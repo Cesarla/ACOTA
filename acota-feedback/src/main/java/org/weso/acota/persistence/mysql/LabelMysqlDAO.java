@@ -1,0 +1,153 @@
+package org.weso.acota.persistence.mysql;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.weso.acota.core.entity.tuples.LabelTuple;
+import org.weso.acota.persistence.LabelDAO;
+
+public class LabelMysqlDAO extends GenericMysqlDAO implements LabelDAO {
+
+	protected String tableName;
+	protected String idField;
+	protected String nameField;
+
+	public LabelMysqlDAO() throws ConfigurationException {
+		super();
+		LabelTuple label = configuration.getLabelTuple();
+		this.tableName = label.getName();
+		this.idField = label.getIdField();
+		this.nameField = label.getNameField();
+	}
+
+	@Override
+	public void saveLabel(Integer id, String label) throws SQLException,
+			ClassNotFoundException {
+		PreparedStatement ps = null;
+		Connection con = null;
+
+		try {
+			con = openConnection();
+
+			StringBuilder query = new StringBuilder("insert into ")
+					.append(tableName).append(" (").append(idField)
+					.append(", ").append(nameField).append(") values(?,?)");
+
+			ps = con.prepareStatement(query.toString());
+			ps.setInt(1, id);
+			ps.setString(2, label);
+
+			ps.executeUpdate();
+
+		} catch (ClassNotFoundException e) {
+			throw e;
+		} finally {
+			closeStatement(ps);
+			closeConnection(con);
+
+		}
+	}
+
+	@Override
+	public String getLabelById(Integer id) throws SQLException,
+			ClassNotFoundException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection con = null;
+
+		String labels = null;
+
+		try {
+			con = openConnection();
+
+			StringBuilder query = new StringBuilder("select * from ")
+					.append(tableName).append(" where ").append(idField)
+					.append("=?");
+
+			ps = con.prepareStatement(query.toString());
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				labels = rs.getString(nameField);
+			}
+
+		} catch (ClassNotFoundException e) {
+			throw e;
+		} finally {
+			closeResult(rs);
+			closeStatement(ps);
+			closeConnection(con);
+
+		}
+		return labels;
+	}
+
+	@Override
+	public String getLabelByHash(Integer hash) throws SQLException,
+			ClassNotFoundException {
+		return getLabelById(hash);
+	}
+
+	@Override
+	public Set<String> getLabelsByIds(Collection<Integer> ids)
+			throws SQLException, ClassNotFoundException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection con = null;
+
+		Set<String> labels = new HashSet<String>();
+		List<Integer> hashesList = new LinkedList<Integer>(ids);
+		if (!ids.isEmpty()) {
+			try {
+				con = openConnection();
+
+				StringBuilder query = new StringBuilder("select * from ")
+						.append(tableName).append(" where ");
+
+				for (int i = 0; i < ids.size(); i++) {
+					query.append(idField).append("=?");
+					if (i + 1 < ids.size()) {
+						query.append(" or ");
+					}
+				}
+
+				ps = con.prepareStatement(query.toString());
+
+				for (int i = 0; i < hashesList.size(); i++) {
+					ps.setInt(i + 1, hashesList.get(i));
+				}
+
+				rs = ps.executeQuery();
+
+				while (rs.next()) {
+					labels.add(rs.getString(nameField));
+				}
+
+			} catch (ClassNotFoundException e) {
+				throw e;
+			} finally {
+				closeResult(rs);
+				closeStatement(ps);
+				closeConnection(con);
+			}
+		}
+		return labels;
+	}
+
+	@Override
+	public Set<String> getLabelsByHashes(Collection<Integer> hashes)
+			throws SQLException, ClassNotFoundException {
+		return getLabelsByIds(hashes);
+	}
+
+}
