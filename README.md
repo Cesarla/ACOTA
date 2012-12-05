@@ -41,19 +41,25 @@ resource.setLabel("About Web Semantics Oviedo");
 resource.setUri("http://www.weso.es");
 request.setResource(resource);
 
-EnhancerAdapter enhancer1 = new LuceneEnhancer();
-EnhancerAdapter enhancer2 = new OpenNLPEnhancer();
-EnhancerAdapter enhancer3 = new WordnetEnhancer();
-EnhancerAdapter enhancer4 = new GoogleEnhancer();
-EnhancerAdapter enhancer5 = new LabelRecommenderEnhancer();
+EnhancerAdapter luceneEnhancer = new LuceneEnhancer();
+EnhancerAdapter openNLPEnhancer = new OpenNLPEnhancer();
+EnhancerAdapter wordnetEnhancer = new WordnetEnhancer();
+EnhancerAdapter googleEnhancer = new GoogleEnhancer();
+EnhancerAdapter labelRecommenderEnhancer = new LabelRecommenderEnhancer();
 
-enhancer1.setSuccessor(enhancer2);
-enhancer2.setSuccessor(enhancer3);
-enhancer3.setSuccessor(enhancer4);
-enhancer4.setSuccessor(enhancer5);
+luceneEnhancer.setSuccessor(openNLPEnhancer);
+openNLPEnhancer.setSuccessor(wordnetEnhancer);
+wordnetEnhancer.setSuccessor(googleEnhancer);
+googleEnhancer.setSuccessor(labelRecommenderEnhancer);
 
-SuggestionTO suggest = enhancer1.enhance(request);
+SuggestionTO suggest = luceneEnhancer.enhance(request);
 
 
-SuggestionTO suggest = enhacer.enhance(request);
+Map<String, Double> labels = suggest.getLabels();
 ```
+
+## Download ##
+The current version of acota is 0.3.0, you can download it from:
+ * [acota-core-0.3.0.jar](https://github.com/downloads/Cesarla/ACOTA/acota-core-0.3.0.jar "Download acota-feedback-0.3.0.jar")
+ * [acota-feedback-0.3.0.jar](https://github.com/downloads/Cesarla/ACOTA/acota-feedback-0.3.0.jar "Download acota-feedback-0.3.0.jar")
+
