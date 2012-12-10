@@ -37,7 +37,6 @@ public class OpenNLPEnhancer extends EnhancerAdapter {
 	
 	protected static Logger logger;
 	protected static Set<String> tokensEs;
-	protected static ProviderTO provider;
 	
 	protected String esSentBin;
 	protected String esPosBin;
@@ -61,12 +60,6 @@ public class OpenNLPEnhancer extends EnhancerAdapter {
 		tokensEs = new HashSet<String>(Arrays.asList((nplTokensEs)));
 	}
 
-
-	public ProviderTO getProvider() {
-		logger.debug("Display provider name");
-		return provider;
-	}
-	
 	@Override
 	protected void preExecute() throws Exception {
 		this.suggest = request.getSuggestions();

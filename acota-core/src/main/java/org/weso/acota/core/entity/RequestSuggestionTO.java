@@ -31,6 +31,10 @@ public class RequestSuggestionTO {
 
 	}
 
+	public RequestSuggestionTO(ResourceTO resource) {
+		this.resource = resource;
+	}
+	
 	public RequestSuggestionTO(ResourceTO resource, SuggestionTO suggestions,
 			List<ProviderTO> targetProviders, int max) {
 		super();
@@ -38,10 +42,6 @@ public class RequestSuggestionTO {
 		this.suggestions = suggestions;
 		this.targetProviders = targetProviders;
 		this.max = max;
-	}
-
-	public RequestSuggestionTO(ResourceTO resource) {
-		this.resource = resource;
 	}
 
 	public List<ProviderTO> getTargetProviders() {

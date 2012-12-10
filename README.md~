@@ -76,10 +76,6 @@ Acota 0.3.0:
  * [acota-feedback-0.3.0.jar](https://github.com/downloads/Cesarla/ACOTA/acota-feedback-0.3.0.jar "Download acota-feedback-0.3.0.jar")
 
 ## Disclaimer
-Acota-feedback requires a MySQL Database, you can download the SQL Creation Script from:
- * [ACOTA's Database SQL Dump](https://github.com/downloads/Cesarla/ACOTA/acota.sql "ACOTA's Database SQL Dump")
-
-Acota does not include Wordnet Dictionary or NLP Files, you can download it from:
+Acota does not include Wordnet Dictionary or NLP Files, you cand download it from:
  * [Wordnet 3.0](http://wordnetcode.princeton.edu/3.0/WNdb-3.0.tar.gz "Download Wordnet 3.0 Dict Files")
- * [SpanishPOS.bin](https://github.com/downloads/Cesarla/ACOTA/SpanishPOS.bin "Download SpanishPOS.bin")
- * [SpanishSent.bin](https://github.com/downloads/Cesarla/ACOTA/SpanishSent.bin "Download SpanishSent.bin")
+ * 

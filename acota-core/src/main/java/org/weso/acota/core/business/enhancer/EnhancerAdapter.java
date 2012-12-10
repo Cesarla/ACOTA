@@ -6,6 +6,7 @@ import java.util.Set;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.weso.acota.core.Configuration;
+import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.SuggestionTO;
 import org.weso.acota.core.entity.TagTO;
@@ -19,14 +20,28 @@ public abstract class EnhancerAdapter implements Enhancer {
 	protected SuggestionTO suggest;
 	protected Enhancer successor;
 	
+	protected Configuration configuration;
+	
 	protected Set<TagTO> tags;
 	protected Map<String, Double> labels;
 	
-	protected static Configuration configuration;
+	protected static ProviderTO provider;
 	
 	public EnhancerAdapter() throws ConfigurationException{
 		EnhancerAdapter.logger = Logger.getLogger(EnhancerAdapter.class);
 		loadConfiguration();
+	}
+	
+	public ProviderTO getProvider() {
+		return provider;
+	}
+	
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
 	
 	@Override
@@ -37,14 +52,14 @@ public abstract class EnhancerAdapter implements Enhancer {
 			execute();
 			postExecute();
 			if(successor != null){
-				return this.successor.enhance(this.request);
+				return successor.enhance(this.request);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Exception enhancing request.", e);
 			throw new AcotaModelException("Exception enhancing request.", e);
 		}
-		return  this.suggest;
+		return suggest;
 	}
 
 	@Override
@@ -64,24 +79,22 @@ public abstract class EnhancerAdapter implements Enhancer {
 	}
 	
 	protected void loadConfiguration() throws ConfigurationException{
-		if(EnhancerAdapter.configuration==null)
-			EnhancerAdapter.configuration = new Configuration();
+		if(this.configuration==null)
+			this.configuration = new Configuration();
 	}
 	
 	protected abstract void execute() throws Exception;
 	protected abstract void preExecute() throws Exception;
 	protected abstract void postExecute() throws Exception;
 	
-	protected void fillSuggestions(TagTO tag, double relevance) {
-		String tagLabel = tag.getLabel();
-		
-		Double value = labels.get(tagLabel);
+	protected void fillSuggestions(String label, double relevance) {
+		Double value = labels.get(label);
 		
 		if(value==null){
 			value = new Double(0);
 		}
 		
-		labels.put(tagLabel, value + relevance);
+		labels.put(label, value + relevance);
 	}
 
 }

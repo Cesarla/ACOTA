@@ -12,7 +12,7 @@ import org.apache.tika.language.LanguageIdentifier;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.business.enhancer.lucene.analyzer.EnglishStopAnalyzer;
 import org.weso.acota.core.business.enhancer.lucene.analyzer.SpanishStopAnalyzer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.SpecialCaseStopAnalyzer;
+import org.weso.acota.core.business.enhancer.lucene.analyzer.DefaultStopAnalyzer;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_ENGLISH;
@@ -34,18 +34,12 @@ public class LuceneEnhancer extends EnhancerAdapter {
 	
 	protected double luceneRelevanceLabel = 10;
 	protected double luceneRelevanceTerm = 5;
-	
-	protected static ProviderTO provider;
 
 	public LuceneEnhancer() throws ConfigurationException{
 		super();
 		LuceneEnhancer.provider = new ProviderTO("Lucene Analizer");
 		this.luceneRelevanceLabel = configuration.getLuceneLabelRelevance();
 		this.luceneRelevanceTerm = configuration.getLuceneTermRelevance();
-	}
-	
-	public ProviderTO getProvider() {
-		return provider;
 	}
 	
 	@Override
@@ -65,7 +59,7 @@ public class LuceneEnhancer extends EnhancerAdapter {
 	@Override
 	protected void postExecute() throws Exception {
 		logger.debug("Add providers to request");
-		this.request.getTargetProviders().add(getProvider());
+		this.request.getTargetProviders().add(provider);
 		logger.debug("Add suggestons to request");
 		this.request.setSuggestions(suggest);
 	}
@@ -106,18 +100,16 @@ public class LuceneEnhancer extends EnhancerAdapter {
 
 		Analyzer analyzer = loadAnalyzer(text);
 
-		if (!SpecialCaseStopAnalyzer.class.isInstance(analyzer)) {
-			logger.debug("Get tokens of texts");
-			TokenStream stream = analyzer.tokenStream(title, new StringReader(
-					text));
-			CharTermAttribute termAttribute = stream
-					.getAttribute(CharTermAttribute.class);
+		logger.debug("Get tokens of texts");
+		TokenStream stream = analyzer.tokenStream(title, new StringReader(
+				text));
+		CharTermAttribute termAttribute = stream
+				.getAttribute(CharTermAttribute.class);
 
-			while (stream.incrementToken()) {
-				logger.debug("Add tag to suggestions");
-				TagTO tag = addTag(termAttribute);
-				fillSuggestions(tag,relevance);
-			}
+		while (stream.incrementToken()) {
+			logger.debug("Add tag to suggestions");
+			TagTO tag = addTag(termAttribute);
+			fillSuggestions(tag.getLabel(),relevance);
 		}
 	}
 
@@ -151,7 +143,7 @@ public class LuceneEnhancer extends EnhancerAdapter {
 		} else if (ld.getLanguage().equals(ISO_639_ENGLISH)) {
 			analyzer = new EnglishStopAnalyzer();
 		} else {
-			analyzer = new SpecialCaseStopAnalyzer();
+			analyzer = new DefaultStopAnalyzer();
 		}
 		return analyzer;
 	}
