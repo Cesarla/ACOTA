@@ -50,7 +50,14 @@ public class ResourceTO {
 
 	public ResourceTO() {
 		super();
-		// TODO Auto-generated constructor stub
+	}
+	
+	public ResourceTO(String uri, String label, String description, String type) {
+		super();
+		this.uri = uri;
+		this.label = label;
+		this.description = description;
+		this.type = type;
 	}
 
 	@Override

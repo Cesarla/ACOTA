@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.weso</groupId>
 	<artifactId>acota-core</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.1</version>
 	<name>acota-core</name>
 	<packaging>jar</packaging>
 	<description>acota-core, library 1.0</description>
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-core</artifactId>
-			<version>0.10</version>
+			<version>1.2</version>
 		</dependency>
 		<!-- For Part-of-Speech tagging  -->
 		<dependency>
@@ -69,6 +69,12 @@
 			<artifactId>maxent</artifactId>
 			<version>2.5.2</version>
 		</dependency>
+		<!-- MIT Java Wordnet Interface  -->
+		<dependency>
+    		<groupId>edu.mit</groupId>
+    		<artifactId>jwi</artifactId>
+    		<version>2.2.3</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
@@ -77,70 +83,6 @@
 			<url>http://opennlp.sourceforge.net/maven2</url>
 		</repository>
 	</repositories>
-	<contributors>
-		<contributor>
-			<name>Jose Emilio Labra Gayo</name>
-			<email />
-			<url>http://www.di.uniovi.es/~labra</url>
-			<organization>Universidad de Oviedo</organization>
-			<organizationUrl>http://www.uniovi.es</organizationUrl>
-			<roles>
-				<role>Project Manager</role>
-			</roles>
-			<timezone>2</timezone>
-			<properties />
-		</contributor>
-	</contributors>
-	<developers>
-		<developer>
-			<id>chema_ar</id>
-			<name>Jose María Alvarez Rodriguez</name>
-			<email>chema.ar@gmail.com</email>
-			<url>http://www.josemalvarez.es</url>
-			<organization>WESO Research Group</organization>
-			<organizationUrl>http://www.weso.es</organizationUrl>
-			<roles>
-				<role>Project Admin</role>
-				<role>Developer</role>
-			</roles>
-			<timezone>2</timezone>
-		</developer>
-		<developer>
-			<id>weena</id>
-			<name>Weena Jiménez</name>
-			<email>weenajimenez@gmail.com</email>
-			<url>http://www.weenajimenez.com</url>
-			<organization>WESO Research Group</organization>
-			<organizationUrl>http://www.weso.es</organizationUrl>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>2</timezone>
-		</developer>
-		<developer>
-			<id>pablo</id>
-			<name>Pablo Abella Vallina</name>
-			<email>pablo.abella@weso.es</email>
-			<organization>WESO Research Group</organization>
-			<organizationUrl>http://www.weso.es</organizationUrl>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>2</timezone>
-		</developer>
-		<developer>
-			<id>cesar</id>
-			<name>César Luis Alvargonzález</name>
-			<email>cesar.luis@weso.es</email>
-			<url>http://www.cesarla.com</url>
-			<organization>WESO Research Group</organization>
-			<organizationUrl>http://www.weso.es</organizationUrl>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>2</timezone>
-		</developer>
-	</developers>
 	<build>
 		<plugins>
 			<plugin>
@@ -151,6 +93,19 @@
 					<target>1.6</target>
 					<showDeprecation>true</showDeprecation>
 					<outputEncoding>UTF-8</outputEncoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>fully.qualified.MainClass</mainClass>
+				        </manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
 				</configuration>
 			</plugin>
 		</plugins>

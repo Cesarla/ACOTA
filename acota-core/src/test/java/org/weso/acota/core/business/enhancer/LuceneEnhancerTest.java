@@ -1,7 +1,9 @@
 package org.weso.acota.core.business.enhancer;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,7 +16,7 @@ import org.junit.Test;
 import org.weso.acota.core.business.enhancer.LuceneEnhancer;
 import org.weso.acota.core.business.enhancer.lucene.analyzer.EnglishStopAnalyzer;
 import org.weso.acota.core.business.enhancer.lucene.analyzer.SpanishStopAnalyzer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.SpecialCaseStopAnalyzer;
+import org.weso.acota.core.business.enhancer.lucene.analyzer.DefaultStopAnalyzer;
 import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
 import org.weso.acota.core.entity.SuggestionTO;
@@ -53,8 +55,8 @@ public class LuceneEnhancerTest{
 	@Test
 	public void enhanceTest() throws IOException{
 		ResourceTO resource = new ResourceTO();
-		resource.setDescription("Esto es Español");
-		resource.setLabel("español");
+		resource.setDescription("Un perro es un animal de compañía");
+		resource.setLabel("animal de compañía");
 		SuggestionTO suggestion = new SuggestionTO();
 		
 		RequestSuggestionTO request = mock(RequestSuggestionTO.class);
@@ -62,7 +64,7 @@ public class LuceneEnhancerTest{
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		luceneEnhancer.enhance(request);
-		assertTrue(15 == suggestion.getLabels().get("español"));
+		assertTrue(15 == suggestion.getLabels().get("animal"));
 	}
 	
 	@Test
@@ -111,7 +113,7 @@ public class LuceneEnhancerTest{
 
 	@Test
 	public void loadAnalyzerOther() {
-		assertTrue(SpecialCaseStopAnalyzer.class.isInstance(
+		assertTrue(DefaultStopAnalyzer.class.isInstance(
 				luceneEnhancer.loadAnalyzer("Das ist Deutsche")));
 	}
 	
@@ -268,7 +270,7 @@ public class LuceneEnhancerTest{
 		TagTO tag = new TagTO("foo", LuceneEnhancer.provider,
 				suggest.getResource());
 		
-		luceneEnhancer.fillSuggestions(tag,1);
+		luceneEnhancer.fillSuggestions(tag.getLabel(),1);
 		
 		assertTrue(2 == labels.get("foo"));
 	}
@@ -285,7 +287,7 @@ public class LuceneEnhancerTest{
 		TagTO tag = new TagTO("foo", LuceneEnhancer.provider,
 				suggest.getResource());
 		
-		luceneEnhancer.fillSuggestions(tag,1);
+		luceneEnhancer.fillSuggestions(tag.getLabel(),1);
 		
 		assertTrue(1 == labels.get("foo"));
 	}

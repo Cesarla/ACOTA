@@ -44,8 +44,6 @@ public class GoogleEnhancer extends EnhancerAdapter {
 	
 	protected Set<TagTO> tags;
 	
-	protected static ProviderTO provider;
-	
 	public GoogleEnhancer() throws ConfigurationException{
 		super();
 		GoogleEnhancer.provider = new ProviderTO("Google Enhancer");
@@ -70,14 +68,8 @@ public class GoogleEnhancer extends EnhancerAdapter {
 
 	@Override
 	protected void postExecute() throws Exception {
-		logger.debug("Add providers to request");
-		this.request.getTargetProviders().add(getProvider());
-		logger.debug("Add suggestons to request");
+		this.request.getTargetProviders().add(provider);
 		this.request.setSuggestions(suggest);
-	}
-
-	public ProviderTO getProvider() {
-		return provider;
 	}
 
 	protected void checkTagsWithSamenLabels() throws MalformedURLException,
@@ -155,7 +147,7 @@ public class GoogleEnhancer extends EnhancerAdapter {
 	protected void addLabelsWeightsSuggestions() {
 		for (TagTO tag : tags) {
 			if (tag.getProvider().equals(provider)) {
-				fillSuggestions(tag, googleRelevance);
+				fillSuggestions(tag.getLabel(), googleRelevance);
 			}
 		}
 	}

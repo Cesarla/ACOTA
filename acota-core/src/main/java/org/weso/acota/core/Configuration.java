@@ -17,12 +17,17 @@ public class Configuration {
 	protected String openNLPesPosBin;
 	protected String openNLPesSentBin;
 	
+	protected String wordnetEnDict;
+	protected Double wordnetRelevance;
+	
 	protected static Logger logger;
+	
+	protected CompositeConfiguration config;
 
 	public Configuration() throws ConfigurationException {
 		Configuration.logger =  Logger.getLogger(Configuration.class);
 		
-		CompositeConfiguration config = new CompositeConfiguration();
+		this.config = new CompositeConfiguration();
 		
 		try {
 			config.addConfiguration(new PropertiesConfiguration("acota.properties"));
@@ -33,8 +38,6 @@ public class Configuration {
 		config.addConfiguration(new PropertiesConfiguration(this.getClass()
 				.getResource("/resources/inner.acota.properties")));
 		
-		
-		
 		this.googleUrl = config.getString("google.url");
 		this.googleEncoding = config.getString("google.encoding");
 		this.googleRelevance = config.getDouble("google.relevance");
@@ -44,6 +47,9 @@ public class Configuration {
 
 		this.openNLPesPosBin = config.getString("opennlp.es.pos");
 		this.openNLPesSentBin = config.getString("opennlp.es.sent");
+		
+		this.wordnetEnDict = config.getString("wordnet.en.dict");
+		this.wordnetRelevance = config.getDouble("wordnet.relevance");
 	}
 
 	public String getGoogleUrl() {
@@ -100,6 +106,22 @@ public class Configuration {
 
 	public void setOpenNLPesPosBin(String openNLPesPosBin) {
 		this.openNLPesPosBin = openNLPesPosBin;
+	}
+
+	public String getWordnetEnDict() {
+		return wordnetEnDict;
+	}
+
+	public void setWordnetEnDict(String wordnetEnDict) {
+		this.wordnetEnDict = wordnetEnDict;
+	}
+
+	public Double getWordnetRelevance() {
+		return wordnetRelevance;
+	}
+
+	public void setWordnetRelevance(Double wordnetRelevance) {
+		this.wordnetRelevance = wordnetRelevance;
 	}
 
 }
