@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
-import org.weso.acota.core.Configuration;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.SuggestionTO;
@@ -20,8 +19,6 @@ public abstract class EnhancerAdapter implements Enhancer {
 	protected SuggestionTO suggest;
 	protected Enhancer successor;
 	
-	protected Configuration configuration;
-	
 	protected Set<TagTO> tags;
 	protected Map<String, Double> labels;
 	
@@ -29,19 +26,10 @@ public abstract class EnhancerAdapter implements Enhancer {
 	
 	public EnhancerAdapter() throws ConfigurationException{
 		EnhancerAdapter.logger = Logger.getLogger(EnhancerAdapter.class);
-		loadConfiguration();
 	}
 	
 	public ProviderTO getProvider() {
 		return provider;
-	}
-	
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-
-	public void setConfiguration(Configuration configuration) {
-		this.configuration = configuration;
 	}
 	
 	@Override
@@ -76,11 +64,6 @@ public abstract class EnhancerAdapter implements Enhancer {
 			logger.debug("Get instance singleton of suggestions");
 			return this.suggest;
 		}
-	}
-	
-	protected void loadConfiguration() throws ConfigurationException{
-		if(this.configuration==null)
-			this.configuration = new Configuration();
 	}
 	
 	protected abstract void execute() throws Exception;

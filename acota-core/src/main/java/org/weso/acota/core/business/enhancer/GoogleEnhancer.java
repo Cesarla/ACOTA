@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.xml.transform.TransformerException;
@@ -17,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.traversal.NodeIterator;
+import org.weso.acota.core.Configuration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
@@ -30,7 +30,7 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  * @author César Luis Alvargonzález
  * @author Weena
  */
-public class GoogleEnhancer extends EnhancerAdapter {
+public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 
 	protected static Logger logger = Logger.getLogger(GoogleEnhancer.class);
 	
@@ -42,11 +42,19 @@ public class GoogleEnhancer extends EnhancerAdapter {
 	
 	protected double googleRelevance;
 	
-	protected Set<TagTO> tags;
+	protected Configuration configuration;
 	
 	public GoogleEnhancer() throws ConfigurationException{
 		super();
 		GoogleEnhancer.provider = new ProviderTO("Google Enhancer");
+		loadConfiguration(configuration);
+	}
+	
+	@Override
+	public void loadConfiguration(Configuration configuration) throws ConfigurationException{
+		if(configuration==null)
+			configuration = new Configuration();
+		this.configuration = configuration;
 		this.googleUrl = configuration.getGoogleUrl();
 		this.googleEncoding = configuration.getGoogleEncoding();
 		this.googleRelevance = configuration.getGoogleRelevance();
@@ -88,7 +96,12 @@ public class GoogleEnhancer extends EnhancerAdapter {
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setInstanceFollowRedirects(true);
 			connection.setRequestProperty("Accept", APPLICATION_XML);
-			connection.connect();
+			try{
+				connection.connect();
+			}catch(Exception e){
+				
+				connection.connect();
+			}
 			if (isValidResponse(connection)) {
 				Document document = processResponse(connection);
 				processDocument(document);

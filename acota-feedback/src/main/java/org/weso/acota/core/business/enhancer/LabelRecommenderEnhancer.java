@@ -25,23 +25,30 @@ import org.weso.acota.persistence.factory.FactoryDAO;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
-public class LabelRecommenderEnhancer extends EnhancerAdapter {
+public class LabelRecommenderEnhancer extends EnhancerAdapter implements FeedbackConfigurable{
 
 	protected LabelDAO labelDao;
 	
 	protected int numRecommendations;
 	protected double relevance;
 
-	protected static FeedbackConfiguration configuration;
+	protected FeedbackConfiguration configuration;
 
 	public LabelRecommenderEnhancer() throws ConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super();
 		LabelRecommenderEnhancer.provider = new ProviderTO(
 				"Label Recommender Enhancer");
-		LabelRecommenderEnhancer.configuration = new FeedbackConfiguration();
+		loadConfiguration(configuration);
+		this.labelDao = FactoryDAO.createLabelDAO();
+	}
+	
+	@Override
+	public void loadConfiguration(FeedbackConfiguration configuration) throws ConfigurationException{
+		if(configuration==null)
+			configuration = new FeedbackConfiguration();
+		this.configuration = configuration;
 		this.relevance = configuration.getLabelRecommenderRelevance();
 		this.numRecommendations = configuration.getLabelRecomenderNumRecommendations();
-		this.labelDao = FactoryDAO.createLabelDAO();
 	}
 
 	@Override

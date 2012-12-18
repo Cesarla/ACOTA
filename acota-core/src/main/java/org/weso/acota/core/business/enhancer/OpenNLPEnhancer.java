@@ -17,6 +17,7 @@ import opennlp.tools.tokenize.SimpleTokenizer;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.tika.language.LanguageIdentifier;
+import org.weso.acota.core.Configuration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.RequestSuggestionTO;
@@ -29,7 +30,7 @@ import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
  * @author Weena
  *
  */
-public class OpenNLPEnhancer extends EnhancerAdapter {
+public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected static final String[] nplTokensEs = new String[] { "SPC", "P", "DI",
 		"PR", "CC", "PP", "CS", "DD", "DP", "RG", "AO", "SPS", "AQ", "W",
@@ -47,19 +48,29 @@ public class OpenNLPEnhancer extends EnhancerAdapter {
 	protected Set<String> verbs;
 	protected Set<String> numbers;
 	
+	protected Configuration configuration;
+	
 	public OpenNLPEnhancer() throws ConfigurationException {
 		super();
 		OpenNLPEnhancer.logger = Logger.getLogger(OpenNLPEnhancer.class);
 		OpenNLPEnhancer.provider = new ProviderTO("OpenNPL tagger");
-		this.esPosBin = configuration.getOpenNLPesPosBin();
-		this.esSentBin = configuration.getOpenNLPesSentBin();
+		loadConfiguration(configuration);
 		
 		this.pronouns = new HashSet<String>();
 		this.verbs = new HashSet<String>();
 		this.numbers = new HashSet<String>();
 		tokensEs = new HashSet<String>(Arrays.asList((nplTokensEs)));
 	}
-
+	
+	@Override
+	public void loadConfiguration(Configuration configuration) throws ConfigurationException{
+		if(configuration==null)
+			configuration = new Configuration();
+		this.configuration = configuration;
+		this.esPosBin = configuration.getOpenNLPesPosBin();
+		this.esSentBin = configuration.getOpenNLPesSentBin();
+	}
+	
 	@Override
 	protected void preExecute() throws Exception {
 		this.suggest = request.getSuggestions();

@@ -59,10 +59,10 @@ Map<String, Double> labels = suggest.getLabels();
 ```
 
 ## Download ##
-The current version of acota is 0.3.1, you can download it from:
+The current version of acota is 0.3.2, you can download it from:
 ### For Maven Users
- * [acota-core-0.3.1.jar](https://github.com/downloads/Cesarla/ACOTA/acota-core-0.3.1.jar "Download acota-feedback-0.3.1.jar")
- * [acota-feedback-0.3.1.jar](https://github.com/downloads/Cesarla/ACOTA/acota-feedback-0.3.1.jar "Download acota-feedback-0.3.1.jar")
+ * [acota-core-0.3.2.jar](https://github.com/downloads/Cesarla/ACOTA/acota-core-0.3.2.jar "Download acota-feedback-0.3.2.jar")
+ * [acota-feedback-0.3.2.jar](https://github.com/downloads/Cesarla/ACOTA/acota-feedback-0.3.2.jar "Download acota-feedback-0.3.2.jar")
 
 ### For Non Maven Users
 Acota-bundle includes all required dependancies:
@@ -71,7 +71,9 @@ Acota-bundle includes all required dependancies:
 
 ### Old Versions
 Acota 0.3.0:
-
+ * [acota-core-0.3.1.jar](https://github.com/downloads/Cesarla/ACOTA/acota-core-0.3.1.jar "Download acota-feedback-0.3.1.jar")
+ * [acota-feedback-0.3.1.jar](https://github.com/downloads/Cesarla/ACOTA/acota-feedback-0.3.1.jar "Download acota-feedback-0.3.1.jar")
+ * [acota-bundle-0.3.1.jar](https://github.com/downloads/Cesarla/ACOTA/acota-bundle-0.3.1.jar "Download acota-bundle-0.3.1.jar")
  * [acota-core-0.3.0.jar](https://github.com/downloads/Cesarla/ACOTA/acota-core-0.3.0.jar "Download acota-feedback-0.3.0.jar")
  * [acota-feedback-0.3.0.jar](https://github.com/downloads/Cesarla/ACOTA/acota-feedback-0.3.0.jar "Download acota-feedback-0.3.0.jar")
 

@@ -8,19 +8,26 @@ import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.persistence.FeedbackDAO;
 import org.weso.acota.persistence.factory.FactoryDAO;
 
-public class SimpleRecommenderEnhancer extends EnhancerAdapter {
+public class SimpleRecommenderEnhancer extends EnhancerAdapter implements FeedbackConfigurable{
 
 	protected FeedbackDAO feedbackDao;
 	protected double relevance;
 
-	protected static FeedbackConfiguration configuration;
+	protected FeedbackConfiguration configuration;
 
 	public SimpleRecommenderEnhancer() throws ConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super();
 		SimpleRecommenderEnhancer.provider = new ProviderTO("Simple Recommender Enhancer");
-		SimpleRecommenderEnhancer.configuration = new FeedbackConfiguration();
-		this.relevance = configuration.getSimpleRecommenderRelevance();
+		loadConfiguration(configuration);
 		this.feedbackDao = FactoryDAO.createFeedbackDAO();
+	}
+	
+	@Override
+	public void loadConfiguration(FeedbackConfiguration configuration) throws ConfigurationException{
+		if(configuration==null)
+			configuration = new FeedbackConfiguration();
+		this.configuration = configuration;
+		this.relevance = configuration.getSimpleRecommenderRelevance();
 	}
 
 	@Override

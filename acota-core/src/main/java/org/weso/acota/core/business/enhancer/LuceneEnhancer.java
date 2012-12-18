@@ -9,6 +9,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.tika.language.LanguageIdentifier;
+import org.weso.acota.core.Configuration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.business.enhancer.lucene.analyzer.EnglishStopAnalyzer;
 import org.weso.acota.core.business.enhancer.lucene.analyzer.SpanishStopAnalyzer;
@@ -25,19 +26,29 @@ import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
  * @author Weena
  * */
 
-public class LuceneEnhancer extends EnhancerAdapter {
+public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 
 	protected static Logger logger = Logger.getLogger(LuceneEnhancer.class);
 	
 	protected static final String DESCIPTION = "desciption";
 	protected static final String LABEL = "label";
 	
-	protected double luceneRelevanceLabel = 10;
-	protected double luceneRelevanceTerm = 5;
+	protected double luceneRelevanceLabel;
+	protected double luceneRelevanceTerm;
 
+	protected Configuration configuration;
+	
 	public LuceneEnhancer() throws ConfigurationException{
 		super();
 		LuceneEnhancer.provider = new ProviderTO("Lucene Analizer");
+		loadConfiguration(configuration);
+	}
+	
+	@Override
+	public void loadConfiguration(Configuration configuration) throws ConfigurationException{
+		if(configuration==null)
+			configuration = new Configuration();
+		this.configuration = configuration;
 		this.luceneRelevanceLabel = configuration.getLuceneLabelRelevance();
 		this.luceneRelevanceTerm = configuration.getLuceneTermRelevance();
 	}

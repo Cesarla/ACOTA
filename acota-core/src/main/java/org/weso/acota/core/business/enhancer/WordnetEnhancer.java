@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.weso.acota.core.Configuration;
 import org.weso.acota.core.entity.ProviderTO;
 
 import edu.mit.jwi.Dictionary;
@@ -17,22 +18,32 @@ import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 
-public class WordnetEnhancer extends EnhancerAdapter {
+public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 
 	protected String wordnetEnDict;
 	protected double wordnetRelevance;
 	
 	protected IDictionary dicionary;
 	
+	protected Configuration configuration;
+	
 	public WordnetEnhancer() throws ConfigurationException, IOException {
 		super();
 		WordnetEnhancer.provider = new ProviderTO("Wordnet Enhancer");
-		this.wordnetEnDict = configuration.getWordnetEnDict();
-		this.wordnetRelevance = configuration.getWordnetRelevance();
+		loadConfiguration(configuration);
 		
 		URL url = new URL ("file",null,wordnetEnDict) ;
 		this.dicionary = new Dictionary ( url ) ;
 		dicionary.open();
+	}
+	
+	@Override
+	public void loadConfiguration(Configuration configuration) throws ConfigurationException{
+		if(configuration==null)
+			configuration = new Configuration();
+		this.configuration = configuration;
+		this.wordnetEnDict = configuration.getWordnetEnDict();
+		this.wordnetRelevance = configuration.getWordnetRelevance();	
 	}
 
 	@Override
