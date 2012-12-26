@@ -10,7 +10,7 @@ before_script:
   - 'wget http://wordnetcode.princeton.edu/3.0/WNdb-3.0.tar.gz'
   - 'tar -xzf WNdb-3.0.tar.gz'
   - mysql -e 'create database acota;'
-  - mysql -p acota.sql
+  - mysql -p= < acota.sql
 script: 
   - mvn -f acota-core/pom.xml install test
   - mvn -f acota-feedback/pom.xml install test
