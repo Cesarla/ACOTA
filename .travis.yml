@@ -1,6 +1,7 @@
 language: java
 jdk:
   - openjdk6
+  - openjdk7
 before_script:
   - 'wget -P acota-core http://156.35.82.101:7000/downloads/acota/utils/travis/core/acota.properties'
   - 'wget -P acota-feedback http://156.35.82.101:7000/downloads/acota/utils/travis/feedback/acota.properties'
@@ -10,7 +11,7 @@ before_script:
   - 'wget http://wordnetcode.princeton.edu/3.0/WNdb-3.0.tar.gz'
   - 'tar -xzf WNdb-3.0.tar.gz'
   - mysql -e 'create database acota;'
-  - mysql -u=root -p= < acota.sql
+  - mysql --user="root" --password="" acota.sql
 script: 
   - mvn -f acota-core/pom.xml install test
   - mvn -f acota-feedback/pom.xml install test
