@@ -20,6 +20,7 @@ import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.weso.acota.core.FeedbackConfiguration;
 import org.weso.acota.persistence.LabelDAO;
 
 public class LabelMysqlDaoTest {
@@ -39,8 +40,9 @@ public class LabelMysqlDaoTest {
 
 	protected IDatabaseConnection getConnection() throws Exception {
 		Class.forName("com.mysql.jdbc.Driver");
+		FeedbackConfiguration configuration = new FeedbackConfiguration();
 		Connection jdbcConnection = DriverManager.getConnection(
-				"jdbc:mysql://localhost/acota", "root", "root");
+				"jdbc:mysql://"+ configuration.getDatabaseUrl() +"/"+configuration.getDatabaseName(), configuration.getDatabaseUser(), configuration.getDatabasePassword());
 		
 		IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
 		
