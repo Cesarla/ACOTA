@@ -70,10 +70,12 @@ Acota-bundle includes all required dependancies:
  * [acota-bundle-0.3.2.jar](http://156.35.82.101:7000/downloads/acota/0.3.2/bundle/acota-bundle-0.3.2.jar "Download acota-bundle-0.3.2.jar")
 
 ### Old Versions
-Acota 0.3.0:
+Acota 0.3.1:
  * [acota-core-0.3.1.jar](http://156.35.82.101:7000/downloads/acota/0.3.1/core/acota-core-0.3.1.jar "Download acota-feedback-0.3.1.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.1/core/acota-core-0.3.1.pom "Download acota-feedback-0.3.1.pom")
  * [acota-feedback-0.3.1.jar](http://156.35.82.101:7000/downloads/acota/0.3.1/feedback/acota-feedback-0.3.1.jar "Download acota-feedback-0.3.1.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.1/feedback/acota-feedback-0.3.1.pom "Download acota-feedback-0.3.1.pom")
  * [acota-bundle-0.3.1.jar](http://156.35.82.101:7000/downloads/acota/0.3.1/bundle/acota-bundle-0.3.1.jar "Download acota-bundle-0.3.1.jar")
+
+Acota 0.3.0:
  * [acota-core-0.3.0.jar](http://156.35.82.101:7000/downloads/acota/0.3.0/core/acota-core-0.3.0.jar "Download acota-feedback-0.3.0.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.0/core/acota-core-0.3.0.pom "Download acota-feedback-0.3.0.pom")
  * [acota-feedback-0.3.0.jar](http://156.35.82.101:7000/downloads/acota/0.3.0/feedback/acota-feedback-0.3.0.jar "Download acota-feedback-0.3.0.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.0/feedback/acota-feedback-0.3.0.pom "Download acota-feedback-0.3.0.pom")
 
