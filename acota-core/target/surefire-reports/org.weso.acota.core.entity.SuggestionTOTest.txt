@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: org.weso.acota.core.entity.SuggestionTOTest
 -------------------------------------------------------------------------------
-Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.083 sec
+Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.104 sec
