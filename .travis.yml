@@ -3,11 +3,17 @@ jdk:
   - openjdk6
 before_script:
   - 'wget -P acota-core http://156.35.82.101:7000/downloads/acota/utils/travis/core/acota.properties'
+  - 'wget -P acota-feedback http://156.35.82.101:7000/downloads/acota/utils/travis/feedback/acota.properties'
   - 'wget http://156.35.82.101:7000/downloads/acota/utils/SpanishPOS.bin'
   - 'wget http://156.35.82.101:7000/downloads/acota/utils/SpanishSent.bin'
+  - 'wget http://156.35.82.101:7000/downloads/acota/utils/travis/sql/acota.sql'
   - 'wget http://wordnetcode.princeton.edu/3.0/WNdb-3.0.tar.gz'
   - 'tar -xzf WNdb-3.0.tar.gz'
-script: mvn -f acota-core/pom.xml install test
+  - mysql -e 'create database acota;'
+  - mysql -p acota.sql
+script: 
+  - mvn -f acota-core/pom.xml install test
+  - mvn -f acota-feedback/pom.xml install test
 notifications:
   email:
     - sisa989@gmail.com
