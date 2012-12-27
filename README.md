@@ -1,6 +1,8 @@
 <img src="http://weso.es/img/logo_acota_850.png">
 # ACOTA:  Automatic Collaborative Tagging 
-[![Build Status](https://travis-ci.org/Cesarla/ACOTA.png?branch=master)](https://travis-ci.org/Cesarla/ACOTA)
+Master: [![Build Status](https://travis-ci.org/Cesarla/ACOTA.png?branch=master)](https://travis-ci.org/Cesarla/ACOTA)
+Develop: [![Build Status](https://travis-ci.org/Cesarla/ACOTA.png?branch=develop)](https://travis-ci.org/Cesarla/ACOTA)
+
 
 ## What is it? ##
 ACOTA (Automatic Collaborative Tagging). It is a Java-based library for suggesting 
