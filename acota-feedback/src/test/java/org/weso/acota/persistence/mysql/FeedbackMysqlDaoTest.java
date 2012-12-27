@@ -30,6 +30,7 @@ public class FeedbackMysqlDaoTest {
 	
 	@Before
 	public void init() throws Exception {
+		System.setProperty("user.timezone", "GMT");
 		DatabaseOperation.CLEAN_INSERT.execute(getConnection(), getDataSet());
 		this.feedbackDao = new FeedbackMysqlDAO();
 	}
