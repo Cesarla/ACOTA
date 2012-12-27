@@ -1,14 +1,10 @@
 package org.weso.acota.core.entity;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-@XmlRootElement(name = "resourceTO")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "resourceTO", propOrder = { "uri", "label", "description",
-		"type" })
+/**
+ * 
+ * @author Jose María Álvarez
+ *
+ */
 public class ResourceTO {
 
 	private String uri = "";
@@ -16,6 +12,21 @@ public class ResourceTO {
 	private String description = "";
 	private String type = "";
 
+	/**
+	 * Zero-argument default constructor.
+	 */
+	public ResourceTO() {
+		super();
+	}
+	
+	public ResourceTO(String uri, String label, String description, String type) {
+		super();
+		this.uri = uri;
+		this.label = label;
+		this.description = description;
+		this.type = type;
+	}
+	
 	public String getUri() {
 		return uri;
 	}
@@ -45,18 +56,6 @@ public class ResourceTO {
 	}
 
 	public void setType(String type) {
-		this.type = type;
-	}
-
-	public ResourceTO() {
-		super();
-	}
-	
-	public ResourceTO(String uri, String label, String description, String type) {
-		super();
-		this.uri = uri;
-		this.label = label;
-		this.description = description;
 		this.type = type;
 	}
 

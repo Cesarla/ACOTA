@@ -23,7 +23,6 @@ import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 /**
  * @author Chema
  * @author César Luis Alvargonzález
- * @author Weena
  * */
 
 public class LuceneEnhancer extends EnhancerAdapter implements Configurable {

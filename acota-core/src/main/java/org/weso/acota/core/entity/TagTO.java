@@ -1,18 +1,9 @@
 package org.weso.acota.core.entity;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
 /**
  * 
- * @author chema
+ * @author Jose María Álvarez
  */
-@XmlRootElement(name = "tagTO")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "tagTO", propOrder = { "label", "provider", "tagged",
-		"taggingDate", "uri", "id" })
 public class TagTO {
 
 	private String label;
@@ -22,6 +13,9 @@ public class TagTO {
 	private String uri;
 	private String id;
 
+	/**
+	 * Zero-argument default constructor.
+	 */
 	public TagTO() {
 	}
 

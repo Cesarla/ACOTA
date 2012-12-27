@@ -1,18 +1,18 @@
 package org.weso.acota.core.entity;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-@XmlRootElement(name = "providerTO")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "providerTO", propOrder = { "provider", "uri" })
+/**
+ * 
+ * @author Jose María Álvarez
+ *
+ */
 public class ProviderTO {
 
 	protected String provider;
 	protected String uri;
 
+	/**
+	 * Zero-argument default constructor.
+	 */
 	public ProviderTO() {
 		super();
 	}

@@ -5,24 +5,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
 /**
  * 
- * @author chema
+ * @author Jose María Álvarez
  */
-@XmlRootElement(name = "suggestionTO")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "suggestionTO", propOrder = { "tags", "labels", "resource" })
 public class SuggestionTO {
 
 	protected Map<String, Double> labels = new LinkedHashMap<String, Double>();
 	protected Set<TagTO> tags = new HashSet<TagTO>();
 	protected ResourceTO resource;
 
+	/**
+	 * Zero-argument default constructor.
+	 */
 	public SuggestionTO() {
 		super();
 	}

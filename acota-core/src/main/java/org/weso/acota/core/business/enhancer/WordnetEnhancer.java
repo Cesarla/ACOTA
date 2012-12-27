@@ -18,6 +18,11 @@ import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 
+/**
+ * 
+ * @author César Luis Alvargonzález
+ *
+ */
 public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 
 	protected String wordnetEnDict;

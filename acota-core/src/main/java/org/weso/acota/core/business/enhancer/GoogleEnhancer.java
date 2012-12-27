@@ -28,7 +28,6 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
 /**
  * @author Chema
  * @author César Luis Alvargonzález
- * @author Weena
  */
 public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 

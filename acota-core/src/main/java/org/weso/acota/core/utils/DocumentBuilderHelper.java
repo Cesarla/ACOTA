@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.weso.acota.core.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -22,16 +17,26 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This is a helper class for building Documents from different sources.
+ * DocumentBuilderHelper is a helper class for building Documents from different sources.
  */
 public class DocumentBuilderHelper {
 
-    public static Reader getStringReader(String article) {
-        return new StringReader(article);
+	/**
+	 * Returns a StringReader from the supplied content
+	 * @param content String providing the character stream
+	 * @return StringReader from the supplied content
+	 */
+    public static Reader getStringReader(String content) {
+        return new StringReader(content);
     }
 
-    public static InputSource getInputSourceFromString(String article) {
-        Reader reader = getStringReader(article);
+    /**
+     * Returns a InputSource from the supplied URI
+     * @param uri The system identifier of the file
+     * @return InputSource from the article
+     */
+    public static InputSource getInputSourceFromString(String uri) {
+        Reader reader = getStringReader(uri);
         return new InputSource(reader);
     }
 
@@ -39,6 +44,11 @@ public class DocumentBuilderHelper {
         return new InputSource(article);
     }
 
+    /**
+     * Creates a new DocumentBuilder
+     * @return New DocumentBuilder
+     * @throws DocumentBuilderException
+     */
     public static DocumentBuilder createDocumentBuilder() throws DocumentBuilderException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -49,9 +59,15 @@ public class DocumentBuilderHelper {
         }
     }
 
-    public static Document getDocumentFromString(String input) throws DocumentBuilderException {
+    /**
+     * Returns a Document from the input path
+     * @param uri The system identifier of the file
+     * @return New Document from input path
+     * @throws DocumentBuilderException
+     */
+    public static Document getDocumentFromString(String uri) throws DocumentBuilderException {
         try {
-            return createDocumentBuilder().parse(getInputSourceFromString(input));
+            return createDocumentBuilder().parse(getInputSourceFromString(uri));
         } catch (SAXException e) {
             throw new DocumentBuilderException(e);
         } catch (IOException e) {
@@ -61,9 +77,15 @@ public class DocumentBuilderHelper {
         }
     }
 
-    public static Document getDocumentFromReader(Reader input) throws DocumentBuilderException {
+    /**
+     * Returns a Document from the supplied Reader
+     * @param reader Supplied Reader
+     * @return New Document from the supplied Reader
+     * @throws DocumentBuilderException
+     */
+    public static Document getDocumentFromReader(Reader reader) throws DocumentBuilderException {
         try {
-            return createDocumentBuilder().parse(getInputSourceFromReader(input));
+            return createDocumentBuilder().parse(getInputSourceFromReader(reader));
         } catch (SAXException e) {
             throw new DocumentBuilderException(e);
         } catch (IOException e) {
@@ -71,9 +93,15 @@ public class DocumentBuilderHelper {
         }
     }
 
-    public static Document getDocumentFromInputStream(InputStream input) throws DocumentBuilderException {
+    /**
+     * Returns a new Document from the supplied inputStream
+     * @param inputStream Supplied InputStream
+     * @return New Document from the supplied inputStream
+     * @throws DocumentBuilderException
+     */
+    public static Document getDocumentFromInputStream(InputStream inputStream) throws DocumentBuilderException {
         try {
-            return createDocumentBuilder().parse(input);
+            return createDocumentBuilder().parse(inputStream);
         } catch (SAXException e) {
             throw new DocumentBuilderException(e);
         } catch (IOException e) {
@@ -81,11 +109,23 @@ public class DocumentBuilderHelper {
         }
     }
 
+    /**
+     * Returns an empty Document
+     * @return Empty Document
+     * @throws DocumentBuilderException
+     */
     public static Document getEmptyDocument() throws DocumentBuilderException {
         return createDocumentBuilder().newDocument();
     }
 
-    public static Document getDocumentFromFile(File file) throws DocumentBuilderException, FileNotFoundException {
+    /**
+     * Returns a Document from the File
+     * @param file File Path
+     * @return Document from the File
+     * @throws DocumentBuilderException
+     * @throws IOException
+     */
+    public static Document getDocumentFromFile(File file) throws DocumentBuilderException, IOException {
         InputStream is = null;
         try {
             is = new FileInputStream(file);
@@ -96,7 +136,7 @@ public class DocumentBuilderHelper {
                     is.close();
                 }
             } catch (IOException e) {
-                //logger.error("Failed to close file, resuming work", e);
+                throw e;
             }
         }
     }

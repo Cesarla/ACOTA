@@ -11,6 +11,11 @@ import org.weso.acota.core.entity.SuggestionTO;
 import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.core.exceptions.AcotaModelException;
 
+/**
+ * 
+ * @author César Luis Alvargonzález
+ *
+ */
 public abstract class EnhancerAdapter implements Enhancer {
 
 	protected static Logger logger;

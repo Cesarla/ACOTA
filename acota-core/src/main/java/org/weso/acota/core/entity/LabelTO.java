@@ -1,17 +1,17 @@
 package org.weso.acota.core.entity;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-@XmlRootElement(name = "labelTO")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "labelTO", propOrder = { "label", "weight" })
+/**
+ * 
+ * @author Jose María Álvarez
+ *
+ */
 public class LabelTO {
 	protected String name;
 	protected double weight;
 
+	/**
+	 * Zero-argument default constructor.
+	 */
 	public LabelTO() {
 
 	}
