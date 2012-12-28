@@ -11,12 +11,18 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
 
 /**
- * 
+ * For non Spanish or English text, it tokenizes, converts to
+ * lower case and removes words to long (>50) and to short(<3).
  * @author César Luis Alvargonzález
  *
  */
 public class DefaultStopAnalyzer extends Analyzer {
-
+	
+	/**
+	 * Zero-argument default constructor.
+	 */
+	public DefaultStopAnalyzer(){}
+	
 	@Override
 	public final TokenStream tokenStream(String arg0, Reader reader) {
 

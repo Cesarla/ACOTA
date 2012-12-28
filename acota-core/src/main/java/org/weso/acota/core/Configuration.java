@@ -5,6 +5,14 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
+/**
+ * The main task of this class is to load the core configuration properties of ACOTA,
+ * this properties could be set programmatically or by a configuration file called
+ * acota.properties
+ * 
+ * @author César Luis Alvargonzález
+ *
+ */
 public class Configuration {
 
 	protected String googleUrl;
@@ -24,6 +32,9 @@ public class Configuration {
 	
 	protected CompositeConfiguration config;
 
+	/**
+	 * Zero-argument default constructor.
+	 */
 	public Configuration() throws ConfigurationException {
 		Configuration.logger =  Logger.getLogger(Configuration.class);
 		

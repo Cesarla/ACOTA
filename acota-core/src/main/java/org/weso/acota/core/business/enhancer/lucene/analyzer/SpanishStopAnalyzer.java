@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LengthFilter;
 import org.apache.lucene.analysis.LowerCaseFilter;
@@ -14,13 +13,13 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
 
 /**
- * 
+ * For non Spanish text, it tokenizes, converts to
+ * lower case, removes words to long (>50) and to short(<3),
+ * and removes Spanish stops words.
  * @author César Luis Alvargonzález
  *
  */
 public class SpanishStopAnalyzer extends Analyzer {
-	
-	protected static Logger logger = Logger.getLogger(SpanishStopAnalyzer.class);
 	
 	private final static String[] SPANISH_STOP_WORDS = {
 		"de","la","que","el","en","y","a","los","del","se","las","por","un","para",
@@ -61,6 +60,9 @@ public class SpanishStopAnalyzer extends Analyzer {
 	
 	protected static final Set<Object> stopWrods = StopFilter.makeStopSet(Version.LUCENE_31,SPANISH_STOP_WORDS);
 	
+	/**
+	 * Zero-argument default constructor.
+	 */
 	public SpanishStopAnalyzer() {}
 
 	@Override

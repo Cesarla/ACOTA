@@ -21,7 +21,7 @@ import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 
 
 /**
- * @author Chema
+ * @author Jose María Álvarez
  * @author César Luis Alvargonzález
  * */
 

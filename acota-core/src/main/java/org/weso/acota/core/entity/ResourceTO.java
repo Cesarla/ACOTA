@@ -19,6 +19,13 @@ public class ResourceTO {
 		super();
 	}
 	
+	/**
+	 * 
+	 * @param uri
+	 * @param label
+	 * @param description
+	 * @param type
+	 */
 	public ResourceTO(String uri, String label, String description, String type) {
 		super();
 		this.uri = uri;

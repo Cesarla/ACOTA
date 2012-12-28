@@ -18,13 +18,25 @@ public class RequestSuggestionTO {
 	 * Zero-argument default constructor.
 	 */
 	public RequestSuggestionTO() {
-
+		super();
 	}
 
+	/**
+	 * 
+	 * @param resource
+	 */
 	public RequestSuggestionTO(ResourceTO resource) {
+		super();
 		this.resource = resource;
 	}
 	
+	/**
+	 * 
+	 * @param resource
+	 * @param suggestions
+	 * @param targetProviders
+	 * @param max
+	 */
 	public RequestSuggestionTO(ResourceTO resource, SuggestionTO suggestions,
 			List<ProviderTO> targetProviders, int max) {
 		super();

@@ -3,7 +3,6 @@ package org.weso.acota.core.business.enhancer.lucene.analyzer;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LengthFilter;
 import org.apache.lucene.analysis.LowerCaseFilter;
@@ -14,14 +13,17 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
 
 /**
- * 
+ * For non English text, it tokenizes, converts to
+ * lower case, removes words to long (>50) and to short(<3),
+ * and removes English stops words.
  * @author César Luis Alvargonzález
  *
  */
 public class EnglishStopAnalyzer extends Analyzer {
 	
-	protected static Logger logger = Logger.getLogger(EnglishStopAnalyzer.class);
-	
+	/**
+	 * Zero-argument default constructor.
+	 */
 	public EnglishStopAnalyzer() {}
 
 	@Override

@@ -7,6 +7,14 @@ import org.weso.acota.core.entity.tuples.DocumentTuple;
 import org.weso.acota.core.entity.tuples.FeedbackTuple;
 import org.weso.acota.core.entity.tuples.LabelTuple;
 
+/**
+ * The main task of this class is to load the feedback configuration properties of ACOTA,
+ * this properties could be set programmatically or by a configuration file called
+ * acota.properties
+ * 
+ * @author César Luis Alvargonzález
+ *
+ */
 public class FeedbackConfiguration extends Configuration {
 
 	protected String documentDAOClass;
@@ -29,6 +37,9 @@ public class FeedbackConfiguration extends Configuration {
 
 	protected static Logger logger;
 
+	/**
+	 * Zero-argument default constructor.
+	 */
 	public FeedbackConfiguration() throws ConfigurationException {
 		super();
 
@@ -47,12 +58,18 @@ public class FeedbackConfiguration extends Configuration {
 		loadSimpleRecommenderSimple();
 	}
 
+	/**
+	 * Loads the DAO Classes properties
+	 */
 	private void loadDAOClasses(){
 		this.documentDAOClass = config.getString("database.dao.impl.documentDAO");
 		this.feedbackDAOClass = config.getString("database.dao.impl.feedbackDAO");
 		this.labelDAOClass = config.getString("database.dao.impl.labelDAO");
 	}
 	
+	/**
+	 * Loads the Database Configuration properties
+	 */
 	private void loadDatabaseConfig() {
 		this.databaseUrl = config.getString("database.url");
 		this.databaseName = config.getString("database.name");
@@ -60,6 +77,9 @@ public class FeedbackConfiguration extends Configuration {
 		this.databasePassword = config.getString("database.password");
 	}
 
+	/**
+	 * Loads the Document Table properties
+	 */
 	private void loadDocumentConfig() {
 		this.documentTuple = new DocumentTuple();
 		documentTuple.setName(config.getString("database.document"));
@@ -67,6 +87,9 @@ public class FeedbackConfiguration extends Configuration {
 		documentTuple.setNameField(config.getString("database.document.name"));
 	}
 
+	/**
+	 * Loads the Feedback Table properties
+	 */
 	private void loadFeedbackConfig() {
 		this.feedbackTuple = new FeedbackTuple();
 		feedbackTuple.setName(config.getString("database.feedback"));
@@ -83,6 +106,9 @@ public class FeedbackConfiguration extends Configuration {
 				.getString("database.feedback.timestamp"));
 	}
 
+	/**
+	 * Loads the Label Table properties
+	 */
 	private void loadLabelConfig() {
 		this.labelTuple = new LabelTuple();
 		labelTuple.setName(config.getString("database.label"));
@@ -90,6 +116,9 @@ public class FeedbackConfiguration extends Configuration {
 		labelTuple.setNameField(config.getString("database.label.name"));
 	}
 
+	/**
+	 * Loads the LabelRecommenderEnhancer properties
+	 */
 	private void loadLabelRecommenderConfig() {
 		this.labelRecommenderRelevance = config
 				.getDouble("enhancer.recommender.label.relevance");
@@ -97,6 +126,9 @@ public class FeedbackConfiguration extends Configuration {
 				.getInt("enhancer.recommender.label.recommendations");
 	}
 	
+	/**
+	 * Loads the SimpleRecommenderEnhancer properties
+	 */
 	private void loadSimpleRecommenderSimple() {
 		this.simpleRecommenderRelevance = config
 				.getDouble("enhancer.recommender.simple.relevance");

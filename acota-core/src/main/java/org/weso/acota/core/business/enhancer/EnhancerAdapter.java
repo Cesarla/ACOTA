@@ -12,7 +12,8 @@ import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.core.exceptions.AcotaModelException;
 
 /**
- * 
+ * Abstract class that implements Enhacer interface, it implements
+ * the chain-of-responsibility design pattern
  * @author César Luis Alvargonzález
  *
  */
@@ -29,10 +30,19 @@ public abstract class EnhancerAdapter implements Enhancer {
 	
 	protected static ProviderTO provider;
 	
+	/**
+	 * Zero-argument default constructor.
+	 *
+	 * @throws ConfigurationException Any exception that occurs while initializing a Configuration
+	 *             object
+	 */
 	public EnhancerAdapter() throws ConfigurationException{
 		EnhancerAdapter.logger = Logger.getLogger(EnhancerAdapter.class);
 	}
 	
+	/**
+	 * @return The current provider
+	 */
 	public ProviderTO getProvider() {
 		return provider;
 	}
@@ -61,6 +71,11 @@ public abstract class EnhancerAdapter implements Enhancer {
 		this.successor = successor;
 	}	
 	
+	/**
+	 * Returns the current SuggestionTO, if the SuggestionTO does not exist,
+	 * it creates a new one and returns it.
+	 * @return Current SuggestionTO
+	 */
 	public SuggestionTO getSuggest(){
 		if(this.suggest==null){
 			logger.debug("New instance singleton of suggestions");
@@ -71,18 +86,37 @@ public abstract class EnhancerAdapter implements Enhancer {
 		}
 	}
 	
+	/**
+	 * Executes the main task of the Enhancer
+	 * @throws Exception
+	 */
 	protected abstract void execute() throws Exception;
+	
+	/**
+	 * Executes previous tasks to get the Enhancer ready to execute its main task.
+	 * @throws Exception
+	 */
 	protected abstract void preExecute() throws Exception;
+	
+	/**
+	 * Cleans the house after the Enhancer execution
+	 * @throws Exception
+	 */
 	protected abstract void postExecute() throws Exception;
 	
-	protected void fillSuggestions(String label, double relevance) {
+	/**
+	 * Adds some weight to a specific label
+	 * @param label Label name
+	 * @param weight Label weight
+	 */
+	protected void fillSuggestions(String label, double weight) {
 		Double value = labels.get(label);
 		
 		if(value==null){
 			value = new Double(0);
 		}
 		
-		labels.put(label, value + relevance);
+		labels.put(label, value + weight);
 	}
 
 }

@@ -17,11 +17,21 @@ public class ProviderTO {
 		super();
 	}
 
+	/**
+	 * 
+	 * @param provider
+	 */
 	public ProviderTO(String provider) {
 		super();
+		this.uri = "";
 		this.provider = provider;
 	}
 
+	/**
+	 * 
+	 * @param provider
+	 * @param uri
+	 */
 	public ProviderTO(String provider, String uri) {
 		super();
 		this.provider = provider;

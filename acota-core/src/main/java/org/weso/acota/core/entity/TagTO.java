@@ -17,8 +17,15 @@ public class TagTO {
 	 * Zero-argument default constructor.
 	 */
 	public TagTO() {
+		super();
 	}
 
+	/**
+	 * 
+	 * @param label
+	 * @param provider
+	 * @param tagged
+	 */
 	public TagTO(String label, ProviderTO provider, ResourceTO tagged) {
 		super();
 		this.label = label;

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 
+ * Contains the results of the Enhancement
  * @author Jose María Álvarez
  */
 public class SuggestionTO {
@@ -22,6 +22,12 @@ public class SuggestionTO {
 		super();
 	}
 
+	/**
+	 * 
+	 * @param labels
+	 * @param tags
+	 * @param resource
+	 */
 	public SuggestionTO(Map<String, Double> labels, Set<TagTO> tags,
 			ResourceTO resource) {
 		super();

@@ -26,7 +26,7 @@ import org.weso.acota.core.utils.DocumentBuilderHelper;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
 /**
- * @author Chema
+ * @author Jose María Álvarez
  * @author César Luis Alvargonzález
  */
 public class GoogleEnhancer extends EnhancerAdapter implements Configurable {

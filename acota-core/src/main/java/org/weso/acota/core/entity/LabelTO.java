@@ -1,7 +1,7 @@
 package org.weso.acota.core.entity;
 
 /**
- * 
+ * Contains the label name and its weight
  * @author Jose María Álvarez
  *
  */
@@ -16,9 +16,14 @@ public class LabelTO {
 
 	}
 
-	public LabelTO(String label, int weight) {
+	/**
+	 * Two-argument constructor
+	 * @param name Label's name
+	 * @param weight Label's Weight
+	 */
+	public LabelTO(String name, int weight) {
 		super();
-		this.name = label;
+		this.name = name;
 		this.weight = weight;
 	}
 

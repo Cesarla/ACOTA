@@ -6,7 +6,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * This class models an exception occured during the creation of a DOM.
+ * This class models an exception occurred during the creation of a DOM.
  */
 public class DocumentBuilderException extends Exception {
 
