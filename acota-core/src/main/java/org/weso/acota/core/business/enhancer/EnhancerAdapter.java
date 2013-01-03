@@ -1,7 +1,6 @@
 package org.weso.acota.core.business.enhancer;
 
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
@@ -25,8 +24,7 @@ public abstract class EnhancerAdapter implements Enhancer {
 	protected SuggestionTO suggest;
 	protected Enhancer successor;
 	
-	protected Set<TagTO> tags;
-	protected Map<String, Double> labels;
+	protected Map<String, TagTO> tags;
 	
 	protected static ProviderTO provider;
 	
@@ -106,17 +104,15 @@ public abstract class EnhancerAdapter implements Enhancer {
 	
 	/**
 	 * Adds some weight to a specific label
-	 * @param label Label name
+	 * @param tags Label name
 	 * @param weight Label weight
 	 */
-	protected void fillSuggestions(String label, double weight) {
-		Double value = labels.get(label);
-		
-		if(value==null){
-			value = new Double(0);
-		}
-		
-		labels.put(label, value + weight);
+	protected void fillSuggestions(TagTO tag, double weight) {
+		TagTO current = tags.get(tag.getLabel());
+		if(current==null)
+			current = tag;
+		current.addValue(weight);
+		tags.put(current.getLabel(), current);
 	}
 
 }

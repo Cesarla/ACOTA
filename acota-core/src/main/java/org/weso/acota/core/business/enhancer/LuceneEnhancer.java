@@ -29,7 +29,7 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 
 	protected static Logger logger = Logger.getLogger(LuceneEnhancer.class);
 	
-	protected static final String DESCIPTION = "desciption";
+	protected static final String DESCIPTION = "description";
 	protected static final String LABEL = "label";
 	
 	protected double luceneRelevanceLabel;
@@ -55,7 +55,6 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	@Override
 	protected void preExecute() throws Exception {
 		this.suggest = request.getSuggestions();
-		this.labels = suggest.getLabels();
 		this.tags = suggest.getTags();
 		suggest.setResource(request.getResource());
 	}
@@ -118,8 +117,8 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 
 		while (stream.incrementToken()) {
 			logger.debug("Add tag to suggestions");
-			TagTO tag = addTag(termAttribute);
-			fillSuggestions(tag.getLabel(),relevance);
+			TagTO tag = createTag(termAttribute);
+			fillSuggestions(tag, relevance);
 		}
 	}
 
@@ -130,12 +129,11 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	 *            Label's attribute
 	 * @return Created tag
 	 */
-	protected TagTO addTag(CharTermAttribute attribute) {
+	protected TagTO createTag(CharTermAttribute attribute) {
 		TagTO tag = new TagTO();
 		tag.setLabel(attribute.toString());
 		tag.setProvider(provider);
 		tag.setTagged(request.getResource());
-		tags.add(tag);
 		return tag;
 	}
 

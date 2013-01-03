@@ -51,8 +51,7 @@ public class SimpleRecommenderEnhancerTest {
 	@Test
 	public void getSuggestTest() {
 		SuggestionTO s = new SuggestionTO(
-				Collections.<String, Double> emptyMap(),
-				Collections.<TagTO> emptySet(), new ResourceTO());
+				Collections.<String, TagTO> emptyMap(), new ResourceTO());
 		simpleRecommenderEnhancer.suggest = s;
 		assertEquals(s, simpleRecommenderEnhancer.getSuggest());
 	}
@@ -79,22 +78,40 @@ public class SimpleRecommenderEnhancerTest {
 	}
 	
 	@Test
-	public void executeTest(){
-		Map<String, Double> labels = new HashMap<String, Double>();
-		labels.put("researcher",4.0);
+	public void executeTest() throws Exception{
+		SuggestionTO suggest = initializeSuggest();
+		
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
+		TagTO tag = new TagTO("researcher", LuceneEnhancer.provider,
+				suggest.getResource());
+		tag.setValue(4.0);
+		tags.put(tag.getLabel(), tag);
+		
+		simpleRecommenderEnhancer.tags = tags;
+		simpleRecommenderEnhancer.suggest = suggest;
 		
 		ResourceTO resource = new ResourceTO();
 		resource.setDescription("Esto es Español");
 		resource.setLabel("español");
 		
-		SuggestionTO suggestion = new SuggestionTO();
-		suggestion.setLabels(labels);
+		suggest.setTags(tags);
 		
 		RequestSuggestionTO request = mock(RequestSuggestionTO.class);
 		when(request.getResource()).thenReturn(resource);
-		when(request.getSuggestions()).thenReturn(suggestion);
+		when(request.getSuggestions()).thenReturn(suggest);
 		
 		simpleRecommenderEnhancer.enhance(request);
-		assertTrue(9 == suggestion.getLabels().get("researcher"));
+		assertTrue(9 == suggest.getTags().get("researcher").getValue());
+	}
+	
+	private SuggestionTO initializeSuggest() throws Exception {
+		SuggestionTO suggest = new SuggestionTO();
+		ResourceTO resource = new ResourceTO();
+		RequestSuggestionTO request = mock(RequestSuggestionTO.class);
+		when(request.getResource()).thenReturn(resource);
+		when(request.getSuggestions()).thenReturn(suggest);
+		simpleRecommenderEnhancer.request = request;
+		simpleRecommenderEnhancer.preExecute();
+		return simpleRecommenderEnhancer.suggest;
 	}
 }

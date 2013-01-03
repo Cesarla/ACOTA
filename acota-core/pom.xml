@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.weso</groupId>
 	<artifactId>acota-core</artifactId>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<name>acota-core</name>
 	<packaging>jar</packaging>
-	<description>acota-core, library 0.3.2</description>
+	<description>acota-core, library 0.3.3</description>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

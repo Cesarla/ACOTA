@@ -42,21 +42,26 @@ googleEnhancer.setSuccessor(labelRecommenderEnhancer);
 SuggestionTO suggest = luceneEnhancer.enhance(request);
 
 
-Map<String, Double> labels = suggest.getLabels();
+Map<String, TagTO> labels = suggest.getTags();
 ```
 
 ## Download ##
-The current version of acota is 0.3.2, you can download it from:
+The current version of acota is 0.3.3, you can download it from:
 ### For Maven Users
- * [acota-core-0.3.2.jar](http://156.35.82.101:7000/downloads/acota/0.3.2/core/acota-core-0.3.2.jar "Download acota-feedback-0.3.2.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.2/core/acota-core-0.3.2.pom "Download acota-feedback-0.3.2.pom")
- * [acota-feedback-0.3.2.jar](http://156.35.82.101:7000/downloads/acota/0.3.2/feedback/acota-feedback-0.3.2.jar "Download acota-feedback-0.3.2.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.2/feedback/acota-feedback-0.3.2.pom "Download acota-feedback-0.3.2.pom")
+ * [acota-core-0.3.3.jar](http://156.35.82.101:7000/downloads/acota/0.3.3/core/acota-core-0.3.3.jar "Download acota-feedback-0.3.3.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.3/core/acota-core-0.3.3.pom "Download acota-feedback-0.3.3.pom")
+ * [acota-feedback-0.3.3.jar](http://156.35.82.101:7000/downloads/acota/0.3.3/feedback/acota-feedback-0.3.3.jar "Download acota-feedback-0.3.3.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.3/feedback/acota-feedback-0.3.3.pom "Download acota-feedback-0.3.3.pom")
 
 ### For Non Maven Users
 Acota-bundle includes all required dependancies:
 
- * [acota-bundle-0.3.2.jar](http://156.35.82.101:7000/downloads/acota/0.3.2/bundle/acota-bundle-0.3.2.jar "Download acota-bundle-0.3.2.jar")
+ * [acota-bundle-0.3.3.jar](http://156.35.82.101:7000/downloads/acota/0.3.3/bundle/acota-bundle-0.3.3.jar "Download acota-bundle-0.3.3.jar")
 
 ### Old Versions
+Acota 0.3.2:
+ * [acota-core-0.3.2.jar](http://156.35.82.101:7000/downloads/acota/0.3.2/core/acota-core-0.3.2.jar "Download acota-feedback-0.3.2.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.2/core/acota-core-0.3.2.pom "Download acota-feedback-0.3.2.pom")
+ * [acota-feedback-0.3.2.jar](http://156.35.82.101:7000/downloads/acota/0.3.2/feedback/acota-feedback-0.3.2.jar "Download acota-feedback-0.3.2.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.2/feedback/acota-feedback-0.3.2.pom "Download acota-feedback-0.3.2.pom")
+ * [acota-bundle-0.3.2.jar](http://156.35.82.101:7000/downloads/acota/0.3.2/bundle/acota-bundle-0.3.2.jar "Download acota-bundle-0.3.2.jar")
+
 Acota 0.3.1:
  * [acota-core-0.3.1.jar](http://156.35.82.101:7000/downloads/acota/0.3.1/core/acota-core-0.3.1.jar "Download acota-feedback-0.3.1.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.1/core/acota-core-0.3.1.pom "Download acota-feedback-0.3.1.pom")
  * [acota-feedback-0.3.1.jar](http://156.35.82.101:7000/downloads/acota/0.3.1/feedback/acota-feedback-0.3.1.jar "Download acota-feedback-0.3.1.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.1/feedback/acota-feedback-0.3.1.pom "Download acota-feedback-0.3.1.pom")

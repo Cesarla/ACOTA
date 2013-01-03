@@ -17,6 +17,7 @@ import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
 import org.weso.acota.core.entity.SuggestionTO;
+import org.weso.acota.core.entity.TagTO;
 
 public class WordnetEnhancerTest {
 	
@@ -76,22 +77,41 @@ public class WordnetEnhancerTest {
 	
 	
 	@Test
-	public void enhanceTest(){
-		Map<String, Double> labels = new HashMap<String, Double>();
-		labels.put("open",4.0);
+	public void enhanceTest() throws Exception{
+		SuggestionTO suggest = initializeSuggest();
+		
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
+		TagTO tag = new TagTO("open", LuceneEnhancer.provider,
+				suggest.getResource());
+		tag.setValue(4.0);
+		tags.put(tag.getLabel(), tag);
+		
+		wordnetEnhancer.tags = tags;
+		wordnetEnhancer.suggest = suggest;
 		
 		ResourceTO resource = new ResourceTO();
 		resource.setDescription("Open");
 		resource.setDescription("");
 		
 		SuggestionTO suggestion = new SuggestionTO();
-		suggestion.setLabels(labels);
+		suggestion.setTags(tags);
 		
 		RequestSuggestionTO request = mock(RequestSuggestionTO.class);
 		when(request.getResource()).thenReturn(resource);
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		wordnetEnhancer.enhance(request);
-		assertTrue(3 == suggestion.getLabels().get("clear"));
+		assertTrue(3 == suggestion.getTags().get("clear").getValue());
+	}
+	
+	private SuggestionTO initializeSuggest() throws Exception {
+		SuggestionTO suggest = new SuggestionTO();
+		ResourceTO resource = new ResourceTO();
+		RequestSuggestionTO request = mock(RequestSuggestionTO.class);
+		when(request.getResource()).thenReturn(resource);
+		when(request.getSuggestions()).thenReturn(suggest);
+		wordnetEnhancer.request = request;
+		wordnetEnhancer.preExecute();
+		return wordnetEnhancer.suggest;
 	}
 }

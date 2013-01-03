@@ -23,7 +23,6 @@ public class ProviderTO {
 	 */
 	public ProviderTO(String provider) {
 		super();
-		this.uri = "";
 		this.provider = provider;
 	}
 

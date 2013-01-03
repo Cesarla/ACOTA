@@ -49,7 +49,7 @@ public class LuceneEnhancerTest{
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		luceneEnhancer.enhance(request);
-		assertTrue(30 == suggestion.getLabels().get("español"));
+		assertTrue(30 == suggestion.getTags().get("español").getValue());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class LuceneEnhancerTest{
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		luceneEnhancer.enhance(request);
-		assertTrue(15 == suggestion.getLabels().get("animal"));
+		assertTrue(15 == suggestion.getTags().get("animal").getValue());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class LuceneEnhancerTest{
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		luceneEnhancer.enhance(request);
-		assertTrue(null == suggestion.getLabels().get("español"));
+		assertTrue(null == suggestion.getTags().get("español"));
 	}
 	
 	
@@ -120,12 +120,12 @@ public class LuceneEnhancerTest{
 	
 	@Test
 	public void extractDescriptionTermsEmptyLabels() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		
 		SuggestionTO suggest = initializeSuggest();
-		suggest.setLabels(labels);
+		suggest.setTags(tags);
 		luceneEnhancer.suggest = suggest;
-		luceneEnhancer.labels = labels;
+		luceneEnhancer.tags = tags;
 		
 		ResourceTO resource = new ResourceTO();
 		resource.setDescription("Esto es Español");
@@ -133,18 +133,23 @@ public class LuceneEnhancerTest{
 		luceneEnhancer.request = new RequestSuggestionTO(resource);
 		luceneEnhancer.extractDescriptionTerms();
 		
-		assertTrue(5 == suggest.getLabels().get("español"));
+		assertTrue(5 == suggest.getTags().get("español").getValue());
 	}
 	
 	@Test
 	public void extractDescriptionSpecialCase() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
-		labels.put("español", 1.0);
-		
 		SuggestionTO suggest = initializeSuggest();
-		suggest.setLabels(labels);
+		
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
+		
+		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
+				suggest.getResource());
+		tag.setValue(1.0);
+		tags.put(tag.getLabel(),tag);
+		
+		suggest.setTags(tags);
 		luceneEnhancer.suggest = suggest;
-		luceneEnhancer.labels = labels;
+		luceneEnhancer.tags = tags;
 		
 		ResourceTO resource = new ResourceTO();
 		resource.setDescription("asdfokl");
@@ -152,18 +157,23 @@ public class LuceneEnhancerTest{
 		luceneEnhancer.request = new RequestSuggestionTO(resource);
 		luceneEnhancer.extractDescriptionTerms();
 		
-		assertTrue(1 == suggest.getLabels().get("español"));
+		assertTrue(1 == suggest.getTags().get("español").getValue());
 	}
 	
 	@Test
 	public void extracDescriptionTermsTest() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
-		labels.put("español", 1.0);
-		
 		SuggestionTO suggest = initializeSuggest();
-		suggest.setLabels(labels);
+		
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
+		
+		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
+				suggest.getResource());
+		tag.setValue(1.0);
+		tags.put(tag.getLabel(),tag);
+		
+		suggest.setTags(tags);
 		luceneEnhancer.suggest = suggest;
-		luceneEnhancer.labels = labels;
+		luceneEnhancer.tags = tags;
 		
 		ResourceTO resource = new ResourceTO();
 		resource.setDescription("Esto es Español");
@@ -171,17 +181,17 @@ public class LuceneEnhancerTest{
 		luceneEnhancer.request = new RequestSuggestionTO(resource);
 		luceneEnhancer.extractDescriptionTerms();
 		
-		assertTrue(6 == suggest.getLabels().get("español"));
+		assertTrue(6 == suggest.getTags().get("español").getValue());
 	}
 	
 	@Test
 	public void extractLabelTermsEmptyLabels() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		
 		SuggestionTO suggest = initializeSuggest();
-		suggest.setLabels(labels);
+		suggest.setTags(tags);
 		luceneEnhancer.suggest = suggest;
-		luceneEnhancer.labels = labels;
+		luceneEnhancer.tags = tags;
 		
 		ResourceTO resource = new ResourceTO();
 		resource.setLabel("Esto es Español");
@@ -190,15 +200,23 @@ public class LuceneEnhancerTest{
 		
 		luceneEnhancer.extractLabelTerms();
 		
-		assertTrue(10 == suggest.getLabels().get("español"));
+		assertTrue(10 == suggest.getTags().get("español").getValue());
 	}
 	
 	@Test
 	public void extractLabelSpecialCase() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
-		labels.put("español", 1.0);
 		SuggestionTO suggest = initializeSuggest();
-		suggest.setLabels(labels);
+		
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
+		
+		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
+				suggest.getResource());
+		tag.setValue(1.0);
+		tags.put(tag.getLabel(),tag);
+		
+		suggest.setTags(tags);
+		luceneEnhancer.suggest = suggest;
+		luceneEnhancer.tags = tags;
 		
 		ResourceTO resource = new ResourceTO();
 		resource.setLabel("asdfokl");
@@ -207,18 +225,24 @@ public class LuceneEnhancerTest{
 		
 		luceneEnhancer.extractLabelTerms();
 		
-		assertTrue(1 == suggest.getLabels().get("español"));
+		assertTrue(1 == suggest.getTags().get("español").getValue());
 	}
 
 	@Test
 	public void extractLabelTermsTest() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
-		labels.put("español", 1.0);
-		
 		SuggestionTO suggest = initializeSuggest();
-		suggest.setLabels(labels);
+		
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
+		
+		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
+				suggest.getResource());
+		tag.setValue(1.0);
+		tags.put(tag.getLabel(),tag);
+		
+
+		suggest.setTags(tags);
 		luceneEnhancer.suggest = suggest;
-		luceneEnhancer.labels = labels;
+		luceneEnhancer.tags = tags;
 		
 		ResourceTO resource = new ResourceTO();
 		resource.setLabel("Esto es Español");
@@ -227,69 +251,76 @@ public class LuceneEnhancerTest{
 		
 		luceneEnhancer.extractLabelTerms();
 		
-		assertTrue(11 == suggest.getLabels().get("español"));
+		assertTrue(11 == suggest.getTags().get("español").getValue());
 	}
 	
 	
 	@Test
 	public void extractTermnsEmtpyLabels() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
-		
 		SuggestionTO suggest = initializeSuggest();
-		suggest.setLabels(labels);
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
+		
+		suggest.setTags(tags);
 		luceneEnhancer.suggest = suggest;
-		luceneEnhancer.labels = labels;
+		luceneEnhancer.tags = tags;
 		
 		luceneEnhancer.extractTerms("label", "Esto es Español", 10);
-		assertTrue(10 == suggest.getLabels().get("español"));
+		assertTrue(10 == suggest.getTags().get("español").getValue());
 	}
 	
 	@Test
 	public void extractTermnsTest() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
-		labels.put("español", 3.0);
-		
 		SuggestionTO suggest = initializeSuggest();
-		luceneEnhancer.suggest.setLabels(labels);
-		luceneEnhancer.labels = labels;
+		
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
+		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
+				suggest.getResource());
+		tag.setValue(3.0);
+		tags.put(tag.getLabel(), tag);
+		
+		luceneEnhancer.suggest.setTags(tags);
+		luceneEnhancer.tags = tags;
 		
 		luceneEnhancer.extractTerms("label", "Esto es Español", 10);
-		assertTrue(13 == suggest.getLabels().get("español"));
+		assertTrue(13 == suggest.getTags().get("español").getValue());
 	}
 	
 	@Test
 	public void fillSuggestiosTest() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
-		labels.put("foo", 1.0);
-		
 		SuggestionTO suggest = initializeSuggest();
-		suggest.setLabels(labels);
-		luceneEnhancer.suggest = suggest;
-		luceneEnhancer.labels = labels;
 		
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		TagTO tag = new TagTO("foo", LuceneEnhancer.provider,
 				suggest.getResource());
+		tag.setValue(1);
+		tags.put(tag.getLabel(), tag);
 		
-		luceneEnhancer.fillSuggestions(tag.getLabel(),1);
+		luceneEnhancer.suggest = suggest;
+		luceneEnhancer.tags = tags;
 		
-		assertTrue(2 == labels.get("foo"));
+		tag = new TagTO("foo", LuceneEnhancer.provider,
+				suggest.getResource());
+		
+		luceneEnhancer.fillSuggestions(tag,1);
+		
+		assertTrue(2 == tags.get("foo").getValue());
 	}
 	
 	@Test
 	public void fillSuggestionsEmptyLabels() throws Exception{
-		Map<String, Double> labels = new HashMap<String, Double>();
+		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		
 		SuggestionTO suggest = initializeSuggest();
-		suggest.setLabels(labels);
+
 		luceneEnhancer.suggest = suggest;
-		luceneEnhancer.labels = labels;
+		luceneEnhancer.tags = tags;
 		
 		TagTO tag = new TagTO("foo", LuceneEnhancer.provider,
 				suggest.getResource());
 		
-		luceneEnhancer.fillSuggestions(tag.getLabel(),1);
+		luceneEnhancer.fillSuggestions(tag,1);
 		
-		assertTrue(1 == labels.get("foo"));
+		assertTrue(1 == tags.get("foo").getValue());
 	}
 
 	@Test
@@ -300,7 +331,7 @@ public class LuceneEnhancerTest{
 		TagTO tag = new TagTO("foo", LuceneEnhancer.provider,
 				suggest.getResource());
 
-		assertEquals(tag, luceneEnhancer.addTag(attribute));
+		assertEquals(tag, luceneEnhancer.createTag(attribute));
 	}
 	
 	private SuggestionTO initializeSuggest() throws Exception {

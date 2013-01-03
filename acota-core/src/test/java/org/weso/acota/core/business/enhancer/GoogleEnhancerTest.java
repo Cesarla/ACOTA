@@ -30,7 +30,7 @@ protected GoogleEnhancer googleEnhancer;
 	
 	@Test
 	public void getSuggestTest(){
-		SuggestionTO s = new SuggestionTO(Collections.<String, Double> emptyMap(), Collections.<TagTO> emptySet(), new ResourceTO());
+		SuggestionTO s = new SuggestionTO(Collections.<String, TagTO> emptyMap(), new ResourceTO());
 		googleEnhancer.suggest = s;
 		assertEquals(s,googleEnhancer.getSuggest());
 	}

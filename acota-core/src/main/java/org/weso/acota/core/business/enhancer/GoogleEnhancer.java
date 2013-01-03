@@ -7,6 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.xml.transform.TransformerException;
@@ -62,13 +64,11 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 	@Override
 	protected void execute() throws Exception {	
 		checkTagsWithSamenLabels();
-		addLabelsWeightsSuggestions();
 	}
 
 	@Override
 	protected void preExecute() throws Exception {
 		this.suggest = request.getSuggestions();
-		this.labels = suggest.getLabels();
 		this.tags = suggest.getTags();
 		suggest.setResource(request.getResource());
 	}
@@ -82,7 +82,11 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 	protected void checkTagsWithSamenLabels() throws MalformedURLException,
 			IOException, UnsupportedEncodingException,
 			DocumentBuilderException, TransformerException {
-		for (Entry<String, Double> label : labels.entrySet()) {
+		Set<Entry<String, TagTO>> backupSet = new HashSet<Entry<String, TagTO>>();
+		for (Entry<String, TagTO> label : tags.entrySet()) {
+			backupSet.add(label);
+		}
+		for (Entry<String, TagTO> label : backupSet) {
 			URL url = new URL(googleUrl + label.getKey().toString());
 			getGoogleRequest(url);
 		}
@@ -149,18 +153,7 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 		while ((node = it.nextNode()) != null) {
 			TagTO tag = new TagTO(node.getNodeValue(), provider,
 					request.getResource());
-			tags.add(tag);
-		}
-	}
-	
-	/**
-	 * Add labels and weight to suggestions
-	 */
-	protected void addLabelsWeightsSuggestions() {
-		for (TagTO tag : tags) {
-			if (tag.getProvider().equals(provider)) {
-				fillSuggestions(tag.getLabel(), googleRelevance);
-			}
+			fillSuggestions(tag, googleRelevance);
 		}
 	}
 

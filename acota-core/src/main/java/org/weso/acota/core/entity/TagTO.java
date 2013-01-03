@@ -4,20 +4,19 @@ package org.weso.acota.core.entity;
  * 
  * @author Jose María Álvarez
  */
-public class TagTO {
+public class TagTO implements Comparable<TagTO>{
 
 	private String label;
 	private ProviderTO provider;
 	private ResourceTO tagged;
-	private String taggingDate;
-	private String uri;
-	private String id;
+	private double value;
 
 	/**
 	 * Zero-argument default constructor.
 	 */
 	public TagTO() {
 		super();
+		this.value = 0;
 	}
 
 	/**
@@ -31,11 +30,7 @@ public class TagTO {
 		this.label = label;
 		this.provider = provider;
 		this.tagged = tagged;
-	}
-
-	public TagTO(String label, ProviderTO provider) {
-		this.label = label;
-		this.provider = provider;
+		this.value = 0;
 	}
 
 	public ProviderTO getProvider() {
@@ -61,29 +56,31 @@ public class TagTO {
 	public void setTagged(ResourceTO tagged) {
 		this.tagged = tagged;
 	}
-
-	public String getTaggingDate() {
-		return taggingDate;
+	
+	public double getValue() {
+		return value;
 	}
 
-	public void setTaggingDate(String taggingDate) {
-		this.taggingDate = taggingDate;
+	public void setValue(double value) {
+		this.value = value;
 	}
-
-	public String getUri() {
-		return uri;
+	
+	public void addValue(double value){
+		this.value+=value;
 	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
+	
+	public void subValue(double value){
+		this.value-=value;
 	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	
+	@Override
+	public int compareTo(TagTO tag) {
+		if(value>tag.getValue())
+			return 1;
+		else if(value<tag.getValue())
+			return -1;
+		else
+			return 0;
 	}
 
 	@Override
@@ -123,12 +120,11 @@ public class TagTO {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "TagTO [label=" + label + ", provider=" + provider + ", tagged="
-				+ tagged + ", taggingDate=" + taggingDate + ", uri=" + uri
-				+ ", id=" + id + "]";
+				+ tagged + ", value=" + value + "]";
 	}
-
+	
 }

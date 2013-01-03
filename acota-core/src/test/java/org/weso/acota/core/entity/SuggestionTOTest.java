@@ -4,9 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,99 +30,80 @@ public class SuggestionTOTest {
 	}
 
 	@Test
-	public void emptyConstructorLabels() {
-		assertEquals(Collections.EMPTY_MAP,
-				suggestionTO.labels);
-	}
-
-	@Test
 	public void emptyConstructorTags() {
-		assertEquals(Collections.EMPTY_SET,
+		assertEquals(Collections.EMPTY_MAP,
 				suggestionTO.tags);
 	}
 
 	@Test
 	public void ConstructorLabelsResource() {
-		assertTrue(null == suggestionTO.resource);
-	}
-	
-	@Test
-	public void ConstructorLabelsTest() {
-		this.suggestionTO = new SuggestionTO(
-				null, null, new ResourceTO());
-		assertTrue(null == suggestionTO.labels);
+		assertEquals(new ResourceTO(), suggestionTO.resource);
 	}
 
 	@Test
 	public void ConstructorTagsTest() {
 		this.suggestionTO = new SuggestionTO(
-				null, null, new ResourceTO());
-		assertTrue(null == suggestionTO.tags);
+				null, new ResourceTO());
+		assertEquals(null, suggestionTO.tags);
 	}
 
 	@Test
 	public void ConstructorLabelsResourceTest() {
 		ResourceTO resourceTO = new ResourceTO();
 		this.suggestionTO = new SuggestionTO(
-				null, null, resourceTO);
+				null, resourceTO);
 		assertEquals(resourceTO, suggestionTO.resource);
 	}
 
 	@Test
 	public void getLabelsEmpty() {
-		assertEquals(Collections.EMPTY_MAP, suggestionTO.getLabels());
+		assertEquals(Collections.EMPTY_MAP, suggestionTO.getTags());
 	}
 
 	@Test
 	public void getLabelsTest() {
 		ResourceTO resourceTO = new ResourceTO();
 		this.suggestionTO = new SuggestionTO(
-				null, null, resourceTO);
-		assertEquals(null, suggestionTO.getLabels());
+				null, resourceTO);
+		assertEquals(null, suggestionTO.getTags());
 	}
 
 	@Test
 	public void getTagsEmpty() {
-		assertEquals(Collections.EMPTY_SET, suggestionTO.getTags());
+		assertEquals(Collections.EMPTY_MAP, suggestionTO.getTags());
 	}
 
 	@Test
 	public void getTagsTest() {
 		ResourceTO resourceTO = new ResourceTO();
 		this.suggestionTO = new SuggestionTO(
-				null, null, resourceTO);
+				null, resourceTO);
 		assertEquals(null, suggestionTO.getTags());
 	}
 	
 	@Test
 	public void getResourceEmpty() {
-		assertTrue(null == suggestionTO.getResource());
+		assertEquals(new ResourceTO(), suggestionTO.getResource());
 	}
 
 	@Test
 	public void getResourceTest() {
 		ResourceTO resourceTO = new ResourceTO();
 		this.suggestionTO = new SuggestionTO(
-				null, null, resourceTO);
+				null, resourceTO);
 		assertEquals(resourceTO, suggestionTO.getResource());
 	}
 
 	@Test
 	public void setLabelsEmpty() {
-		suggestionTO.setLabels(Collections.<String, Double> emptyMap());
-		assertTrue(Collections.<String, Double> emptyMap() == suggestionTO.labels);
-	}
-
-	@Test
-	public void setLabelsTest() {
-		suggestionTO.setLabels(null);
-		assertEquals(null, suggestionTO.labels);
+		suggestionTO.setTags(Collections.<String, TagTO> emptyMap());
+		assertEquals(Collections.<String, TagTO> emptyMap(), suggestionTO.tags);
 	}
 
 	@Test
 	public void setTagsEmpty() {
-		suggestionTO.setTags(Collections.<TagTO> emptySet());
-		assertTrue(Collections.<TagTO> emptySet() == suggestionTO.tags);
+		suggestionTO.setTags(Collections.<String,TagTO> emptyMap());
+		assertTrue(Collections.<String,TagTO> emptyMap() == suggestionTO.tags);
 	}
 
 	@Test
@@ -136,7 +115,7 @@ public class SuggestionTOTest {
 	@Test
 	public void setResourceEmpty() {
 		suggestionTO.setTags(null);
-		assertTrue(null == suggestionTO.tags);
+		assertEquals(null, suggestionTO.tags);
 	}
 
 	@Test
@@ -149,15 +128,15 @@ public class SuggestionTOTest {
 
 	@Test
 	public void hashCodeEmpty() {
-		assertTrue(29791 == suggestionTO.hashCode());
+		assertEquals(924482, suggestionTO.hashCode());
 	}
 
 	@Test
 	public void hashCodeTest() {
 		ResourceTO resourceTO = new ResourceTO();
 		this.suggestionTO = new SuggestionTO(
-				null, null, resourceTO);
-		assertTrue(28658942 == suggestionTO.hashCode());
+				null, resourceTO);
+		assertEquals(924482, suggestionTO.hashCode());
 	}
 	
 	@Test
@@ -167,7 +146,7 @@ public class SuggestionTOTest {
 	
 	@Test
 	public void equalsSameInstance(){
-		assertTrue(suggestionTO.equals(suggestionTO));
+		assertEquals(suggestionTO,suggestionTO);
 	}
 	
 	@Test
@@ -178,54 +157,38 @@ public class SuggestionTOTest {
 	
 	@Test
 	public void equalsResourcesEquals(){
-		SuggestionTO s1 = new SuggestionTO(Collections.<String, Double> emptyMap(),Collections.<TagTO> emptySet(),new ResourceTO());
-		SuggestionTO s2 = new SuggestionTO(Collections.<String, Double> emptyMap(),Collections.<TagTO> emptySet(),new ResourceTO());
+		SuggestionTO s1 = new SuggestionTO(Collections.<String, TagTO> emptyMap(),new ResourceTO());
+		SuggestionTO s2 = new SuggestionTO(Collections.<String, TagTO> emptyMap(),new ResourceTO());
 		
-		assertTrue(s1.equals(s2));
+		assertEquals(s1,s2);
 	}
 	
 	@Test
 	public void equalsResourcesNulls(){
-		SuggestionTO s1 = new SuggestionTO(null,null,null);
-		SuggestionTO s2 = new SuggestionTO(null,null,null);
+		SuggestionTO s1 = new SuggestionTO(null,null);
+		SuggestionTO s2 = new SuggestionTO(null,null);
 		
-		assertTrue(s1.equals(s2));
-	}
-	
-	@Test
-	public void equalsTags(){
-		Set<TagTO> s = new HashSet<TagTO>();
-		s.add(new TagTO());
-		
-		SuggestionTO s1 = new SuggestionTO(null,Collections.<TagTO> emptySet(),null);
-		SuggestionTO s2 = new SuggestionTO(null,s,null);
-		
-		assertFalse(s1.equals(s2));
-	}
-	
-	@Test
-	public void equalsTags1(){
-		SuggestionTO s1 = new SuggestionTO(null,null,null);
-		SuggestionTO s2 = new SuggestionTO(null,Collections.<TagTO> emptySet(),null);
-		
-		assertFalse(s1.equals(s2));
+		assertEquals(s1,s2);
 	}
 	
 	@Test
 	public void equalsLabels(){
-		Map<String,Double> m = new HashMap<String,Double>();
-		m.put("a",2.0);
+		Map<String,TagTO> m = new HashMap<String,TagTO>();
 		
-		SuggestionTO s1 = new SuggestionTO(Collections.<String, Double> emptyMap(),null,null);
-		SuggestionTO s2 = new SuggestionTO(m,null,null);
+		TagTO tag = new TagTO("a", null,
+				null);
+		tag.setValue(2.0);
+		m.put(tag.getLabel(), tag);
 		
+		SuggestionTO s1 = new SuggestionTO(Collections.<String, TagTO> emptyMap(),null);
+		SuggestionTO s2 = new SuggestionTO(m,null);
 		assertFalse(s1.equals(s2));
 	}
 	
 	@Test
 	public void equalsLabels1(){
-		SuggestionTO s1 = new SuggestionTO(null,null,null);
-		SuggestionTO s2 = new SuggestionTO(Collections.<String, Double> emptyMap(),null,null);
+		SuggestionTO s1 = new SuggestionTO(null,null);
+		SuggestionTO s2 = new SuggestionTO(Collections.<String, TagTO> emptyMap(),null);
 		
 		assertFalse(s1.equals(s2));
 	}
@@ -235,16 +198,16 @@ public class SuggestionTOTest {
 		ResourceTO r = new ResourceTO();
 		r.setLabel("a");
 		
-		SuggestionTO s1 = new SuggestionTO(null,null,new ResourceTO());
-		SuggestionTO s2 = new SuggestionTO(null,null,r);
+		SuggestionTO s1 = new SuggestionTO(null,new ResourceTO());
+		SuggestionTO s2 = new SuggestionTO(null,r);
 		
 		assertFalse(s1.equals(s2));
 	}
 	
 	@Test
 	public void equalsResources1(){
-		SuggestionTO s1 = new SuggestionTO(null,null,null);
-		SuggestionTO s2 = new SuggestionTO(null,null,new ResourceTO());
+		SuggestionTO s1 = new SuggestionTO(null,null);
+		SuggestionTO s2 = new SuggestionTO(null,new ResourceTO());
 		
 		assertFalse(s1.equals(s2));
 	}

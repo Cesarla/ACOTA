@@ -1,9 +1,7 @@
 package org.weso.acota.core.entity;
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Contains the results of the Enhancement
@@ -11,8 +9,7 @@ import java.util.Set;
  */
 public class SuggestionTO {
 
-	protected Map<String, Double> labels = new LinkedHashMap<String, Double>();
-	protected Set<TagTO> tags = new HashSet<TagTO>();
+	protected Map<String, TagTO> tags;
 	protected ResourceTO resource;
 
 	/**
@@ -20,35 +17,36 @@ public class SuggestionTO {
 	 */
 	public SuggestionTO() {
 		super();
+		this.tags = new LinkedHashMap<String, TagTO>();
+		this.resource = new ResourceTO();
 	}
 
 	/**
-	 * 
-	 * @param labels
-	 * @param tags
+	 * One-argument constructor.
 	 * @param resource
 	 */
-	public SuggestionTO(Map<String, Double> labels, Set<TagTO> tags,
-			ResourceTO resource) {
+	public SuggestionTO(ResourceTO resource) {
 		super();
-		this.labels = labels;
-		this.tags = tags;
+		this.tags = new LinkedHashMap<String, TagTO>();
+		this.resource = resource;
+	}
+	
+	/**
+	 * Two-argument constructor. 
+	 * @param tagss
+	 * @param resource
+	 */
+	public SuggestionTO(Map<String, TagTO> tagss, ResourceTO resource){
+		super();
+		this.tags = tagss;
 		this.resource = resource;
 	}
 
-	public Map<String, Double> getLabels() {
-		return labels;
-	}
-
-	public void setLabels(Map<String, Double> labels) {
-		this.labels = labels;
-	}
-
-	public Set<TagTO> getTags() {
+	public Map<String, TagTO> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<TagTO> tags) {
+	public void setTags(Map<String, TagTO> tags) {
 		this.tags = tags;
 	}
 
@@ -64,10 +62,9 @@ public class SuggestionTO {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((labels == null) ? 0 : labels.hashCode());
+		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		result = prime * result
 				+ ((resource == null) ? 0 : resource.hashCode());
-		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		return result;
 	}
 
@@ -80,28 +77,17 @@ public class SuggestionTO {
 		if (getClass() != obj.getClass())
 			return false;
 		SuggestionTO other = (SuggestionTO) obj;
-		if (labels == null) {
-			if (other.labels != null)
-				return false;
-		} else if (!labels.equals(other.labels))
-			return false;
-		else;
-		if (resource == null) {
-			if (other.resource != null)
-				return false;
-		} else if (!resource.equals(other.resource))
-			return false;
-		else;
 		if (tags == null) {
 			if (other.tags != null)
 				return false;
 		} else if (!tags.equals(other.tags))
 			return false;
-		else;
+		if (resource == null) {
+			if (other.resource != null)
+				return false;
+		} else if (!resource.equals(other.resource))
+			return false;
 		return true;
 	}
-
-	
-
 	
 }

@@ -21,6 +21,7 @@ import org.weso.acota.core.Configuration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.RequestSuggestionTO;
+import org.weso.acota.core.entity.TagTO;
 
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 
@@ -74,7 +75,6 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	@Override
 	protected void preExecute() throws Exception {
 		this.suggest = request.getSuggestions();
-		this.labels = suggest.getLabels();
 		this.tags = suggest.getTags();
 		suggest.setResource(request.getResource());
 	}
@@ -139,10 +139,10 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	protected void calculateMaxValue() {
-		List<Double> list = new ArrayList<Double>(labels.values());
+		List<TagTO> list = new ArrayList<TagTO>(tags.values());
 		Collections.sort(list);
 		if(list.size()>0)
-			maxWeight = list.get(0);
+			maxWeight = list.get(0).getValue();
 	}
 
 	/**
@@ -152,8 +152,8 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected void findAndRemove(String word) {
 		logger.debug("Remove some tags");
-		if (labels.containsKey(word.toLowerCase())) {
-			labels.remove(word.toLowerCase());
+		if (tags.containsKey(word.toLowerCase())) {
+			tags.remove(word.toLowerCase());
 		}
 	}
 
@@ -166,9 +166,9 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		calculateMaxValue();
 		double sum = maxWeight / 2;
 
-		for (Entry<String, Double> label : labels.entrySet()) {
+		for (Entry<String, TagTO> label : tags.entrySet()) {
 			if (words.contains(label.getKey())) {
-				label.setValue(label.getValue() + sum);
+				label.getValue().addValue(sum);
 			}
 		}
 	}
@@ -183,9 +183,9 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		calculateMaxValue();
 		double sum = maxWeight / 2;
 
-		for (Entry<String, Double> label : labels.entrySet()) {
+		for (Entry<String, TagTO> label : tags.entrySet()) {
 			if (words.contains(label.getKey())) {
-				label.setValue(label.getValue() - sum);
+				label.getValue().subValue(sum);
 			}
 		}
 
@@ -199,9 +199,9 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	protected void findAndChangeNumbers(Set<String> words) {
 		calculateMaxValue();
 
-		for (Entry<String, Double> label : labels.entrySet()) {
+		for (Entry<String, TagTO> label : tags.entrySet()) {
 			if (words.contains(label.getKey())) {
-				label.setValue(label.getValue() - maxWeight);
+				label.getValue().subValue(maxWeight);
 			}
 		}
 

@@ -10,9 +10,8 @@ import java.util.List;
 public class RequestSuggestionTO {
 
 	private ResourceTO resource;
-	private SuggestionTO suggestions = new SuggestionTO();
-	private List<ProviderTO> targetProviders = new ArrayList<ProviderTO>();
-	private int max = 10;
+	private SuggestionTO suggestions;
+	private List<ProviderTO> targetProviders;
 
 	/**
 	 * Zero-argument default constructor.
@@ -22,7 +21,7 @@ public class RequestSuggestionTO {
 	}
 
 	/**
-	 * 
+	 * One-argument default constructor.
 	 * @param resource
 	 */
 	public RequestSuggestionTO(ResourceTO resource) {
@@ -31,22 +30,22 @@ public class RequestSuggestionTO {
 	}
 	
 	/**
-	 * 
+	 * Three-argument default constructor.
 	 * @param resource
 	 * @param suggestions
 	 * @param targetProviders
-	 * @param max
 	 */
 	public RequestSuggestionTO(ResourceTO resource, SuggestionTO suggestions,
-			List<ProviderTO> targetProviders, int max) {
+			List<ProviderTO> targetProviders) {
 		super();
 		this.resource = resource;
 		this.suggestions = suggestions;
 		this.targetProviders = targetProviders;
-		this.max = max;
 	}
 	
 	public ResourceTO getResource() {
+		if(resource==null)
+			this.resource=new ResourceTO();
 		return resource;
 	}
 
@@ -55,7 +54,7 @@ public class RequestSuggestionTO {
 	}
 
 	public List<ProviderTO> getTargetProviders() {
-		if (this.targetProviders == null) {
+		if (targetProviders == null) {
 			this.targetProviders = new ArrayList<ProviderTO>();
 		}
 		return targetProviders;
@@ -65,19 +64,13 @@ public class RequestSuggestionTO {
 		this.targetProviders = targetProviders;
 	}
 
-	public int getMax() {
-		return max;
-	}
-
-	public void setMax(int max) {
-		this.max = max;
-	}
-
 	public void setSuggestions(SuggestionTO suggestions) {
 		this.suggestions = suggestions;
 	}
 
 	public SuggestionTO getSuggestions() {
+		if(suggestions==null)
+			this.suggestions = new SuggestionTO();
 		return suggestions;
 	}
 }

@@ -19,6 +19,7 @@ import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.weso.acota.core.FeedbackConfiguration;
 import org.weso.acota.core.entity.ProviderTO;
+import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.core.entity.tuples.FeedbackTuple;
 import org.weso.acota.persistence.LabelDAO;
 import org.weso.acota.persistence.factory.FactoryDAO;
@@ -59,7 +60,6 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 	@Override
 	protected void preExecute() throws Exception {
 		this.suggest = request.getSuggestions();
-		this.labels = suggest.getLabels();
 		this.tags = suggest.getTags();
 		suggest.setResource(request.getResource());
 	}
@@ -95,14 +95,14 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 			SQLException, ClassNotFoundException {
 		ItemBasedRecommender recommender = loadRecommender();
 		List<RecommendedItem> items = null;
-		for (Entry<String, Double> label : labels.entrySet()) {
+		for (Entry<String, TagTO> label : tags.entrySet()) {
 			try {
 				items = recommender.mostSimilarItems(label.getKey().hashCode(),
 						numRecommendations);
 				handleRecommendLabels(items);
 			} catch (TasteException e) {
 				//Drain, It is essentially necessary, mahout throws an
-				//exception when you try to recommend an item that does
+				//exception when it tries to recommend an item that does
 				//not exists
 			}
 		}
@@ -127,11 +127,12 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 	}
 
 	protected void handleRecommendLabel(String label) {
-		Double value = labels.get(label);
-		if (value == null) {
-			value = 0d;
+		TagTO tag = tags.get(label);
+		if (tag == null) {
+			tag = new TagTO(label,provider,request.getResource());
 		}
-		labels.put(label, value + relevance);
+		tag.addValue(relevance);
+		tags.put(label, tag);
 	}
 
 }

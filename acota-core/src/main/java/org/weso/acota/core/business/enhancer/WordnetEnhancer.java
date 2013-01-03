@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.Configuration;
 import org.weso.acota.core.entity.ProviderTO;
+import org.weso.acota.core.entity.TagTO;
 
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
@@ -53,11 +54,11 @@ public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 
 	@Override
 	protected void execute() throws Exception {
-		Set<Entry<String, Double>> backupSet = new HashSet<Entry<String, Double>>();
-		for (Entry<String, Double> label : labels.entrySet()) {
+		Set<Entry<String, TagTO>> backupSet = new HashSet<Entry<String, TagTO>>();
+		for (Entry<String, TagTO> label : tags.entrySet()) {
 			backupSet.add(label);
 		}
-		for (Entry<String, Double> label : backupSet) {
+		for (Entry<String, TagTO> label : backupSet) {
 			findSynonims(label.getKey());
 		}
 	}
@@ -65,7 +66,6 @@ public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 	@Override
 	protected void preExecute() throws Exception {
 		this.suggest = request.getSuggestions();
-		this.labels = suggest.getLabels();
 		this.tags = suggest.getTags();
 		suggest.setResource(request.getResource());
 
@@ -87,8 +87,12 @@ public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 			String cleanWord = "";
 			for ( IWord w : synset.getWords () ){
 				cleanWord = w.getLemma().replace('_', ' ').toLowerCase();
-				if(!cleanWord.equals(label))
-					fillSuggestions(cleanWord, wordnetRelevance);
+				if(!cleanWord.equals(label)){
+					TagTO tag = tags.get(cleanWord);
+					if(tag == null)
+						tag = new TagTO(cleanWord, provider, suggest.getResource());
+					fillSuggestions(tag, wordnetRelevance);
+				}
 			}
 		}
 	}
