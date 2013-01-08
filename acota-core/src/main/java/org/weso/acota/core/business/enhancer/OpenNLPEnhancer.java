@@ -45,22 +45,30 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected double maxWeight;
 
-	protected Set<String> pronouns;
+	protected Set<String> noun;
 	protected Set<String> verbs;
 	protected Set<String> numbers;
 	
+	protected SimpleTokenizer tokenizer;
+	protected SentenceDetector esSentenceDetector;
+	protected POSTagger esPOSTagger;
+	
 	protected Configuration configuration;
 	
-	public OpenNLPEnhancer() throws ConfigurationException {
+	public OpenNLPEnhancer() throws ConfigurationException, IOException {
 		super();
 		OpenNLPEnhancer.logger = Logger.getLogger(OpenNLPEnhancer.class);
 		OpenNLPEnhancer.provider = new ProviderTO("OpenNPL tagger");
-		loadConfiguration(configuration);
-		
-		this.pronouns = new HashSet<String>();
+		OpenNLPEnhancer.tokensEs = new HashSet<String>(Arrays.asList((nplTokensEs)));
+		this.noun = new HashSet<String>();
 		this.verbs = new HashSet<String>();
 		this.numbers = new HashSet<String>();
-		tokensEs = new HashSet<String>(Arrays.asList((nplTokensEs)));
+		
+		loadConfiguration(configuration);
+		
+		this.tokenizer = new SimpleTokenizer();
+		this.esSentenceDetector = new SentenceDetector(esSentBin);
+		this.esPOSTagger = new PosTagger(esPosBin);
 	}
 	
 	@Override
@@ -77,6 +85,10 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		this.suggest = request.getSuggestions();
 		this.tags = suggest.getTags();
 		suggest.setResource(request.getResource());
+		
+		noun.clear();
+		verbs.clear();
+		numbers.clear();
 	}
 	
 	
@@ -106,22 +118,17 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		LanguageIdentifier ld = new LanguageIdentifier(terms);
 
 		if (ld.getLanguage().equals(ISO_639_SPANISH)) {
-			SimpleTokenizer tokenizer = new SimpleTokenizer();
-			SentenceDetector sentencesDetector = new SentenceDetector(esPosBin);
-			
-			POSTagger spost = new PosTagger(esSentBin);
-			
-			String sentences[] = sentencesDetector.sentDetect(suggest
+			String sentences[] = esSentenceDetector.sentDetect(suggest
 					.getResource().getDescription());
 			for (String sentence : sentences) {
 				String[] textTokenized = tokenizer.tokenize(sentence);
-				processSetence(spost.tag(textTokenized), textTokenized);
+				processSetence(esPOSTagger.tag(textTokenized), textTokenized);
 			}
 		}
 
-		findAndChangePronouns(pronouns);
-		findAndChangeVerbs(verbs);
-		findAndChangeNumbers(numbers);
+		findAndChangeNoun();
+		findAndChangeVerbs();
+		findAndChangeNumbers();
 	}
 
 	protected void processSetence(String[] tags, String[] textTokenized) {
@@ -129,7 +136,7 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 			if (tokensEs.contains(tags[y])) {
 				findAndRemove(textTokenized[y]);
 			} else if (tags[y].startsWith("N")) {
-				pronouns.add(textTokenized[y].toLowerCase());
+				noun.add(textTokenized[y].toLowerCase());
 			} else if (tags[y].startsWith("V")) {
 				verbs.add(textTokenized[y].toLowerCase());
 			} else if (tags[y].startsWith("Z")) {
@@ -158,33 +165,29 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * Modify Pronouns
-	 * 
-	 * @param words
+	 * Modify Nouns' weight
 	 */
-	protected void findAndChangePronouns(Set<String> words) {
+	protected void findAndChangeNoun() {
 		calculateMaxValue();
 		double sum = maxWeight / 2;
 
 		for (Entry<String, TagTO> label : tags.entrySet()) {
-			if (words.contains(label.getKey())) {
+			if (noun.contains(label.getKey())) {
 				label.getValue().addValue(sum);
 			}
 		}
 	}
 
 	/**
-	 * Modify Verbs
-	 * 
-	 * @param words
+	 * Modify Verbs' weight
 	 */
 
-	protected void findAndChangeVerbs(Set<String> words) {
+	protected void findAndChangeVerbs() {
 		calculateMaxValue();
 		double sum = maxWeight / 2;
 
 		for (Entry<String, TagTO> label : tags.entrySet()) {
-			if (words.contains(label.getKey())) {
+			if (verbs.contains(label.getKey())) {
 				label.getValue().subValue(sum);
 			}
 		}
@@ -192,15 +195,13 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * Modify Numbers
-	 * 
-	 * @param words
+	 * Modify Numbers' weight
 	 */
-	protected void findAndChangeNumbers(Set<String> words) {
+	protected void findAndChangeNumbers() {
 		calculateMaxValue();
 
 		for (Entry<String, TagTO> label : tags.entrySet()) {
-			if (words.contains(label.getKey())) {
+			if (numbers.contains(label.getKey())) {
 				label.getValue().subValue(maxWeight);
 			}
 		}

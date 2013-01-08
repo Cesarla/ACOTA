@@ -123,8 +123,8 @@ public class TagTO implements Comparable<TagTO>{
 
 	@Override
 	public String toString() {
-		return "TagTO [label=" + label + ", provider=" + provider + ", tagged="
-				+ tagged + ", value=" + value + "]";
+		return "TagTO [label=" + label /*+ ", provider=" + provider + ", tagged="
+				+ tagged*/ + ", value=" + value + "]";
 	}
 	
 }
