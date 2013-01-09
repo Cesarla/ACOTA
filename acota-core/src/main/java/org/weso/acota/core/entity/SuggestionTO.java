@@ -23,7 +23,7 @@ public class SuggestionTO {
 
 	/**
 	 * One-argument constructor.
-	 * @param resource
+	 * @param resource Linked {@linked ResourceTO}
 	 */
 	public SuggestionTO(ResourceTO resource) {
 		super();
@@ -33,12 +33,12 @@ public class SuggestionTO {
 	
 	/**
 	 * Two-argument constructor. 
-	 * @param tagss
-	 * @param resource
+	 * @param tags Map with label's name as keys and {@link TagTO} as values
+	 * @param resource Linked {@linked ResourceTO}
 	 */
-	public SuggestionTO(Map<String, TagTO> tagss, ResourceTO resource){
+	public SuggestionTO(Map<String, TagTO> tags, ResourceTO resource){
 		super();
-		this.tags = tagss;
+		this.tags = tags;
 		this.resource = resource;
 	}
 

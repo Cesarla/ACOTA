@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * Contains the ResourceTO and the SuggestionTO for a recommendation (Set of Enhancements)
  * @author Jose María Álvarez
  */
 public class RequestSuggestionTO {
@@ -31,7 +31,7 @@ public class RequestSuggestionTO {
 	
 	/**
 	 * Three-argument default constructor.
-	 * @param resource
+	 * @param resource 
 	 * @param suggestions
 	 * @param targetProviders
 	 */

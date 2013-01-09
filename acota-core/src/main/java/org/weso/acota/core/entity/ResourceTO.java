@@ -1,30 +1,35 @@
 package org.weso.acota.core.entity;
 
 /**
- * 
+ * Contains data related to a Resource as URI, label, description,
+ * or type
  * @author Jose María Álvarez
  *
  */
 public class ResourceTO {
 
-	private String uri = "";
-	private String label = "";
-	private String description = "";
-	private String type = "";
+	private String uri;
+	private String label;
+	private String description;
+	private String type;
 
 	/**
 	 * Zero-argument default constructor.
 	 */
 	public ResourceTO() {
 		super();
+		this.uri = "";
+		this.label = "";
+		this.description = "";
+		this.type = "";
 	}
 	
 	/**
-	 * 
-	 * @param uri
-	 * @param label
-	 * @param description
-	 * @param type
+	 * Secondary constructor.
+	 * @param uri Resource's URI
+	 * @param label Resource's label
+	 * @param description Resource's description
+	 * @param type Resource's type
 	 */
 	public ResourceTO(String uri, String label, String description, String type) {
 		super();

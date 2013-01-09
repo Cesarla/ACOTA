@@ -1,7 +1,8 @@
 package org.weso.acota.core.entity;
 
 /**
- * 
+ * This class contains the label's name, the  {@link ProviderTO} where it was created
+ * and the linked {@link ResourceTO}
  * @author Jose María Álvarez
  */
 public class TagTO implements Comparable<TagTO>{
@@ -20,10 +21,10 @@ public class TagTO implements Comparable<TagTO>{
 	}
 
 	/**
-	 * 
-	 * @param label
-	 * @param provider
-	 * @param tagged
+	 * Secondary constructor.
+	 * @param label Label's name of the tag
+	 * @param provider {@link ProviderTO} where it was created
+	 * @param tagged Linked {@link ResourceTO}
 	 */
 	public TagTO(String label, ProviderTO provider, ResourceTO tagged) {
 		super();

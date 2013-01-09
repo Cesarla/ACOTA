@@ -1,7 +1,7 @@
 package org.weso.acota.core.entity;
 
 /**
- * 
+ * Enhancer's Identifier, it contains the name and the URI associated to the Enhancer
  * @author Jose María Álvarez
  *
  */
@@ -18,8 +18,8 @@ public class ProviderTO {
 	}
 
 	/**
-	 * 
-	 * @param provider
+	 * One-argument constructor
+	 * @param provider Provider's name
 	 */
 	public ProviderTO(String provider) {
 		super();
@@ -27,9 +27,9 @@ public class ProviderTO {
 	}
 
 	/**
-	 * 
-	 * @param provider
-	 * @param uri
+	 * Two-argument constructor
+	 * @param provider Provider's name
+	 * @param uri Provider's uri
 	 */
 	public ProviderTO(String provider, String uri) {
 		super();
