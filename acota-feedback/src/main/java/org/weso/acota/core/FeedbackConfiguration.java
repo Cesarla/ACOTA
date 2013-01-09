@@ -17,6 +17,8 @@ import org.weso.acota.core.entity.tuples.LabelTuple;
  */
 public class FeedbackConfiguration extends Configuration {
 
+	protected static final String INTERNAL_ACOTA_PERSISTENCE_PROPERTIES_PATH = "/resources/inner.acota.persistence.properties";
+	
 	protected String documentDAOClass;
 	protected String feedbackDAOClass;
 	protected String labelDAOClass;
@@ -39,6 +41,8 @@ public class FeedbackConfiguration extends Configuration {
 
 	/**
 	 * Zero-argument default constructor.
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
 	public FeedbackConfiguration() throws ConfigurationException {
 		super();
@@ -46,7 +50,7 @@ public class FeedbackConfiguration extends Configuration {
 		Configuration.logger = Logger.getLogger(FeedbackConfiguration.class);
 
 		config.addConfiguration(new PropertiesConfiguration(this.getClass()
-				.getResource("/resources/inner.acota.persistence.properties")));
+				.getResource(INTERNAL_ACOTA_PERSISTENCE_PROPERTIES_PATH)));
 
 		loadDAOClasses();
 		loadDatabaseConfig();

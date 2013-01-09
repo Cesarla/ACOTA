@@ -20,7 +20,6 @@ import org.apache.tika.language.LanguageIdentifier;
 import org.weso.acota.core.Configuration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.entity.ProviderTO;
-import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.TagTO;
 
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
@@ -42,8 +41,6 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected String esSentBin;
 	protected String esPosBin;
-	
-	protected double maxWeight;
 
 	protected Set<String> noun;
 	protected Set<String> verbs;
@@ -55,6 +52,12 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected Configuration configuration;
 	
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 */
 	public OpenNLPEnhancer() throws ConfigurationException, IOException {
 		super();
 		OpenNLPEnhancer.logger = Logger.getLogger(OpenNLPEnhancer.class);
@@ -91,11 +94,10 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		numbers.clear();
 	}
 	
-	
 	@Override
 	protected void execute() throws Exception {
-		analyseLabelTerms(request);
-		analyseDescriptionTerms(request);
+		analyseLabelTerms();
+		analyseDescriptionTerms();
 	}
 
 	@Override
@@ -106,16 +108,29 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		this.request.setSuggestions(suggest);
 	}
 
-	protected void analyseLabelTerms(RequestSuggestionTO request) throws IOException {
+	/**
+	 * Makes an Analysis of the label terms
+	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 */
+	protected void analyseLabelTerms() throws IOException {
 		analysisOfTerms(request.getResource().getLabel());
 	}
 
-	protected void analyseDescriptionTerms(RequestSuggestionTO request) throws IOException {
+	/**
+	 * Makes an Analysis of the descriptions terms
+	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 */
+	protected void analyseDescriptionTerms() throws IOException {
 		analysisOfTerms(request.getResource().getDescription());
 	}
 
-	public void analysisOfTerms(String terms) throws IOException {
-		LanguageIdentifier ld = new LanguageIdentifier(terms);
+	/**
+	 * Makes an Analysis of a text's terms
+	 * @param text Text to make the analysis
+	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 */
+	public void analysisOfTerms(String text) throws IOException {
+		LanguageIdentifier ld = new LanguageIdentifier(text);
 
 		if (ld.getLanguage().equals(ISO_639_SPANISH)) {
 			String sentences[] = esSentenceDetector.sentDetect(suggest
@@ -131,6 +146,11 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		findAndChangeNumbers();
 	}
 
+	/**
+	 * Processes a set of terms and saves them depending on its morphosyntactic type
+	 * @param tags OpenNLP Tags related to the Tokenized Text
+	 * @param textTokenized Tokenized Text
+	 */
 	protected void processSetence(String[] tags, String[] textTokenized) {
 		for (int y = 0; y < textTokenized.length; y++) {
 			if (tokensEs.contains(tags[y])) {
@@ -145,31 +165,35 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		}
 	}
 
-	protected void calculateMaxValue() {
+	/**
+	 * Calculates the maximum value of the tags Map
+	 * @return The maximum value of the tags Map
+	 */
+	protected double calculateMaxValue() {
 		List<TagTO> list = new ArrayList<TagTO>(tags.values());
 		Collections.sort(list);
+		double value = 0d;
 		if(list.size()>0)
-			maxWeight = list.get(0).getValue();
+			value = list.get(0).getValue();
+		return value;
 	}
 
 	/**
-	 * Remove a word from labels
-	 * 
-	 * @param word
+	 * Removes a word from the tags Map
+	 * @param label Label of the tag to remove
 	 */
-	protected void findAndRemove(String word) {
+	protected void findAndRemove(String label) {
 		logger.debug("Remove some tags");
-		if (tags.containsKey(word.toLowerCase())) {
-			tags.remove(word.toLowerCase());
+		if (tags.containsKey(label.toLowerCase())) {
+			tags.remove(label.toLowerCase());
 		}
 	}
 
 	/**
-	 * Modify Nouns' weight
+	 * Modifies Nouns' weight. Adds the half of the maximum weight.
 	 */
 	protected void findAndChangeNoun() {
-		calculateMaxValue();
-		double sum = maxWeight / 2;
+		double sum = calculateMaxValue() / 2;
 
 		for (Entry<String, TagTO> label : tags.entrySet()) {
 			if (noun.contains(label.getKey())) {
@@ -179,33 +203,28 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * Modify Verbs' weight
+	 * Modifies Verbs' weight. Subtracts the half of the maximum weight.
 	 */
-
 	protected void findAndChangeVerbs() {
-		calculateMaxValue();
-		double sum = maxWeight / 2;
+		double sum = calculateMaxValue() / 2;
 
 		for (Entry<String, TagTO> label : tags.entrySet()) {
 			if (verbs.contains(label.getKey())) {
 				label.getValue().subValue(sum);
 			}
 		}
-
 	}
 
 	/**
-	 * Modify Numbers' weight
+	 * Modifies Numbers' weight. Subtracts the maximum weight.
 	 */
 	protected void findAndChangeNumbers() {
-		calculateMaxValue();
-
+		double value = calculateMaxValue();
 		for (Entry<String, TagTO> label : tags.entrySet()) {
 			if (numbers.contains(label.getKey())) {
-				label.getValue().subValue(maxWeight);
+				label.getValue().subValue(value);
 			}
 		}
-
 	}
 
 }

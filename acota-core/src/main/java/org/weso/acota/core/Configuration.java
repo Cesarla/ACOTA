@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
  */
 public class Configuration {
 
+	protected static final String INTERNAL_ACOTA_PROPERTIES_PATH = "/resources/inner.acota.properties";
+	
 	protected String googleUrl;
 	protected String googleEncoding;
 	protected Double googleRelevance;
@@ -34,12 +36,28 @@ public class Configuration {
 
 	/**
 	 * Zero-argument default constructor.
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
 	public Configuration() throws ConfigurationException {
 		Configuration.logger =  Logger.getLogger(Configuration.class);
 		
 		this.config = new CompositeConfiguration();
 		
+		loadsConfiguration();
+		
+		loadLuceneEnhancerConfig();
+		loadOpenNLPEnhancerConfig();
+		loadWordnetEnhancerConfig();
+		loadGoogleEnhancerConfig();
+	}
+
+	/**
+	 * Loads Acota's configuration properties files
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 */
+	private void loadsConfiguration() throws ConfigurationException {
 		try {
 			config.addConfiguration(new PropertiesConfiguration("acota.properties"));
 		} catch (Exception e) {
@@ -47,20 +65,40 @@ public class Configuration {
 		}
 		
 		config.addConfiguration(new PropertiesConfiguration(this.getClass()
-				.getResource("/resources/inner.acota.properties")));
-		
+				.getResource(INTERNAL_ACOTA_PROPERTIES_PATH)));
+	}
+
+	/**
+	 * Loads LuceneEnhancer's Configuration
+	 */
+	private void loadLuceneEnhancerConfig() {
+		this.luceneTermRelevance = config.getDouble("lucene.term.relevance");
+		this.luceneLabelRelevance = config.getDouble("lucene.label.relevance");
+	}
+	
+	/**
+	 * Loads OpenNLPEnhancer's Configuration
+	 */
+	private void loadOpenNLPEnhancerConfig() {
+		this.openNLPesPosBin = config.getString("opennlp.es.pos");
+		this.openNLPesSentBin = config.getString("opennlp.es.sent");
+	}
+	
+	/**
+	 * Loads WordnetEnhancer's Configuration
+	 */
+	private void loadWordnetEnhancerConfig() {
+		this.wordnetEnDict = config.getString("wordnet.en.dict");
+		this.wordnetRelevance = config.getDouble("wordnet.relevance");
+	}
+
+	/**
+	 * Loads GoogleEnhancer's Configuration
+	 */
+	private void loadGoogleEnhancerConfig() {
 		this.googleUrl = config.getString("google.url");
 		this.googleEncoding = config.getString("google.encoding");
 		this.googleRelevance = config.getDouble("google.relevance");
-
-		this.luceneTermRelevance = config.getDouble("lucene.term.relevance");
-		this.luceneLabelRelevance = config.getDouble("lucene.label.relevance");
-
-		this.openNLPesPosBin = config.getString("opennlp.es.pos");
-		this.openNLPesSentBin = config.getString("opennlp.es.sent");
-		
-		this.wordnetEnDict = config.getString("wordnet.en.dict");
-		this.wordnetRelevance = config.getDouble("wordnet.relevance");
 	}
 
 	public String getGoogleUrl() {

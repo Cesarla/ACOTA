@@ -22,6 +22,11 @@ import org.weso.acota.core.Configuration;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
 
+/**
+ * 
+ * @author César Luis Alvargonzález
+ *
+ */
 public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 
 	protected static final String[] nplTokensEs= new String[] { "NC", "NP", "VA", "VIP", "VM", "VS",
@@ -48,6 +53,12 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 
 	protected Configuration configuration;
 
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 * @throws IOException If there is some issue reading OpenNLP's files
+	 */
 	public TokenizerEnhancer() throws ConfigurationException, IOException {
 		super();
 		
@@ -170,6 +181,12 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		}
 	}
 
+	/**
+	 * Calculates the bigger valid index of the array
+	 * @param tags Array of OpenNLP tags
+	 * @return The bigger valid index of the array
+	 * @return -1 If there is no valid tags
+	 */
 	protected int calculateMax(String[] tags) {
 		for (int i = tags.length - 1; i >= 0; i--) {
 			if (tokens.contains(tags[i]))
@@ -178,6 +195,12 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		return -1;
 	}
 
+	/**
+	 * Calculates the lower valid index of the array
+	 * @param tags Array of OpenNLP tags
+	 * @return The lower valid index of the array
+	 * @return -1 If there is no valid tags
+	 */
 	protected int calculateMin(String[] tags) {
 		for (int i = 0; i < tags.length; i++) {
 			if (tokens.contains(tags[i]))
@@ -186,9 +209,20 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		return -1;
 	}
 
+	/**
+	 * Inner Class StringArrayWrapper is a wrap of a String[], so
+	 * it could be used as key in Maps or similar
+	 * data structures.
+	 * @author César Luis Alvargonzález
+	 *
+	 */
 	public final class StringArrayWrapper {
 		protected final String[] data;
 
+		/**
+		 * One-argument default constructor.
+		 * @param data String[] to store
+		 */
 		public StringArrayWrapper(String[] data) {
 			if (data == null) {
 				throw new NullPointerException();

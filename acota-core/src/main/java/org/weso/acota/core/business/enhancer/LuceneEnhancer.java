@@ -21,9 +21,10 @@ import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 
 
 /**
+ * 
  * @author Jose María Álvarez
  * @author César Luis Alvargonzález
- * */
+ */
 
 public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 
@@ -37,6 +38,11 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 
 	protected Configuration configuration;
 	
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 */
 	public LuceneEnhancer() throws ConfigurationException{
 		super();
 		LuceneEnhancer.provider = new ProviderTO("Lucene Analizer");
@@ -74,9 +80,8 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * Extract Description Terms
-	 * 
-	 * @throws IOException
+	 * Extracts Description Terms
+	 * @throws IOException Any exception that occurs while reading Lucene's TokenStream
 	 */
 	protected void extractDescriptionTerms() throws IOException {
 		extractTerms(DESCIPTION, request.getResource().getDescription(),
@@ -84,9 +89,8 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * Extract Label Terms
-	 * 
-	 * @throws IOException
+	 * Extracts Label Terms
+	 * @throws IOException Any exception that occurs while reading Lucene's TokenStream
 	 */
 	protected void extractLabelTerms() throws IOException {
 		extractTerms(LABEL, request.getResource().getLabel(),
@@ -94,15 +98,11 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * Extracts terms from a text
-	 * 
-	 * @param title
-	 *            King of entity (description, label)
-	 * @param text
-	 *            Text to extract the terms
-	 * @param relevance
-	 *            ??????
-	 * @throws IOException
+	 * Tokenizes and removes stop-words (Spanish and English) from the supplied text
+	 * @param title FieldName (description, label)
+	 * @param text Text to extract the terms
+	 * @param relevance Weight which is incremented each matched term
+	 * @throws IOException Any exception that occurs while reading Lucene's TokenStream
 	 */
 	protected void extractTerms(String title, String text, double relevance)
 			throws IOException {
@@ -124,9 +124,7 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 
 	/**
 	 * Creates and adds a new tag to the suggest tags set
-	 * 
-	 * @param attribute
-	 *            Label's attribute
+	 * @param attribute Label's attribute
 	 * @return Created tag
 	 */
 	protected TagTO createTag(CharTermAttribute attribute) {
@@ -139,9 +137,7 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 
 	/**
 	 * Loads a language analyzer
-	 * 
-	 * @param text
-	 *            Text to analyze
+	 * @param text Text to analyze
 	 */
 	protected Analyzer loadAnalyzer(String text) {
 		LanguageIdentifier ld = new LanguageIdentifier(text);

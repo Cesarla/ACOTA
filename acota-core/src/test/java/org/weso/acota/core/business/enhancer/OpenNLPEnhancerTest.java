@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
@@ -216,8 +215,7 @@ public class OpenNLPEnhancerTest {
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		
 		openNLPEnhancer.tags = tags;
-		openNLPEnhancer.calculateMaxValue();
-		assertTrue(0 == openNLPEnhancer.maxWeight);
+		assertTrue(0 == openNLPEnhancer.calculateMaxValue());
 	}
 	
 	@Test 

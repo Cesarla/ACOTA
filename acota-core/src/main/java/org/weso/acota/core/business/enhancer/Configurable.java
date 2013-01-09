@@ -13,7 +13,6 @@ import org.weso.acota.core.Configuration;
 public interface Configurable {
 	/**
 	 * Loads the configuration into the class that implements this interface
-	 * 
 	 * @param configuration
 	 *            Acota-core's configuration class
 	 * @throws ConfigurationException

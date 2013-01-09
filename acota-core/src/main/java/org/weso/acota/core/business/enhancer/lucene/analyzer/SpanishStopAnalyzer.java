@@ -24,7 +24,7 @@ public class SpanishStopAnalyzer extends Analyzer {
 	private final static String[] SPANISH_STOP_WORDS = {
 		"de","la","que","el","en","y","a","los","del","se","las","por","un","para",
 		"con","no","una","su","al","es","lo","como","más","pero","sus","le","ya","o",
-		"fue","este","ha","sí","porque","esta","son","entre","está","cuando","muy","sin",
+		"fue","este","ha","sí", "si","porque","esta","son","entre","está","cuando","muy","sin",
 		"sobre","ser","tiene","también","me","hasta","hay","donde","han","quien","están",
 		"estado","desde","todo","nos","durante","estados","todos","uno","les","ni","contra",
 		"otros","fueron","ese","eso","había","ante","ellos","e","esto","mí","antes","algunos",

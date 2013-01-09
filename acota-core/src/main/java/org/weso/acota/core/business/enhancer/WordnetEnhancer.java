@@ -20,7 +20,8 @@ import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 
 /**
- * 
+ * WordnetEnhancer increases the weight of the terms that match with the synonyms of the
+ * label founded, if the term was already in the tags Map, or adds the term to the tags Map
  * @author César Luis Alvargonzález
  *
  */
@@ -33,6 +34,12 @@ public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected Configuration configuration;
 	
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 * @throws IOException Any exception that occurs while initializing Wordnet's dictionary
+	 */
 	public WordnetEnhancer() throws ConfigurationException, IOException {
 		super();
 		WordnetEnhancer.provider = new ProviderTO("Wordnet Enhancer");
@@ -78,6 +85,11 @@ public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 
 	}
 
+	/**
+	 * Increases the weight of the terms that match with the synonyms of
+	 * the label founded
+	 * @param label Label founded
+	 */
 	protected void findSynonims(String label){
 		IIndexWord idxWord = dicionary.getIndexWord (label , POS . NOUN ) ;
 		if(idxWord!=null){

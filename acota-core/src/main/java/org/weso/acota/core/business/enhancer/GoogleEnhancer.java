@@ -45,6 +45,11 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected Configuration configuration;
 	
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 */
 	public GoogleEnhancer() throws ConfigurationException{
 		super();
 		GoogleEnhancer.provider = new ProviderTO("Google Enhancer");
@@ -134,6 +139,13 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 		return DocumentBuilderHelper.getDocumentFromString(response.toString());
 	}
 
+	/**
+	 * Checks if a HTTP connection has a valid response (200 OK) 
+	 * @param connection HTTP Connection
+	 * @return true If the response is "HTTP/1.0 200 OK"
+	 * @return false In other case
+	 * @throws IOException if an error occurred connecting to the server.
+	 */
 	protected boolean isValidResponse(HttpURLConnection connection)
 			throws IOException {
 		return connection.getResponseCode() == HttpURLConnection.HTTP_OK
@@ -141,10 +153,10 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * 
-	 * @param result
-	 * @throws DocumentBuilderException
-	 * @throws TransformerException
+	 * Loads Google Autocomplete's XML results document into the tags map
+	 * @param result Google Autocomplete's XML result document
+	 * @throws TransformerException If happens an exceptional condition that
+	 * occurred during the transformation process.
 	 */
 	protected void processDocument(Document result) throws TransformerException {
 		NodeIterator it = XPathAPI.selectNodeIterator(result, "//suggestion/@data");

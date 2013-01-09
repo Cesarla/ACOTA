@@ -11,7 +11,7 @@ public class ProviderTO {
 	protected String uri;
 
 	/**
-	 * Zero-argument default constructor.
+	 * Zero-argument default constructor
 	 */
 	public ProviderTO() {
 		super();
