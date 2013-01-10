@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contains the ResourceTO and the SuggestionTO for a recommendation (Set of Enhancements)
+ * Contains the related data to a single Enhancement request, as {@link ResourceTO},
+ * the {@link SuggestionTO} and the List of the different {@link ProviderTO} for a
+ * recommendation (Set of Enhancements).
+ * 
  * @author Jose María Álvarez
  */
 public class RequestSuggestionTO {
@@ -22,7 +25,7 @@ public class RequestSuggestionTO {
 
 	/**
 	 * One-argument default constructor.
-	 * @param resource
+	 * @param resource Enhancement {@link ResourceTO}
 	 */
 	public RequestSuggestionTO(ResourceTO resource) {
 		super();
@@ -31,9 +34,9 @@ public class RequestSuggestionTO {
 	
 	/**
 	 * Three-argument default constructor.
-	 * @param resource 
-	 * @param suggestions
-	 * @param targetProviders
+	 * @param resource Enhancement {@link ResourceTO}
+	 * @param suggestions {@link SuggestionTO}'s Result
+	 * @param targetProviders List of the different {@link ProviderTO}
 	 */
 	public RequestSuggestionTO(ResourceTO resource, SuggestionTO suggestions,
 			List<ProviderTO> targetProviders) {

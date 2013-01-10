@@ -16,8 +16,8 @@ import org.apache.lucene.util.Version;
  * For non English text, it tokenizes, converts to
  * lower case, removes words to long (>50) and to short(<3),
  * and removes English stops words.
+ * 
  * @author César Luis Alvargonzález
- *
  */
 public class EnglishStopAnalyzer extends Analyzer {
 	

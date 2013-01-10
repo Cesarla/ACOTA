@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
  * acota.properties
  * 
  * @author César Luis Alvargonzález
- *
  */
 public class Configuration {
 
@@ -69,7 +68,7 @@ public class Configuration {
 	}
 
 	/**
-	 * Loads LuceneEnhancer's Configuration
+	 * Loads {@linked org.weso.acota.core.business.enhancer.LuceneEnhancer}'s Configuration
 	 */
 	private void loadLuceneEnhancerConfig() {
 		this.luceneTermRelevance = config.getDouble("lucene.term.relevance");
@@ -77,7 +76,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * Loads OpenNLPEnhancer's Configuration
+	 * Loads {@linked org.weso.acota.core.business.enhancer.OpenNLPEnhancer}'s Configuration
 	 */
 	private void loadOpenNLPEnhancerConfig() {
 		this.openNLPesPosBin = config.getString("opennlp.es.pos");
@@ -85,7 +84,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * Loads WordnetEnhancer's Configuration
+	 * Loads {@linked org.weso.acota.core.business.enhancer.WordnetEnhancer}'s Configuration
 	 */
 	private void loadWordnetEnhancerConfig() {
 		this.wordnetEnDict = config.getString("wordnet.en.dict");
@@ -93,7 +92,7 @@ public class Configuration {
 	}
 
 	/**
-	 * Loads GoogleEnhancer's Configuration
+	 * Loads {@linked org.weso.acota.core.business.enhancer.GoogleEnhancer}'s Configuration
 	 */
 	private void loadGoogleEnhancerConfig() {
 		this.googleUrl = config.getString("google.url");

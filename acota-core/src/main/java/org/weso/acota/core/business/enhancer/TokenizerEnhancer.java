@@ -23,9 +23,11 @@ import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
 
 /**
+ * TokenizerEnhancer is an {@link Enhancer} specialized in tokenizing, removing stop-words and
+ * cleaning the input data, producing a set of k-word {@link TagTO}s, k is configurable and
+ * supplied by {@link Configuration}.
  * 
  * @author César Luis Alvargonzález
- *
  */
 public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 
@@ -52,6 +54,47 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	protected POSTagger esPOSTagger;
 
 	protected Configuration configuration;
+
+	/**
+	 * Inner Class StringArrayWrapper is a wrap of a String[], so
+	 * it could be used as key in Maps or similar
+	 * data structures.
+	 * @author César Luis Alvargonzález
+	 *
+	 */
+	public final class StringArrayWrapper {
+		protected final String[] data;
+
+		/**
+		 * One-argument default constructor.
+		 * @param data String[] to store
+		 */
+		public StringArrayWrapper(String[] data) {
+			if (data == null) {
+				throw new NullPointerException();
+			}
+			this.data = data;
+		}
+
+		@Override
+		public boolean equals(Object other) {
+			if (!(other instanceof StringArrayWrapper)) {
+				return false;
+			}
+			return Arrays.equals(data, ((StringArrayWrapper) other).data);
+		}
+
+		@Override
+		public int hashCode() {
+			return Arrays.hashCode(data);
+		}
+
+		@Override
+		public String toString() {
+			return Arrays.toString(data);
+		}
+
+	}
 
 	/**
 	 * Zero-argument default constructor
@@ -98,8 +141,6 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		this.suggest = request.getSuggestions();
 		this.tags = suggest.getTags();
 		suggest.setResource(request.getResource());
-		
-		auxiliar.clear();
 	}
 
 	@Override
@@ -110,19 +151,35 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		this.request.setSuggestions(suggest);
 	}
 
+	/**
+	 * Extracts Label terms
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
+	protected void extractLabelTerms() throws IOException {
+		extractTerms(LABEL, request.getResource().getLabel(),
+				luceneRelevanceLabel);
+	}
+	
+	/**
+	 * Extracts Description terms
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	protected void extractDescriptionTerms() throws IOException {
 		extractTerms(DESCIPTION, request.getResource().getDescription(),
 				luceneRelevanceTerm);
 	}
 
-	protected void extractLabelTerms() throws IOException {
-		extractTerms(LABEL, request.getResource().getLabel(),
-				luceneRelevanceLabel);
-	}
-
+	/**
+	 * Tokenizes and removes stop-words (Spanish and English) from the supplied text
+	 * @param title FieldName (description, label)
+	 * @param text Text to extract the terms
+	 * @param relevance Weight which is incremented each matched term
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	protected void extractTerms(String title, String text, double relevance)
 			throws IOException {
 		String[] sentences = esSentenceDetector.sentDetect(text);
+		auxiliar.clear();
 		for (String sentence : sentences) {
 			loadChunks(tokenizer.tokenize(sentence), relevance);
 		}
@@ -130,17 +187,33 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 
 	}
 
-	protected void loadChunks(String[] chunks, double relevance) {
+	/**
+	 * Generates the k-words saving them into a auxiliary map
+	 * @param tokenizedText Tokenized Text
+	 * @param relevance Weight which is incremented each matched term
+	 */
+	protected void loadChunks(String[] tokenizedText, double relevance) {
 		for (int i = 1; i <= k; i++) {
-			for (int j = 0; j + i <= chunks.length; j++) {
+			for (int j = 0; j + i <= tokenizedText.length; j++) {
 				addString(
-						cleanChunks(Arrays.copyOfRange(chunks, j, i + j - 1)),
+						cleanChunks(Arrays.copyOfRange(tokenizedText, j, i + j - 1)),
 						relevance);
 			}
 		}
 	}
 
-	protected StringArrayWrapper cleanChunks(String[] chunk) {
+	/**
+	 * Trims any word of the edges that not fits with:
+	 * 	<ul>
+	 * 		<li>Characters</li>
+	 * 		<li>Numbers</li>
+	 * 		<li>Length (of the word) bigger than 2</li>
+	 * 	</ul>
+	 * 
+	 * @param chunk
+	 * @return 
+	 */
+	protected String[] cleanChunks(String[] chunk) {
 		List<String> auxList = new LinkedList<String>();
 		for (int i = 0; i < chunk.length; i++) {
 			if (!pattern.matcher(chunk[i]).find()) {
@@ -149,33 +222,50 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 			}
 		}
 		String[] finalChunk = new String[auxList.size()];
-		return new StringArrayWrapper(auxList.toArray(finalChunk));
+		return auxList.toArray(finalChunk);
 
 	}
 
-	protected void addString(StringArrayWrapper phrase, double relevance) {
-		Double value = auxiliar.get(phrase);
+	/**
+	 * Adds or Increases (If currently exists) the label to the auxiliary labels map 
+	 * @param label Label's name
+	 * @param relevance Weight which is incremented each matched term
+	 */
+	protected void addString(String[] label, double relevance) {
+		StringArrayWrapper stringArrayWraper = new StringArrayWrapper(label);
+		Double value = auxiliar.get(stringArrayWraper);
 		if (value == null)
 			value = 0d;
 		value += relevance;
-		auxiliar.put(phrase, value);
+		auxiliar.put(stringArrayWraper, value);
 	}
 
-	public void analysisOfTerms(double relevance) throws IOException {
+	/**
+	 * Process the auxiliary 
+	 * @param relevance Weight which is incremented each matched term
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
+	protected void analysisOfTerms(double relevance) throws IOException {
 		for (Entry<StringArrayWrapper, Double> value : auxiliar.entrySet()) {
 			processSetence(esPOSTagger.tag(value.getKey().data),
 					value.getKey().data, relevance);
 		}
 	}
 
-	protected void processSetence(String[] tags, String[] textTokenized,
+	/**
+	 * Trims the labels removing non meaningful words from the edges of the sentence
+	 * @param tags OpenNLP Tags related to the Tokenized Text
+	 * @param tokenizedText Tokenized Text
+	 * @param relevance Weight which is incremented each matched term
+	 */
+	protected void processSetence(String[] tags, String[] tokenizedText,
 			double relevance) {
 		int min = calculateMin(tags);
 		int max = calculateMax(tags);
 		if (min <= max && min >= 0 && max >= 0) {
 
 			TagTO tag = new TagTO(StringUtils.join(
-					Arrays.copyOfRange(textTokenized, min, max + 1), " "),
+					Arrays.copyOfRange(tokenizedText, min, max + 1), " "),
 					provider, request.getResource());
 			fillSuggestions(tag, relevance);
 		}
@@ -207,47 +297,6 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 				return i;
 		}
 		return -1;
-	}
-
-	/**
-	 * Inner Class StringArrayWrapper is a wrap of a String[], so
-	 * it could be used as key in Maps or similar
-	 * data structures.
-	 * @author César Luis Alvargonzález
-	 *
-	 */
-	public final class StringArrayWrapper {
-		protected final String[] data;
-
-		/**
-		 * One-argument default constructor.
-		 * @param data String[] to store
-		 */
-		public StringArrayWrapper(String[] data) {
-			if (data == null) {
-				throw new NullPointerException();
-			}
-			this.data = data;
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			if (!(other instanceof StringArrayWrapper)) {
-				return false;
-			}
-			return Arrays.equals(data, ((StringArrayWrapper) other).data);
-		}
-
-		@Override
-		public int hashCode() {
-			return Arrays.hashCode(data);
-		}
-
-		@Override
-		public String toString() {
-			return Arrays.toString(data);
-		}
-
 	}
 
 }

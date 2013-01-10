@@ -25,10 +25,11 @@ import org.weso.acota.core.entity.TagTO;
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 
 /**
+ * OpenNLPEnhancer is an {@link Enhancer} specialized in modifying
+ * the weights, of the sets of{@link TagTO}s, depending on its morphosyntactic type.
  * 
  * @author César Luis Alvargonzález
- * @author Weena
- *
+ * @author Weena Jimenez
  */
 public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
@@ -149,18 +150,18 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	/**
 	 * Processes a set of terms and saves them depending on its morphosyntactic type
 	 * @param tags OpenNLP Tags related to the Tokenized Text
-	 * @param textTokenized Tokenized Text
+	 * @param tokenizedText Tokenized Text
 	 */
-	protected void processSetence(String[] tags, String[] textTokenized) {
-		for (int y = 0; y < textTokenized.length; y++) {
+	protected void processSetence(String[] tags, String[] tokenizedText) {
+		for (int y = 0; y < tokenizedText.length; y++) {
 			if (tokensEs.contains(tags[y])) {
-				findAndRemove(textTokenized[y]);
+				findAndRemove(tokenizedText[y]);
 			} else if (tags[y].startsWith("N")) {
-				noun.add(textTokenized[y].toLowerCase());
+				noun.add(tokenizedText[y].toLowerCase());
 			} else if (tags[y].startsWith("V")) {
-				verbs.add(textTokenized[y].toLowerCase());
+				verbs.add(tokenizedText[y].toLowerCase());
 			} else if (tags[y].startsWith("Z")) {
-				numbers.add(textTokenized[y].toLowerCase());
+				numbers.add(tokenizedText[y].toLowerCase());
 			}
 		}
 	}

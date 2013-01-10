@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * Contains the results of the Enhancement
+ * 
  * @author Jose María Álvarez
  */
 public class SuggestionTO {

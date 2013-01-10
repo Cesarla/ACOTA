@@ -21,11 +21,12 @@ import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 
 
 /**
+ * LuceneEnhancer is an {@link Enhancer} specialized in tokenizing, removing stop-words and
+ * cleaning the input data, producing a set of single-word {@link TagTO}s
  * 
  * @author Jose María Álvarez
  * @author César Luis Alvargonzález
  */
-
 public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 
 	protected static Logger logger = Logger.getLogger(LuceneEnhancer.class);
@@ -136,8 +137,9 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * Loads a language analyzer
+	 * Loads a language analyzer (English, Spanish or Default)
 	 * @param text Text to analyze
+	 * @return Lucene's {@link Analyzer}
 	 */
 	protected Analyzer loadAnalyzer(String text) {
 		LanguageIdentifier ld = new LanguageIdentifier(text);

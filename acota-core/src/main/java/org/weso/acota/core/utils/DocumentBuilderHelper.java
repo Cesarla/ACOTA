@@ -33,21 +33,26 @@ public class DocumentBuilderHelper {
     /**
      * Returns a InputSource from the supplied URI
      * @param uri The system identifier of the file
-     * @return InputSource from the article
+     * @return InputSource from the article 
      */
     public static InputSource getInputSourceFromString(String uri) {
         Reader reader = getStringReader(uri);
         return new InputSource(reader);
     }
 
-    public static InputSource getInputSourceFromReader(Reader article) {
-        return new InputSource(article);
+    /**
+     * Returns a InputSource from the supplied Reader
+     * @param reader Character streams
+     * @return InputSource from the article 
+     */
+    public static InputSource getInputSourceFromReader(Reader reader) {
+        return new InputSource(reader);
     }
 
     /**
      * Creates a new DocumentBuilder
      * @return New DocumentBuilder
-     * @throws DocumentBuilderException
+     * @throws DocumentBuilderException Any exception that occurs during the DOM creation.
      */
     public static DocumentBuilder createDocumentBuilder() throws DocumentBuilderException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -63,7 +68,7 @@ public class DocumentBuilderHelper {
      * Returns a Document from the input path
      * @param uri The system identifier of the file
      * @return New Document from input path
-     * @throws DocumentBuilderException
+     * @throws DocumentBuilderException Any exception that occurs during the DOM creation.
      */
     public static Document getDocumentFromString(String uri) throws DocumentBuilderException {
         try {
@@ -81,7 +86,7 @@ public class DocumentBuilderHelper {
      * Returns a Document from the supplied Reader
      * @param reader Supplied Reader
      * @return New Document from the supplied Reader
-     * @throws DocumentBuilderException
+     * @throws DocumentBuilderException Any exception that occurs during the DOM creation.
      */
     public static Document getDocumentFromReader(Reader reader) throws DocumentBuilderException {
         try {
@@ -97,7 +102,7 @@ public class DocumentBuilderHelper {
      * Returns a new Document from the supplied inputStream
      * @param inputStream Supplied InputStream
      * @return New Document from the supplied inputStream
-     * @throws DocumentBuilderException
+     * @throws DocumentBuilderException Any exception that occurs during the DOM creation.
      */
     public static Document getDocumentFromInputStream(InputStream inputStream) throws DocumentBuilderException {
         try {
@@ -112,7 +117,7 @@ public class DocumentBuilderHelper {
     /**
      * Returns an empty Document
      * @return Empty Document
-     * @throws DocumentBuilderException
+     * @throws DocumentBuilderException Any exception that occurs during the DOM creation.
      */
     public static Document getEmptyDocument() throws DocumentBuilderException {
         return createDocumentBuilder().newDocument();
@@ -122,21 +127,22 @@ public class DocumentBuilderHelper {
      * Returns a Document from the File
      * @param file File Path
      * @return Document from the File
-     * @throws DocumentBuilderException
-     * @throws IOException
+     * @throws DocumentBuilderException Any exception that occurs during the DOM creation.
      */
-    public static Document getDocumentFromFile(File file) throws DocumentBuilderException, IOException {
+    public static Document getDocumentFromFile(File file) throws DocumentBuilderException{
         InputStream is = null;
         try {
             is = new FileInputStream(file);
             return getDocumentFromInputStream(is);
+        } catch(IOException e){
+        	 throw new DocumentBuilderException(e);
         } finally {
             try {
                 if (is != null) {
                     is.close();
                 }
             } catch (IOException e) {
-                throw e;
+                throw new DocumentBuilderException(e);
             }
         }
     }

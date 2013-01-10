@@ -11,10 +11,10 @@ import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.core.exceptions.AcotaModelException;
 
 /**
- * Abstract class that implements Enhacer interface, it implements
+ * Abstract class that implements {@link Enhacer} interface, it implements
  * the chain-of-responsibility design pattern
+ * 
  * @author César Luis Alvargonzález
- *
  */
 public abstract class EnhancerAdapter implements Enhancer {
 
@@ -39,7 +39,7 @@ public abstract class EnhancerAdapter implements Enhancer {
 	}
 	
 	/**
-	 * @return The current provider
+	 * @return The current {@link ProviderTO}
 	 */
 	public ProviderTO getProvider() {
 		return provider;
@@ -70,7 +70,7 @@ public abstract class EnhancerAdapter implements Enhancer {
 	}	
 	
 	/**
-	 * Returns the current SuggestionTO, if the SuggestionTO does not exist,
+	 * Returns the current {@link SuggestionTO}, if the {@link SuggestionTO} does not exist,
 	 * it creates a new one and returns it.
 	 * @return Current SuggestionTO
 	 */
@@ -85,27 +85,27 @@ public abstract class EnhancerAdapter implements Enhancer {
 	}
 	
 	/**
-	 * Executes the main task of the Enhancer
-	 * @throws Exception
+	 * Executes the main task of the {@link Enhancer}
+	 * @throws Exception Exception Any Exception that occurs during the main execution
 	 */
 	protected abstract void execute() throws Exception;
 	
 	/**
-	 * Executes previous tasks to get the Enhancer ready to execute its main task.
-	 * @throws Exception
+	 * Executes previous tasks to get the {@link Enhancer} ready to execute its main task.
+	 * @throws Exception Exception Any Exception that occurs previous the execution
 	 */
 	protected abstract void preExecute() throws Exception;
 	
 	/**
-	 * Cleans the house after the Enhancer execution
-	 * @throws Exception
+	 * Cleans the house after the {@link Enhancer} execution
+	 * @throws Exception Any Exception that occurs during the post execution
 	 */
 	protected abstract void postExecute() throws Exception;
 	
 	/**
-	 * Adds some weight to a specific label
-	 * @param tags Label name
-	 * @param weight Label weight
+	 * Adds some weight to a specific {@link TagTO}
+	 * @param tags {@link TagTO}'s name
+	 * @param weight Weight to add to the {@link TagTO}'s weight
 	 */
 	protected void fillSuggestions(TagTO tag, double weight) {
 		TagTO current = tags.get(tag.getLabel());

@@ -1,7 +1,7 @@
 package org.weso.acota.core.entity;
 
 /**
- * Contains data related to a Resource as URI, label, description,
+ * Contains data related to a Resource, as URI, label, description
  * or type
  * @author Jose María Álvarez
  *

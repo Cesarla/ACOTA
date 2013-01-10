@@ -20,10 +20,12 @@ import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 
 /**
- * WordnetEnhancer increases the weight of the terms that match with the synonyms of the
- * label founded, if the term was already in the tags Map, or adds the term to the tags Map
+ * WordnetEnhancer is an {@link Enhancer} specialized in increasing the weight 
+ * of the terms that match with the synonyms of the founded terms, if the term
+ * was already in the {@link TagTO}'s Map, or adds the term to
+ * the {@link TagTO}'s Map.
+ * 
  * @author César Luis Alvargonzález
- *
  */
 public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 
@@ -45,7 +47,7 @@ public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 		WordnetEnhancer.provider = new ProviderTO("Wordnet Enhancer");
 		loadConfiguration(configuration);
 		
-		URL url = new URL ("file",null,wordnetEnDict) ;
+		URL url = new URL ("file", null, wordnetEnDict) ;
 		this.dicionary = new Dictionary ( url ) ;
 		dicionary.open();
 	}
