@@ -20,12 +20,21 @@ import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.weso.acota.core.FeedbackConfiguration;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
-import org.weso.acota.core.entity.tuples.FeedbackTuple;
+import org.weso.acota.core.entity.persistence.tables.FeedbackTable;
 import org.weso.acota.persistence.LabelDAO;
 import org.weso.acota.persistence.factory.FactoryDAO;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
+/**
+ * LabelRecommenderEnhancer is an {@link Enhancer} specialized in suggesting 
+ * Labels, depending in the feedback of the different users. This {@link Enhancer} 
+ * increases, or adds it if there is not currently present, the weight of the
+ * labels tagged in common documents
+ * 
+ * @author César Luis Alvargonzález
+ *
+ */
 public class LabelRecommenderEnhancer extends EnhancerAdapter implements FeedbackConfigurable{
 
 	protected LabelDAO labelDao;
@@ -35,6 +44,17 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 
 	protected FeedbackConfiguration configuration;
 
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException ConfigurationException Any exception that 
+	 * occurs while initializing a Configuration object
+	 * @throws InstantiationException Thrown when an application tries to instantiate
+	 * an interface or an abstract class
+	 * @throws IllegalAccessException An IllegalAccessException is thrown when an
+	 * application tries to reflectively create an instance
+	 * @throws ClassNotFoundException Thrown when an application tries to load in a
+	 * class through its string name
+	 */
 	public LabelRecommenderEnhancer() throws ConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super();
 		LabelRecommenderEnhancer.provider = new ProviderTO(
@@ -54,7 +74,19 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 
 	@Override
 	protected void execute() throws Exception {
-		recommendLabel();
+		ItemBasedRecommender recommender = loadRecommender();
+		List<RecommendedItem> items = null;
+		for (Entry<String, TagTO> label : tags.entrySet()) {
+			try {
+				items = recommender.mostSimilarItems(label.getKey().hashCode(),
+						numRecommendations);
+				handleRecommendLabels(items);
+			} catch (TasteException e) {
+				//Drain, It sucks but is essentially necessary, Mahout 
+				//throws an exception when it tries to recommend an 
+				//item that does not exists
+			}
+		}
 	}
 
 	@Override
@@ -72,6 +104,11 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 		this.request.setSuggestions(suggest);
 	}
 
+	/**
+	 * Loads into memory the Mahout Recommender
+	 * @return ItemBasedRecommender Interface implemented by "item-based" recommenders.
+	 * @throws IOException Signals that an I/O exception of some sort has occurred.
+	 */
 	public ItemBasedRecommender loadRecommender() throws IOException {
 
 		MysqlDataSource dataSource = new MysqlDataSource();
@@ -80,43 +117,40 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 		dataSource.setPassword(configuration.getDatabaseUser());
 		dataSource.setDatabaseName(configuration.getDatabaseName());
 
-		FeedbackTuple feedback = configuration.getFeedbackTuple();
+		FeedbackTable feedback = configuration.getFeedbackTuple();
 
 		JDBCDataModel dataModel = new MySQLJDBCDataModel(dataSource,
-				feedback.getName(), feedback.getDocumentIdField(),
-				feedback.getLabelIdField(), feedback.getPreferenceField(),
-				feedback.getTimestampField());
+				feedback.getName(), feedback.getDocumentIdAttribute(),
+				feedback.getLabelIdAttribute(), feedback.getPreferenceAttribute(),
+				feedback.getTimestampAttribute());
 
 		ItemSimilarity itemSimilarity = new LogLikelihoodSimilarity(dataModel);
 		return new GenericItemBasedRecommender(dataModel, itemSimilarity);
 	}
 
-	protected void recommendLabel() throws IOException, TasteException,
-			SQLException, ClassNotFoundException {
-		ItemBasedRecommender recommender = loadRecommender();
-		List<RecommendedItem> items = null;
-		for (Entry<String, TagTO> label : tags.entrySet()) {
-			try {
-				items = recommender.mostSimilarItems(label.getKey().hashCode(),
-						numRecommendations);
-				handleRecommendLabels(items);
-			} catch (TasteException e) {
-				//Drain, It is essentially necessary, mahout throws an
-				//exception when it tries to recommend an item that does
-				//not exists
-			}
-		}
-	}
-
+	/**
+	 * Handles the recommendation of the recommended items by Mahout, increasing
+	 * the weight associated to its labels
+	 * @param items Ids (hashCodes) of the recommended labels
+	 * @throws SQLException An exception that provides information on a relational
+	 * database access error or other errors.
+	 * @throws ClassNotFoundException Thrown when an application tries to load in a
+	 * class through its string name
+	 */
 	protected void handleRecommendLabels(List<RecommendedItem> items)
 			throws SQLException, ClassNotFoundException {
 		Collection<Integer> hashes = getHashCollection(items);
-		Set<String> recommendedLabel = labelDao.getLabelsByHashes(hashes);
+		Set<String> recommendedLabel = labelDao.getLabelsByHashCodes(hashes);
 		for (String label : recommendedLabel) {
 			handleRecommendLabel(label);
 		}
 	}
 
+	/**
+	 * Transforms a Collection<RecommendedItem> to a Collection<Integer>
+	 * @param items Collection of the recommended items by Mahout
+	 * @return Collection<Integer> with the ids (hashCodes) of the items
+	 */
 	protected Collection<Integer> getHashCollection(
 			Collection<RecommendedItem> items) {
 		Set<Integer> hashes = new HashSet<Integer>();
@@ -126,13 +160,13 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 		return hashes;
 	}
 
+	/**
+	 * Increases the weight of the {@link TagTO} associated to the label
+	 * @param label {@link TagTO}'s label
+	 */
 	protected void handleRecommendLabel(String label) {
-		TagTO tag = tags.get(label);
-		if (tag == null) {
-			tag = new TagTO(label,provider,request.getResource());
-		}
-		tag.addValue(relevance);
-		tags.put(label, tag);
+		TagTO tag = new TagTO(label,provider,request.getResource());
+		fillSuggestions(tag, relevance);
 	}
 
 }

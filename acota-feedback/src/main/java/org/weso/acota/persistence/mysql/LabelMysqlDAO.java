@@ -11,21 +11,32 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.weso.acota.core.entity.tuples.LabelTuple;
+import org.weso.acota.core.entity.persistence.tables.LabelTable;
 import org.weso.acota.persistence.LabelDAO;
 
+/**
+ * Concrete implementation of LabelDAO for the DBMS MySQL 5.x
+ * @see LabelDAO
+ * @author César Luis Alvargonzález
+ *
+ */
 public class LabelMysqlDAO extends GenericMysqlDAO implements LabelDAO {
 
 	protected String tableName;
-	protected String idField;
-	protected String nameField;
+	protected String idAttribute;
+	protected String nameAttribute;
 
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 */
 	public LabelMysqlDAO() throws ConfigurationException {
 		super();
-		LabelTuple label = configuration.getLabelTuple();
+		LabelTable label = configuration.getLabelTuple();
 		this.tableName = label.getName();
-		this.idField = label.getIdField();
-		this.nameField = label.getNameField();
+		this.idAttribute = label.getIdAttribute();
+		this.nameAttribute = label.getNameAttribute();
 	}
 
 	@Override
@@ -38,8 +49,8 @@ public class LabelMysqlDAO extends GenericMysqlDAO implements LabelDAO {
 			con = openConnection();
 
 			StringBuilder query = new StringBuilder("insert into ")
-					.append(tableName).append(" (").append(idField)
-					.append(", ").append(nameField).append(") values(?,?)");
+					.append(tableName).append(" (").append(idAttribute)
+					.append(", ").append(nameAttribute).append(") values(?,?)");
 
 			ps = con.prepareStatement(query.toString());
 			ps.setInt(1, id);
@@ -69,7 +80,7 @@ public class LabelMysqlDAO extends GenericMysqlDAO implements LabelDAO {
 			con = openConnection();
 
 			StringBuilder query = new StringBuilder("select * from ")
-					.append(tableName).append(" where ").append(idField)
+					.append(tableName).append(" where ").append(idAttribute)
 					.append("=?");
 
 			ps = con.prepareStatement(query.toString());
@@ -78,7 +89,7 @@ public class LabelMysqlDAO extends GenericMysqlDAO implements LabelDAO {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				labels = rs.getString(nameField);
+				labels = rs.getString(nameAttribute);
 			}
 
 		} catch (ClassNotFoundException e) {
@@ -115,7 +126,7 @@ public class LabelMysqlDAO extends GenericMysqlDAO implements LabelDAO {
 						.append(tableName).append(" where ");
 
 				for (int i = 0; i < ids.size(); i++) {
-					query.append(idField).append("=?");
+					query.append(idAttribute).append("=?");
 					if (i + 1 < ids.size()) {
 						query.append(" or ");
 					}
@@ -130,7 +141,7 @@ public class LabelMysqlDAO extends GenericMysqlDAO implements LabelDAO {
 				rs = ps.executeQuery();
 
 				while (rs.next()) {
-					labels.add(rs.getString(nameField));
+					labels.add(rs.getString(nameAttribute));
 				}
 
 			} catch (ClassNotFoundException e) {
@@ -145,7 +156,7 @@ public class LabelMysqlDAO extends GenericMysqlDAO implements LabelDAO {
 	}
 
 	@Override
-	public Set<String> getLabelsByHashes(Collection<Integer> hashes)
+	public Set<String> getLabelsByHashCodes(Collection<Integer> hashes)
 			throws SQLException, ClassNotFoundException {
 		return getLabelsByIds(hashes);
 	}

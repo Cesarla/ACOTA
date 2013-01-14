@@ -1,7 +1,13 @@
-package org.weso.acota.core.entity;
+package org.weso.acota.core.entity.persistence;
 
 import java.util.Date;
 
+/**
+ * Feedback contains data related to a feedback by the user.
+ * 
+ * @author César Luis Alvargonzález
+ *
+ */
 public class Feedback {
 	protected int id;
 	protected int userId;
@@ -9,10 +15,21 @@ public class Feedback {
 	protected String document;
 	protected Date date;
 
+	/**
+	 * Zero-argument default constructor.
+	 */
 	public Feedback() {
 		super();
 	}
 
+	/**
+	 * Five-argument secondary constructor.
+	 * @param id Feedback's id
+	 * @param userId Feedback's user's id
+	 * @param label Feedback's Label Name
+	 * @param document Feedback's Document URL
+	 * @param date Feedback's Tagged Date
+	 */
 	public Feedback(int id, int userId, String label, String document, Date date) {
 		super();
 		this.id = id;

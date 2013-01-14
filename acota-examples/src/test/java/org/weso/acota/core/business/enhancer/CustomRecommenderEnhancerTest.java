@@ -17,21 +17,22 @@ import static org.mockito.Mockito.when;
 import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
-import org.weso.acota.core.entity.Feedback;
+import org.weso.acota.core.business.enhancer.CustomRecommenderEnhancer;
+import org.weso.acota.core.entity.persistence.Feedback;
 import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
 import org.weso.acota.core.entity.SuggestionTO;
 import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.persistence.mysql.FeedbackMysqlDAO;
 
-public class SimpleRecommenderEnhancerTest {
+public class CustomRecommenderEnhancerTest {
 
-	protected SimpleRecommenderEnhancer simpleRecommenderEnhancer;
+	protected CustomRecommenderEnhancer simpleRecommenderEnhancer;
 
 	@Before
 	public void startUp() throws ConfigurationException, SQLException,
 			ClassNotFoundException, InstantiationException, IllegalAccessException {
-		this.simpleRecommenderEnhancer = new SimpleRecommenderEnhancer();
+		this.simpleRecommenderEnhancer = new CustomRecommenderEnhancer();
 
 		Set<Feedback> feedbacks = new HashSet<Feedback>();
 		feedbacks.add(new Feedback(1, 1, "researcher",
@@ -58,7 +59,7 @@ public class SimpleRecommenderEnhancerTest {
 
 	@Test
 	public void getProviderTest() {
-		assertEquals(SimpleRecommenderEnhancer.provider,
+		assertEquals(CustomRecommenderEnhancer.provider,
 				simpleRecommenderEnhancer.getProvider());
 	}
 
@@ -82,7 +83,7 @@ public class SimpleRecommenderEnhancerTest {
 		SuggestionTO suggest = initializeSuggest();
 		
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
-		TagTO tag = new TagTO("researcher", LuceneEnhancer.provider,
+		TagTO tag = new TagTO("researcher", CustomRecommenderEnhancer.provider,
 				suggest.getResource());
 		tag.setValue(4.0);
 		tags.put(tag.getLabel(), tag);

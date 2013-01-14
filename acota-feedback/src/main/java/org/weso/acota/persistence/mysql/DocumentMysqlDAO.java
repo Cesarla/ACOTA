@@ -11,20 +11,31 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.weso.acota.core.entity.tuples.DocumentTuple;
+import org.weso.acota.core.entity.persistence.tables.DocumentTable;
 import org.weso.acota.persistence.DocumentDAO;
 
+/**
+ * Concrete implementation of DocumentDAO for the DBMS MySQL 5.x
+ * @see DocumentDAO
+ * @author César Luis Alvargonzález
+ *
+ */
 public class DocumentMysqlDAO extends GenericMysqlDAO implements DocumentDAO {
 	protected String tableName;
-	protected String idField;
-	protected String nameField;
+	protected String idAttribute;
+	protected String nameAttribute;
 
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 */
 	public DocumentMysqlDAO() throws ConfigurationException {
 		super();
-		DocumentTuple label = configuration.getDocumentTuple();
+		DocumentTable label = configuration.getDocumentTuple();
 		this.tableName = label.getName();
-		this.idField = label.getIdField();
-		this.nameField = label.getNameField();
+		this.idAttribute = label.getIdAttribute();
+		this.nameAttribute = label.getNameAttribute();
 	}
 
 	@Override
@@ -37,8 +48,8 @@ public class DocumentMysqlDAO extends GenericMysqlDAO implements DocumentDAO {
 			con = openConnection();
 
 			StringBuilder query = new StringBuilder("insert into ")
-					.append(tableName).append(" (").append(idField)
-					.append(", ").append(nameField).append(") values(?,?)");
+					.append(tableName).append(" (").append(idAttribute)
+					.append(", ").append(nameAttribute).append(") values(?,?)");
 
 			ps = con.prepareStatement(query.toString());
 			ps.setInt(1, id);
@@ -68,7 +79,7 @@ public class DocumentMysqlDAO extends GenericMysqlDAO implements DocumentDAO {
 			con = openConnection();
 
 			StringBuilder query = new StringBuilder("select * from ")
-					.append(tableName).append(" where ").append(idField)
+					.append(tableName).append(" where ").append(idAttribute)
 					.append("=?");
 
 			ps = con.prepareStatement(query.toString());
@@ -77,7 +88,7 @@ public class DocumentMysqlDAO extends GenericMysqlDAO implements DocumentDAO {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				labels = rs.getString(nameField);
+				labels = rs.getString(nameAttribute);
 			}
 
 		} catch (ClassNotFoundException e) {
@@ -92,7 +103,7 @@ public class DocumentMysqlDAO extends GenericMysqlDAO implements DocumentDAO {
 	}
 
 	@Override
-	public String getDocumentByHash(Integer hash) throws SQLException,
+	public String getDocumentByHashCode(Integer hash) throws SQLException,
 			ClassNotFoundException {
 		return getDocumentById(hash);
 	}
@@ -114,7 +125,7 @@ public class DocumentMysqlDAO extends GenericMysqlDAO implements DocumentDAO {
 						.append(tableName).append(" where ");
 
 				for (int i = 0; i < ids.size(); i++) {
-					query.append(idField).append("=?");
+					query.append(idAttribute).append("=?");
 					if (i + 1 < ids.size()) {
 						query.append(" or ");
 					}
@@ -129,7 +140,7 @@ public class DocumentMysqlDAO extends GenericMysqlDAO implements DocumentDAO {
 				rs = ps.executeQuery();
 
 				while (rs.next()) {
-					documents.add(rs.getString(nameField));
+					documents.add(rs.getString(nameAttribute));
 				}
 
 			} catch (ClassNotFoundException e) {
@@ -144,7 +155,7 @@ public class DocumentMysqlDAO extends GenericMysqlDAO implements DocumentDAO {
 	}
 
 	@Override
-	public Set<String> getDocumentsByHashes(Collection<Integer> hashes)
+	public Set<String> getDocumentsByHashCodes(Collection<Integer> hashes)
 			throws SQLException, ClassNotFoundException {
 		return getDocumentsByIds(hashes);
 	}
