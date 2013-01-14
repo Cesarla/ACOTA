@@ -5,13 +5,13 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
@@ -28,7 +28,7 @@ public class OpenNLPEnhancerTest {
 	protected OpenNLPEnhancer openNLPEnhancer;
 	
 	@Before
-	public void setUp() throws ConfigurationException{
+	public void setUp() throws ConfigurationException, IOException{
 		this.openNLPEnhancer = new OpenNLPEnhancer();
 	}
 	
@@ -39,7 +39,7 @@ public class OpenNLPEnhancerTest {
 	
 	@Test
 	public void OpenNLPEConstructorPronouns(){
-		assertEquals(Collections.EMPTY_SET, openNLPEnhancer.pronouns);
+		assertEquals(Collections.EMPTY_SET, openNLPEnhancer.noun);
 	}
 	
 	@Test
@@ -125,7 +125,7 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.enhance(request);
 		
-		assertEquals(4,suggest.getTags().get("prueba").getValue(),1e-15);
+		assertEquals(6.0,suggest.getTags().get("prueba").getValue(),1e-15);
 	}
 	
 	@Test
@@ -205,7 +205,7 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.processSetence(new String[]{"PN","N","V","Z"}, new String[]{"eso","tu","comer","uno"});
 		
 		assertTrue(openNLPEnhancer.tags.get("eso")==null);
-		assertTrue(openNLPEnhancer.pronouns.contains("tu"));
+		assertTrue(openNLPEnhancer.noun.contains("tu"));
 		assertTrue(openNLPEnhancer.verbs.contains("comer"));
 		assertTrue(openNLPEnhancer.numbers.contains("uno"));
 	}
@@ -215,8 +215,7 @@ public class OpenNLPEnhancerTest {
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		
 		openNLPEnhancer.tags = tags;
-		openNLPEnhancer.calculateMaxValue();
-		assertTrue(0 == openNLPEnhancer.maxWeight);
+		assertTrue(0 == openNLPEnhancer.calculateMaxValue());
 	}
 	
 	@Test 
@@ -256,7 +255,7 @@ public class OpenNLPEnhancerTest {
 	}
 	
 	@Test
-	public void findAndChangePronounsEmpty() throws Exception{
+	public void findAndChangeNounsEmpty() throws Exception{
 		SuggestionTO suggest = initializeSuggest();
 		
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
@@ -268,15 +267,13 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.tags = tags;
 		openNLPEnhancer.suggest = suggest;
 		
-		Set<String> pronouns = new HashSet<String>();
-		
-		openNLPEnhancer.findAndChangePronouns(pronouns);
+		openNLPEnhancer.findAndChangeNoun();
 		
 		assertTrue(1 == openNLPEnhancer.tags.get("yo").getValue());
 	}
 	
 	@Test
-	public void findAndChangePronounsTest() throws Exception{
+	public void findAndChangeNounsTest() throws Exception{
 		SuggestionTO suggest = initializeSuggest();
 		
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
@@ -288,10 +285,10 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.tags = tags;
 		openNLPEnhancer.suggest = suggest;
 		
-		Set<String> pronouns = new HashSet<String>();
-		pronouns.add("yo");
+		openNLPEnhancer.noun = new HashSet<String>();
+		openNLPEnhancer.noun.add("yo");
 		
-		openNLPEnhancer.findAndChangePronouns(pronouns);
+		openNLPEnhancer.findAndChangeNoun();
 		assertTrue(1.5 == openNLPEnhancer.tags.get("yo").getValue());
 	}
 	
@@ -308,9 +305,7 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.tags = tags;
 		openNLPEnhancer.suggest = suggest;
 		
-		Set<String> words = new HashSet<String>();
-		
-		openNLPEnhancer.findAndChangeVerbs(words);
+		openNLPEnhancer.findAndChangeVerbs();
 		
 		assertTrue(2 == openNLPEnhancer.tags.get("comer").getValue());
 	}
@@ -328,10 +323,10 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.tags = tags;
 		openNLPEnhancer.suggest = suggest;
 		
-		Set<String> verbs = new HashSet<String>();
-		verbs.add("comer");
+		openNLPEnhancer.verbs = new HashSet<String>();
+		openNLPEnhancer.verbs.add("comer");
 		
-		openNLPEnhancer.findAndChangeVerbs(verbs);
+		openNLPEnhancer.findAndChangeVerbs();
 		
 		assertTrue(1 == openNLPEnhancer.tags.get("comer").getValue());
 	}
@@ -349,9 +344,7 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.tags = tags;
 		openNLPEnhancer.suggest = suggest;
 		
-		Set<String> words = new HashSet<String>();
-		
-		openNLPEnhancer.findAndChangeNumbers(words);
+		openNLPEnhancer.findAndChangeNumbers();
 		
 		assertTrue(1 == openNLPEnhancer.tags.get("uno").getValue());
 	}
@@ -369,10 +362,10 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.tags = tags;
 		openNLPEnhancer.suggest = suggest;
 		
-		Set<String> words = new HashSet<String>();
-		words.add("uno");
+		openNLPEnhancer.numbers = new HashSet<String>();
+		openNLPEnhancer.numbers.add("uno");
 		
-		openNLPEnhancer.findAndChangeNumbers(words);
+		openNLPEnhancer.findAndChangeNumbers();
 		
 		assertTrue(0 == openNLPEnhancer.tags.get("uno").getValue());
 	}

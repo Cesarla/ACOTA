@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +27,10 @@ import org.weso.acota.core.utils.DocumentBuilderHelper;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
 /**
+ * GoogleEnhancer is an {@link Enhancer} specialized in making calls to Google 
+ * Autocomplete's API with the different {@link TagTO}'s labels, enriching
+ * the set of {@link TagTO}s
+ * 
  * @author Jose María Álvarez
  * @author César Luis Alvargonzález
  */
@@ -45,6 +48,11 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected Configuration configuration;
 	
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 */
 	public GoogleEnhancer() throws ConfigurationException{
 		super();
 		GoogleEnhancer.provider = new ProviderTO("Google Enhancer");
@@ -63,7 +71,14 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 	
 	@Override
 	protected void execute() throws Exception {	
-		checkTagsWithSamenLabels();
+		Set<Entry<String, TagTO>> backupSet = new HashSet<Entry<String, TagTO>>();
+		for (Entry<String, TagTO> label : tags.entrySet()) {
+			backupSet.add(label);
+		}
+		for (Entry<String, TagTO> label : backupSet) {
+			URL url = new URL(googleUrl + label.getKey().toString());
+			makeRESTCall(url);
+		}
 	}
 
 	@Override
@@ -79,20 +94,14 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 		this.request.setSuggestions(suggest);
 	}
 
-	protected void checkTagsWithSamenLabels() throws MalformedURLException,
-			IOException, UnsupportedEncodingException,
-			DocumentBuilderException, TransformerException {
-		Set<Entry<String, TagTO>> backupSet = new HashSet<Entry<String, TagTO>>();
-		for (Entry<String, TagTO> label : tags.entrySet()) {
-			backupSet.add(label);
-		}
-		for (Entry<String, TagTO> label : backupSet) {
-			URL url = new URL(googleUrl + label.getKey().toString());
-			getGoogleRequest(url);
-		}
-	}
-
-	protected void getGoogleRequest(URL url) throws IOException,
+	/**
+	 * Makes a REST Call to Google Autocomplete's API
+	 * @param url URL of the Rest Call
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 * @throws DocumentBuilderException Any exception that occurs during the DOM creation.
+	 * @throws TransformerException Any exception that occurs 
+	 */
+	protected void makeRESTCall(URL url) throws IOException,
 			DocumentBuilderException, TransformerException {
 		HttpURLConnection connection = null;
 		try {
@@ -116,6 +125,14 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 		}
 	}
 
+	/**
+	 * Transforms the Google Autocomplete REST call return to an XML Document
+	 * @param connection Rest call return
+	 * @return XML Document returned by the rest call
+	 * @throws UnsupportedEncodingException The Character Encoding is not supported.
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 * @throws DocumentBuilderException Any exception that occurs during the DOM creation.
+	 */
 	protected Document processResponse(HttpURLConnection connection)
 			throws UnsupportedEncodingException, IOException,
 			DocumentBuilderException {
@@ -134,6 +151,13 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 		return DocumentBuilderHelper.getDocumentFromString(response.toString());
 	}
 
+	/**
+	 * Checks if a HTTP connection has a valid response (200 OK) 
+	 * @param connection HTTP Connection
+	 * @return true If the response is "HTTP/1.0 200 OK"
+	 * @return false In other case
+	 * @throws IOException if an error occurred connecting to the server.
+	 */
 	protected boolean isValidResponse(HttpURLConnection connection)
 			throws IOException {
 		return connection.getResponseCode() == HttpURLConnection.HTTP_OK
@@ -141,10 +165,10 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * 
-	 * @param result
-	 * @throws DocumentBuilderException
-	 * @throws TransformerException
+	 * Loads Google Autocomplete's XML result document into the tags map
+	 * @param result Google Autocomplete's XML result document
+	 * @throws TransformerException If happens an exceptional condition that
+	 * occurred during the transformation process.
 	 */
 	protected void processDocument(Document result) throws TransformerException {
 		NodeIterator it = XPathAPI.selectNodeIterator(result, "//suggestion/@data");

@@ -20,16 +20,16 @@ import org.apache.tika.language.LanguageIdentifier;
 import org.weso.acota.core.Configuration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.entity.ProviderTO;
-import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.TagTO;
 
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 
 /**
+ * OpenNLPEnhancer is an {@link Enhancer} specialized in modifying
+ * the weights, of the sets of{@link TagTO}s, depending on its morphosyntactic type.
  * 
  * @author César Luis Alvargonzález
- * @author Weena
- *
+ * @author Weena Jimenez
  */
 public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
@@ -42,25 +42,37 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected String esSentBin;
 	protected String esPosBin;
-	
-	protected double maxWeight;
 
-	protected Set<String> pronouns;
+	protected Set<String> noun;
 	protected Set<String> verbs;
 	protected Set<String> numbers;
 	
+	protected SimpleTokenizer tokenizer;
+	protected SentenceDetector esSentenceDetector;
+	protected POSTagger esPOSTagger;
+	
 	protected Configuration configuration;
 	
-	public OpenNLPEnhancer() throws ConfigurationException {
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 */
+	public OpenNLPEnhancer() throws ConfigurationException, IOException {
 		super();
 		OpenNLPEnhancer.logger = Logger.getLogger(OpenNLPEnhancer.class);
 		OpenNLPEnhancer.provider = new ProviderTO("OpenNPL tagger");
-		loadConfiguration(configuration);
-		
-		this.pronouns = new HashSet<String>();
+		OpenNLPEnhancer.tokensEs = new HashSet<String>(Arrays.asList((nplTokensEs)));
+		this.noun = new HashSet<String>();
 		this.verbs = new HashSet<String>();
 		this.numbers = new HashSet<String>();
-		tokensEs = new HashSet<String>(Arrays.asList((nplTokensEs)));
+		
+		loadConfiguration(configuration);
+		
+		this.tokenizer = new SimpleTokenizer();
+		this.esSentenceDetector = new SentenceDetector(esSentBin);
+		this.esPOSTagger = new PosTagger(esPosBin);
 	}
 	
 	@Override
@@ -77,13 +89,16 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		this.suggest = request.getSuggestions();
 		this.tags = suggest.getTags();
 		suggest.setResource(request.getResource());
+		
+		noun.clear();
+		verbs.clear();
+		numbers.clear();
 	}
-	
 	
 	@Override
 	protected void execute() throws Exception {
-		analyseLabelTerms(request);
-		analyseDescriptionTerms(request);
+		analyseLabelTerms();
+		analyseDescriptionTerms();
 	}
 
 	@Override
@@ -94,117 +109,123 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		this.request.setSuggestions(suggest);
 	}
 
-	protected void analyseLabelTerms(RequestSuggestionTO request) throws IOException {
+	/**
+	 * Makes an Analysis of the label terms
+	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 */
+	protected void analyseLabelTerms() throws IOException {
 		analysisOfTerms(request.getResource().getLabel());
 	}
 
-	protected void analyseDescriptionTerms(RequestSuggestionTO request) throws IOException {
+	/**
+	 * Makes an Analysis of the descriptions terms
+	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 */
+	protected void analyseDescriptionTerms() throws IOException {
 		analysisOfTerms(request.getResource().getDescription());
 	}
 
-	public void analysisOfTerms(String terms) throws IOException {
-		LanguageIdentifier ld = new LanguageIdentifier(terms);
+	/**
+	 * Makes an Analysis of a text's terms
+	 * @param text Text to make the analysis
+	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 */
+	public void analysisOfTerms(String text) throws IOException {
+		LanguageIdentifier ld = new LanguageIdentifier(text);
 
 		if (ld.getLanguage().equals(ISO_639_SPANISH)) {
-			SimpleTokenizer tokenizer = new SimpleTokenizer();
-			SentenceDetector sentencesDetector = new SentenceDetector(esPosBin);
-			
-			POSTagger spost = new PosTagger(esSentBin);
-			
-			String sentences[] = sentencesDetector.sentDetect(suggest
+			String sentences[] = esSentenceDetector.sentDetect(suggest
 					.getResource().getDescription());
 			for (String sentence : sentences) {
 				String[] textTokenized = tokenizer.tokenize(sentence);
-				processSetence(spost.tag(textTokenized), textTokenized);
+				processSetence(esPOSTagger.tag(textTokenized), textTokenized);
 			}
 		}
 
-		findAndChangePronouns(pronouns);
-		findAndChangeVerbs(verbs);
-		findAndChangeNumbers(numbers);
+		findAndChangeNoun();
+		findAndChangeVerbs();
+		findAndChangeNumbers();
 	}
 
-	protected void processSetence(String[] tags, String[] textTokenized) {
-		for (int y = 0; y < textTokenized.length; y++) {
+	/**
+	 * Processes a set of terms and saves them depending on its morphosyntactic type
+	 * @param tags OpenNLP Tags related to the Tokenized Text
+	 * @param tokenizedText Tokenized Text
+	 */
+	protected void processSetence(String[] tags, String[] tokenizedText) {
+		for (int y = 0; y < tokenizedText.length; y++) {
 			if (tokensEs.contains(tags[y])) {
-				findAndRemove(textTokenized[y]);
+				findAndRemove(tokenizedText[y]);
 			} else if (tags[y].startsWith("N")) {
-				pronouns.add(textTokenized[y].toLowerCase());
+				noun.add(tokenizedText[y].toLowerCase());
 			} else if (tags[y].startsWith("V")) {
-				verbs.add(textTokenized[y].toLowerCase());
+				verbs.add(tokenizedText[y].toLowerCase());
 			} else if (tags[y].startsWith("Z")) {
-				numbers.add(textTokenized[y].toLowerCase());
+				numbers.add(tokenizedText[y].toLowerCase());
 			}
 		}
 	}
 
-	protected void calculateMaxValue() {
+	/**
+	 * Calculates the maximum value of the tags Map
+	 * @return The maximum value of the tags Map
+	 */
+	protected double calculateMaxValue() {
 		List<TagTO> list = new ArrayList<TagTO>(tags.values());
 		Collections.sort(list);
+		double value = 0d;
 		if(list.size()>0)
-			maxWeight = list.get(0).getValue();
+			value = list.get(0).getValue();
+		return value;
 	}
 
 	/**
-	 * Remove a word from labels
-	 * 
-	 * @param word
+	 * Removes a word from the tags Map
+	 * @param label Label of the tag to remove
 	 */
-	protected void findAndRemove(String word) {
+	protected void findAndRemove(String label) {
 		logger.debug("Remove some tags");
-		if (tags.containsKey(word.toLowerCase())) {
-			tags.remove(word.toLowerCase());
+		if (tags.containsKey(label.toLowerCase())) {
+			tags.remove(label.toLowerCase());
 		}
 	}
 
 	/**
-	 * Modify Pronouns
-	 * 
-	 * @param words
+	 * Modifies Nouns' weight. Adds the half of the maximum weight.
 	 */
-	protected void findAndChangePronouns(Set<String> words) {
-		calculateMaxValue();
-		double sum = maxWeight / 2;
+	protected void findAndChangeNoun() {
+		double sum = calculateMaxValue() / 2;
 
 		for (Entry<String, TagTO> label : tags.entrySet()) {
-			if (words.contains(label.getKey())) {
+			if (noun.contains(label.getKey())) {
 				label.getValue().addValue(sum);
 			}
 		}
 	}
 
 	/**
-	 * Modify Verbs
-	 * 
-	 * @param words
+	 * Modifies Verbs' weight. Subtracts the half of the maximum weight.
 	 */
-
-	protected void findAndChangeVerbs(Set<String> words) {
-		calculateMaxValue();
-		double sum = maxWeight / 2;
+	protected void findAndChangeVerbs() {
+		double sum = calculateMaxValue() / 2;
 
 		for (Entry<String, TagTO> label : tags.entrySet()) {
-			if (words.contains(label.getKey())) {
+			if (verbs.contains(label.getKey())) {
 				label.getValue().subValue(sum);
 			}
 		}
-
 	}
 
 	/**
-	 * Modify Numbers
-	 * 
-	 * @param words
+	 * Modifies Numbers' weight. Subtracts the maximum weight.
 	 */
-	protected void findAndChangeNumbers(Set<String> words) {
-		calculateMaxValue();
-
+	protected void findAndChangeNumbers() {
+		double value = calculateMaxValue();
 		for (Entry<String, TagTO> label : tags.entrySet()) {
-			if (words.contains(label.getKey())) {
-				label.getValue().subValue(maxWeight);
+			if (numbers.contains(label.getKey())) {
+				label.getValue().subValue(value);
 			}
 		}
-
 	}
 
 }

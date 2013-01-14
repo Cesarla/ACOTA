@@ -3,20 +3,20 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.weso</groupId>
 	<artifactId>acota-core</artifactId>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<name>acota-core</name>
 	<packaging>jar</packaging>
-	<description>acota-core, library 0.3.3</description>
+	<description>acota-core, library 0.3.4</description>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>2.5</org.springframework.version>
 	</properties>
 	<dependencies>
+		<!-- For testing purposes -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.4</version>
+			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -25,16 +25,18 @@
 			<version>1.9.0</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- For Logging purposes -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
+			<version>1.2.17</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-			<version>1.0.3</version>
+			<version>1.1.1</version>
 		</dependency>
+		<!-- Apache Configuration Utils -->
 		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
@@ -44,21 +46,15 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
-			<version>3.1.0</version>
+			<version>3.6.0</version>
 		</dependency>
-		<!-- Lucene-snowball  -->
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-snowball</artifactId>
-			<version>3.0.3</version>
-		</dependency>
-		<!-- Apache Tika - for language identification -->
+		<!-- Apache Tika - Language identification -->
 		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-core</artifactId>
 			<version>1.2</version>
 		</dependency>
-		<!-- For Part-of-Speech tagging  -->
+		<!-- Natural Language Processing  -->
 		<dependency>
 			<groupId>opennlp</groupId>
 			<artifactId>opennlp-tools</artifactId>

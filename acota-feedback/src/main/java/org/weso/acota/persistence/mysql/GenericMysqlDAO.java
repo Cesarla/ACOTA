@@ -10,11 +10,22 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.FeedbackConfiguration;
 import org.weso.acota.persistence.GenericDAO;
 
+/**
+ * Concrete implementation of LabelDAO for the DBMS MySQL 5.x
+ * @see GenericDAO
+ * @author César Luis Alvargonzález
+ *
+ */
 public abstract class GenericMysqlDAO implements GenericDAO {
 
 	protected FeedbackConfiguration configuration;
 	protected String url;
 
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 */
 	public GenericMysqlDAO() throws ConfigurationException {
 		super();
 		this.configuration = new FeedbackConfiguration();

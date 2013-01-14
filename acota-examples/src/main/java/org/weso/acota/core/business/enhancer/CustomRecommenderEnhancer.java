@@ -4,21 +4,35 @@ import java.util.Map.Entry;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.FeedbackConfiguration;
+import org.weso.acota.core.business.enhancer.EnhancerAdapter;
+import org.weso.acota.core.business.enhancer.FeedbackConfigurable;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.persistence.FeedbackDAO;
 import org.weso.acota.persistence.factory.FactoryDAO;
 
-public class SimpleRecommenderEnhancer extends EnhancerAdapter implements FeedbackConfigurable{
+/**
+ * Naive recommender {@link Enhancer}, increases the weight of the most used labels
+ * @author César Luis Alvargonzález
+ *
+ */
+public class CustomRecommenderEnhancer extends EnhancerAdapter implements FeedbackConfigurable{
 
 	protected FeedbackDAO feedbackDao;
 	protected double relevance;
 
 	protected FeedbackConfiguration configuration;
 
-	public SimpleRecommenderEnhancer() throws ConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	/**
+	 * Zero-argument default Exception
+	 * @throws ConfigurationException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
+	public CustomRecommenderEnhancer() throws ConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super();
-		SimpleRecommenderEnhancer.provider = new ProviderTO("Simple Recommender Enhancer");
+		CustomRecommenderEnhancer.provider = new ProviderTO("Simple Recommender Enhancer");
 		loadConfiguration(configuration);
 		this.feedbackDao = FactoryDAO.createFeedbackDAO();
 	}

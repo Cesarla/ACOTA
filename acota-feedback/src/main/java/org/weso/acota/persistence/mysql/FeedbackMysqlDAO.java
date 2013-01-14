@@ -8,50 +8,61 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.weso.acota.core.entity.Feedback;
-import org.weso.acota.core.entity.tuples.DocumentTuple;
-import org.weso.acota.core.entity.tuples.FeedbackTuple;
-import org.weso.acota.core.entity.tuples.LabelTuple;
+import org.weso.acota.core.entity.persistence.Feedback;
+import org.weso.acota.core.entity.persistence.tables.DocumentTable;
+import org.weso.acota.core.entity.persistence.tables.FeedbackTable;
+import org.weso.acota.core.entity.persistence.tables.LabelTable;
 import org.weso.acota.persistence.FeedbackDAO;
 
+/**
+ * Concrete implementation of FeedbackDAO for the DBMS MySQL 5.x
+ * @see FeedbackDAO
+ * @author César Luis Alvargonzález
+ *
+ */
 public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 	
 	protected String documentTableName;
-	protected String documentIdField;
-	protected String documentNameField;
+	protected String documentIdAttribute;
+	protected String documentNameAttribute;
 
 	protected String feedbackTableName;
-	protected String feedbackIdField;
-	protected String feedbackUserIdField;
-	protected String feedbackDocumentIdField;
-	protected String feedbackLabelIdField;
-	protected String feedbackPreferenceField;
-	protected String feedbackTimestampField;
+	protected String feedbackIdAttribute;
+	protected String feedbackUserIdAttribute;
+	protected String feedbackDocumentIdAttribute;
+	protected String feedbackLabelIdAttribute;
+	protected String feedbackPreferenceAttribute;
+	protected String feedbackTimestampAttribute;
 
 	protected String labelTableName;
-	protected String labelIdField;
-	protected String labelNameField;
+	protected String labelIdAttribute;
+	protected String labelNameAttribute;
 
+	/**
+	 * Zero-argument default constructor
+	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 */
 	public FeedbackMysqlDAO() throws ConfigurationException {
 		super();
-		DocumentTuple document = configuration.getDocumentTuple();
+		DocumentTable document = configuration.getDocumentTuple();
 		this.documentTableName = document.getName();
-		this.documentIdField = document.getIdField();
-		this.documentNameField = document.getNameField();
+		this.documentIdAttribute = document.getIdAttribute();
+		this.documentNameAttribute = document.getNameAttribute();
 
-		FeedbackTuple feedback = configuration.getFeedbackTuple();
+		FeedbackTable feedback = configuration.getFeedbackTuple();
 		this.feedbackTableName = feedback.getName();
-		this.feedbackIdField = feedback.getIdField();
-		this.feedbackUserIdField = feedback.getUserIdField();
-		this.feedbackDocumentIdField = feedback.getDocumentIdField();
-		this.feedbackLabelIdField = feedback.getLabelIdField();
-		this.feedbackPreferenceField = feedback.getPreferenceField();
-		this.feedbackTimestampField = feedback.getTimestampField();
+		this.feedbackIdAttribute = feedback.getIdAttribute();
+		this.feedbackUserIdAttribute = feedback.getUserIdAttribute();
+		this.feedbackDocumentIdAttribute = feedback.getDocumentIdAttribute();
+		this.feedbackLabelIdAttribute = feedback.getLabelIdAttribute();
+		this.feedbackPreferenceAttribute = feedback.getPreferenceAttribute();
+		this.feedbackTimestampAttribute = feedback.getTimestampAttribute();
 
-		LabelTuple label = configuration.getLabelTuple();
+		LabelTable label = configuration.getLabelTuple();
 		this.labelTableName = label.getName();
-		this.labelIdField = label.getIdField();
-		this.labelNameField = label.getNameField();
+		this.labelIdAttribute = label.getIdAttribute();
+		this.labelNameAttribute = label.getNameAttribute();
 	}
 
 	@Override
@@ -65,9 +76,9 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 
 			StringBuilder query = new StringBuilder("insert into ")
 					.append(feedbackTableName).append(" (")
-					.append(feedbackUserIdField).append(", ")
-					.append(feedbackDocumentIdField).append(", ")
-					.append(feedbackLabelIdField).append(") values(?,?,?)");
+					.append(feedbackUserIdAttribute).append(", ")
+					.append(feedbackDocumentIdAttribute).append(", ")
+					.append(feedbackLabelIdAttribute).append(") values(?,?,?)");
 
 			ps = con.prepareStatement(query.toString());
 			ps.setInt(1, feedback.getUserId());
@@ -98,29 +109,29 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 			con = openConnection();
 
 			StringBuilder query = new StringBuilder("select f.")
-					.append(feedbackIdField).append(", f.")
-					.append(feedbackUserIdField).append(", d.")
-					.append(documentNameField).append(", l.")
-					.append(labelNameField).append(",f.")
-					.append(feedbackTimestampField).append(" from ")
+					.append(feedbackIdAttribute).append(", f.")
+					.append(feedbackUserIdAttribute).append(", d.")
+					.append(documentNameAttribute).append(", l.")
+					.append(labelNameAttribute).append(",f.")
+					.append(feedbackTimestampAttribute).append(" from ")
 					.append(documentTableName).append(" as d,")
 					.append(feedbackTableName).append(" as f,")
 					.append(labelTableName).append(" as l where f.")
-					.append(feedbackDocumentIdField).append(" = d.")
-					.append(documentIdField).append(" and f.")
-					.append(feedbackLabelIdField).append(" = l.")
-					.append(labelIdField);
+					.append(feedbackDocumentIdAttribute).append(" = d.")
+					.append(documentIdAttribute).append(" and f.")
+					.append(feedbackLabelIdAttribute).append(" = l.")
+					.append(labelIdAttribute);
 
 			ps = con.prepareStatement(query.toString());
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
 				feedback = new Feedback();
-				feedback.setId(rs.getInt(feedbackIdField));
-				feedback.setUserId(rs.getInt(feedbackUserIdField));
-				feedback.setDocument(rs.getString("d." + documentNameField));
-				feedback.setLabel(rs.getString("l." + labelNameField));
-				feedback.setDate(rs.getTimestamp(feedbackTimestampField));
+				feedback.setId(rs.getInt(feedbackIdAttribute));
+				feedback.setUserId(rs.getInt(feedbackUserIdAttribute));
+				feedback.setDocument(rs.getString("d." + documentNameAttribute));
+				feedback.setLabel(rs.getString("l." + labelNameAttribute));
+				feedback.setDate(rs.getTimestamp(feedbackTimestampAttribute));
 				feedbacks.add(feedback);
 			}
 
@@ -148,19 +159,19 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 			con = openConnection();
 
 			StringBuilder query = new StringBuilder("select f.")
-					.append(feedbackIdField).append(", f.")
-					.append(feedbackUserIdField).append(", d.")
-					.append(documentNameField).append(", l.")
-					.append(labelNameField).append(",f.")
-					.append(feedbackTimestampField).append(" from ")
+					.append(feedbackIdAttribute).append(", f.")
+					.append(feedbackUserIdAttribute).append(", d.")
+					.append(documentNameAttribute).append(", l.")
+					.append(labelNameAttribute).append(",f.")
+					.append(feedbackTimestampAttribute).append(" from ")
 					.append(documentTableName).append(" as d,")
 					.append(feedbackTableName).append(" as f,")
 					.append(labelTableName).append(" as l where f.")
-					.append(feedbackUserIdField).append(" = ? and f.")
-					.append(feedbackDocumentIdField).append(" = d.")
-					.append(documentIdField).append(" and f.")
-					.append(feedbackLabelIdField).append(" = l.")
-					.append(labelIdField);
+					.append(feedbackUserIdAttribute).append(" = ? and f.")
+					.append(feedbackDocumentIdAttribute).append(" = d.")
+					.append(documentIdAttribute).append(" and f.")
+					.append(feedbackLabelIdAttribute).append(" = l.")
+					.append(labelIdAttribute);
 
 			ps = con.prepareStatement(query.toString());
 			ps.setInt(1, userId);
@@ -168,12 +179,11 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 
 			while (rs.next()) {
 				feedback = new Feedback();
-				feedback = new Feedback();
-				feedback.setId(rs.getInt(feedbackIdField));
-				feedback.setUserId(rs.getInt(feedbackUserIdField));
-				feedback.setDocument(rs.getString("d." + documentNameField));
-				feedback.setLabel(rs.getString("l." + labelNameField));
-				feedback.setDate(rs.getTimestamp(feedbackTimestampField));
+				feedback.setId(rs.getInt(feedbackIdAttribute));
+				feedback.setUserId(rs.getInt(feedbackUserIdAttribute));
+				feedback.setDocument(rs.getString("d." + documentNameAttribute));
+				feedback.setLabel(rs.getString("l." + labelNameAttribute));
+				feedback.setDate(rs.getTimestamp(feedbackTimestampAttribute));
 				feedbacks.add(feedback);
 			}
 
@@ -201,19 +211,19 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 			con = openConnection();
 
 			StringBuilder query = new StringBuilder("select f.")
-					.append(feedbackIdField).append(", f.")
-					.append(feedbackUserIdField).append(", d.")
-					.append(documentNameField).append(", l.")
-					.append(labelNameField).append(",f.")
-					.append(feedbackTimestampField).append(" from ")
+					.append(feedbackIdAttribute).append(", f.")
+					.append(feedbackUserIdAttribute).append(", d.")
+					.append(documentNameAttribute).append(", l.")
+					.append(labelNameAttribute).append(",f.")
+					.append(feedbackTimestampAttribute).append(" from ")
 					.append(documentTableName).append(" as d,")
 					.append(feedbackTableName).append(" as f,")
 					.append(labelTableName).append(" as l where l.")
-					.append(labelNameField).append(" = ? and f.")
-					.append(feedbackDocumentIdField).append(" = d.")
-					.append(documentIdField).append(" and f.")
-					.append(feedbackLabelIdField).append(" = l.")
-					.append(labelIdField);
+					.append(labelNameAttribute).append(" = ? and f.")
+					.append(feedbackDocumentIdAttribute).append(" = d.")
+					.append(documentIdAttribute).append(" and f.")
+					.append(feedbackLabelIdAttribute).append(" = l.")
+					.append(labelIdAttribute);
 
 			ps = con.prepareStatement(query.toString());
 			ps.setString(1, label);
@@ -221,12 +231,11 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 
 			while (rs.next()) {
 				feedback = new Feedback();
-				feedback = new Feedback();
-				feedback.setId(rs.getInt(feedbackIdField));
-				feedback.setUserId(rs.getInt(feedbackUserIdField));
-				feedback.setDocument(rs.getString("d." + documentNameField));
-				feedback.setLabel(rs.getString("l." + labelNameField));
-				feedback.setDate(rs.getTimestamp(feedbackTimestampField));
+				feedback.setId(rs.getInt(feedbackIdAttribute));
+				feedback.setUserId(rs.getInt(feedbackUserIdAttribute));
+				feedback.setDocument(rs.getString("d." + documentNameAttribute));
+				feedback.setLabel(rs.getString("l." + labelNameAttribute));
+				feedback.setDate(rs.getTimestamp(feedbackTimestampAttribute));
 				feedbacks.add(feedback);
 			}
 
@@ -254,19 +263,19 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 			con = openConnection();
 
 			StringBuilder query = new StringBuilder("select f.")
-					.append(feedbackIdField).append(", f.")
-					.append(feedbackUserIdField).append(", d.")
-					.append(documentNameField).append(", l.")
-					.append(labelNameField).append(",f.")
-					.append(feedbackTimestampField).append(" from ")
+					.append(feedbackIdAttribute).append(", f.")
+					.append(feedbackUserIdAttribute).append(", d.")
+					.append(documentNameAttribute).append(", l.")
+					.append(labelNameAttribute).append(",f.")
+					.append(feedbackTimestampAttribute).append(" from ")
 					.append(documentTableName).append(" as d,")
 					.append(feedbackTableName).append(" as f,")
 					.append(labelTableName).append(" as l where d.")
-					.append(documentNameField).append(" = ? and f.")
-					.append(feedbackDocumentIdField).append(" = d.")
-					.append(documentIdField).append(" and f.")
-					.append(feedbackLabelIdField).append(" = l.")
-					.append(labelIdField);
+					.append(documentNameAttribute).append(" = ? and f.")
+					.append(feedbackDocumentIdAttribute).append(" = d.")
+					.append(documentIdAttribute).append(" and f.")
+					.append(feedbackLabelIdAttribute).append(" = l.")
+					.append(labelIdAttribute);
 
 			ps = con.prepareStatement(query.toString());
 			ps.setString(1, document);
@@ -274,12 +283,11 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 
 			while (rs.next()) {
 				feedback = new Feedback();
-				feedback = new Feedback();
-				feedback.setId(rs.getInt(feedbackIdField));
-				feedback.setUserId(rs.getInt(feedbackUserIdField));
-				feedback.setDocument(rs.getString("d." + documentNameField));
-				feedback.setLabel(rs.getString("l." + labelNameField));
-				feedback.setDate(rs.getTimestamp(feedbackTimestampField));
+				feedback.setId(rs.getInt(feedbackIdAttribute));
+				feedback.setUserId(rs.getInt(feedbackUserIdAttribute));
+				feedback.setDocument(rs.getString("d." + documentNameAttribute));
+				feedback.setLabel(rs.getString("l." + labelNameAttribute));
+				feedback.setDate(rs.getTimestamp(feedbackTimestampAttribute));
 				feedbacks.add(feedback);
 			}
 

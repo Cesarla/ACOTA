@@ -21,10 +21,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.weso.acota.core.FeedbackConfiguration;
-import org.weso.acota.core.entity.Feedback;
+import org.weso.acota.core.entity.persistence.Feedback;
 import org.weso.acota.persistence.FeedbackDAO;
 
-public class FeedbackMysqlDaoTest {
+public class FeedbackMysqlDAOTest {
 
 	protected FeedbackDAO feedbackDao;
 	

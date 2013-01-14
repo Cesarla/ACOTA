@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.weso.acota.core.FeedbackConfiguration;
 import org.weso.acota.persistence.DocumentDAO;
 
-public class DocumentMysqlDaoTest {
+public class DocumentMysqlDAOTest {
 	
 	private DocumentDAO documentDao;
 	
@@ -88,12 +88,12 @@ public class DocumentMysqlDaoTest {
 	
 	@Test
 	public void getDocumentByHashThatNotExists() throws SQLException, ClassNotFoundException{
-		assertEquals(null, documentDao.getDocumentByHash(1000));
+		assertEquals(null, documentDao.getDocumentByHashCode(1000));
 	}
 	
 	@Test
 	public void getDocumentByHashTest() throws SQLException, ClassNotFoundException{
-		assertEquals("http://www.weso.es", documentDao.getDocumentByHash(-220345143));
+		assertEquals("http://www.weso.es", documentDao.getDocumentByHashCode(-220345143));
 	}
 	
 	@Test
@@ -106,7 +106,7 @@ public class DocumentMysqlDaoTest {
 		Set<Integer> ids = new HashSet<Integer>();
 		ids.add(9238424);
 		ids.add(93247);
-		assertEquals(Collections.EMPTY_SET, documentDao.getDocumentsByHashes(ids));
+		assertEquals(Collections.EMPTY_SET, documentDao.getDocumentsByHashCodes(ids));
 	}
 	
 	@Test
@@ -123,7 +123,7 @@ public class DocumentMysqlDaoTest {
 	
 	@Test
 	public void getDocumentsByHashesEmpty() throws SQLException, ClassNotFoundException{
-		assertEquals(Collections.EMPTY_SET, documentDao.getDocumentsByHashes(Collections.<Integer> emptySet()));
+		assertEquals(Collections.EMPTY_SET, documentDao.getDocumentsByHashCodes(Collections.<Integer> emptySet()));
 	}
 	
 	@Test
@@ -131,7 +131,7 @@ public class DocumentMysqlDaoTest {
 		Set<Integer> hashes = new HashSet<Integer>();
 		hashes.add(9238424);
 		hashes.add(93247);
-		assertEquals(Collections.EMPTY_SET, documentDao.getDocumentsByHashes(hashes));
+		assertEquals(Collections.EMPTY_SET, documentDao.getDocumentsByHashCodes(hashes));
 	}
 	
 	@Test
@@ -143,7 +143,7 @@ public class DocumentMysqlDaoTest {
 		Set<Integer> hashes = new HashSet<Integer>();
 		hashes.add(-220345143);
 		hashes.add(778016507);
-		assertEquals(Documents, documentDao.getDocumentsByHashes(hashes));
+		assertEquals(Documents, documentDao.getDocumentsByHashCodes(hashes));
 	}
 	
 }

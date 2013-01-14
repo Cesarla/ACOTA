@@ -1,8 +1,11 @@
 package org.weso.acota.core.entity;
 
 /**
+ * This class contains the label's name, the  {@link ProviderTO} where it was created
+ * and the linked {@link ResourceTO}
  * 
  * @author Jose María Álvarez
+ * @author César Luis Alvargonzález
  */
 public class TagTO implements Comparable<TagTO>{
 
@@ -20,10 +23,10 @@ public class TagTO implements Comparable<TagTO>{
 	}
 
 	/**
-	 * 
-	 * @param label
-	 * @param provider
-	 * @param tagged
+	 * Secondary constructor.
+	 * @param label Label's name of the tag
+	 * @param provider {@link ProviderTO} where it was created
+	 * @param tagged Linked {@link ResourceTO}
 	 */
 	public TagTO(String label, ProviderTO provider, ResourceTO tagged) {
 		super();
@@ -65,10 +68,18 @@ public class TagTO implements Comparable<TagTO>{
 		this.value = value;
 	}
 	
+	/**
+	 * Adds the value to the current {@link TagTO#value}
+	 * @param value Value to add
+	 */
 	public void addValue(double value){
 		this.value+=value;
 	}
 	
+	/**
+	 * Subtracts the value to the current {@link TagTO#value}
+	 * @param value Value to Subtract
+	 */
 	public void subValue(double value){
 		this.value-=value;
 	}
@@ -123,8 +134,8 @@ public class TagTO implements Comparable<TagTO>{
 
 	@Override
 	public String toString() {
-		return "TagTO [label=" + label + ", provider=" + provider + ", tagged="
-				+ tagged + ", value=" + value + "]";
+		return "TagTO [label=" + label /*+ ", provider=" + provider + ", tagged="
+				+ tagged*/ + ", value=" + value + "]";
 	}
 	
 }

@@ -1,9 +1,10 @@
 package org.weso.acota.core.entity;
 
 /**
+ * {@link org.weso.acota.core.business.enhancer.Enhancer}'s Identifier, it contains the name and the 
+ * URI associated to the {@linked org.weso.acota.core.business.enhancer.Enhancer}
  * 
  * @author Jose María Álvarez
- *
  */
 public class ProviderTO {
 
@@ -11,15 +12,15 @@ public class ProviderTO {
 	protected String uri;
 
 	/**
-	 * Zero-argument default constructor.
+	 * Zero-argument default constructor
 	 */
 	public ProviderTO() {
 		super();
 	}
 
 	/**
-	 * 
-	 * @param provider
+	 * One-argument constructor
+	 * @param provider Provider's name
 	 */
 	public ProviderTO(String provider) {
 		super();
@@ -27,9 +28,9 @@ public class ProviderTO {
 	}
 
 	/**
-	 * 
-	 * @param provider
-	 * @param uri
+	 * Two-argument constructor
+	 * @param provider Provider's name
+	 * @param uri Provider's URI
 	 */
 	public ProviderTO(String provider, String uri) {
 		super();

@@ -4,9 +4,9 @@ import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.SuggestionTO;
 
 /**
+ * Enhancer Interface, implements Chain of Responsibility design pattern
  * 
  * @author César Luis Alvargonzález
- *
  */
 public interface Enhancer {
 
@@ -16,9 +16,9 @@ public interface Enhancer {
 	public void setSuccessor(Enhancer successor);
 	
 	/**
-	 * 
-	 * @param request
-	 * @return
+	 * Enhance the results using several techniques
+	 * @param request {@link RequestSuggestionTO} object
+	 * @return The results of the Enhancement
 	 */
 	public SuggestionTO enhance(RequestSuggestionTO request);
 	

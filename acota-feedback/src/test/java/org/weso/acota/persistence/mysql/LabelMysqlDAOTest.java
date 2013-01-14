@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.weso.acota.core.FeedbackConfiguration;
 import org.weso.acota.persistence.LabelDAO;
 
-public class LabelMysqlDaoTest {
+public class LabelMysqlDAOTest {
 	
 	private LabelDAO labelDao;
 	
@@ -106,7 +106,7 @@ public class LabelMysqlDaoTest {
 		Set<Integer> ids = new HashSet<Integer>();
 		ids.add(9238424);
 		ids.add(93247);
-		assertEquals(Collections.EMPTY_SET, labelDao.getLabelsByHashes(ids));
+		assertEquals(Collections.EMPTY_SET, labelDao.getLabelsByHashCodes(ids));
 	}
 	
 	@Test
@@ -123,7 +123,7 @@ public class LabelMysqlDaoTest {
 	
 	@Test
 	public void getLabelsByHashesEmpty() throws SQLException, ClassNotFoundException{
-		assertEquals(Collections.EMPTY_SET, labelDao.getLabelsByHashes(Collections.<Integer> emptySet()));
+		assertEquals(Collections.EMPTY_SET, labelDao.getLabelsByHashCodes(Collections.<Integer> emptySet()));
 	}
 	
 	@Test
@@ -131,7 +131,7 @@ public class LabelMysqlDaoTest {
 		Set<Integer> hashes = new HashSet<Integer>();
 		hashes.add(9238424);
 		hashes.add(93247);
-		assertEquals(Collections.EMPTY_SET, labelDao.getLabelsByHashes(hashes));
+		assertEquals(Collections.EMPTY_SET, labelDao.getLabelsByHashCodes(hashes));
 	}
 	
 	@Test
@@ -143,7 +143,7 @@ public class LabelMysqlDaoTest {
 		Set<Integer> hashes = new HashSet<Integer>();
 		hashes.add(98629247);
 		hashes.add(-350895717);
-		assertEquals(labels, labelDao.getLabelsByHashes(hashes));
+		assertEquals(labels, labelDao.getLabelsByHashCodes(hashes));
 	}
 	
 }
