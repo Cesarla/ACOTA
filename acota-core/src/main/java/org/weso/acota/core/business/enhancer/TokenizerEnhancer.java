@@ -37,12 +37,12 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	protected static final String DESCIPTION = "description";
 	protected static final String LABEL = "label";
 
-	protected double luceneRelevanceLabel;
-	protected double luceneRelevanceTerm;
+	protected double tokenizerRelevanceLabel;
+	protected double tokenizerRelevanceTerm;
 	protected String esSentBin;
 	protected String esPosBin;
 
-	protected int k = 5;
+	protected int k;
 	
 	protected Map<StringArrayWrapper, Double> auxiliar;
 	protected Set<String> tokens;
@@ -124,8 +124,9 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		if (configuration == null)
 			configuration = new Configuration();
 		this.configuration = configuration;
-		this.luceneRelevanceLabel = configuration.getLuceneLabelRelevance();
-		this.luceneRelevanceTerm = configuration.getLuceneTermRelevance();
+		this.tokenizerRelevanceLabel = configuration.getTokenizerLabelRelevance();
+		this.tokenizerRelevanceTerm = configuration.getTokenizerTermRelevance();
+		this.k = configuration.getTokenizerK();
 		this.esPosBin = configuration.getOpenNLPesPosBin();
 		this.esSentBin = configuration.getOpenNLPesSentBin();
 	}
@@ -157,7 +158,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected void extractLabelTerms() throws IOException {
 		extractTerms(LABEL, request.getResource().getLabel(),
-				luceneRelevanceLabel);
+				tokenizerRelevanceLabel);
 	}
 	
 	/**
@@ -166,7 +167,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected void extractDescriptionTerms() throws IOException {
 		extractTerms(DESCIPTION, request.getResource().getDescription(),
-				luceneRelevanceTerm);
+				tokenizerRelevanceTerm);
 	}
 
 	/**

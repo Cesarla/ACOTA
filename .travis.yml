@@ -17,6 +17,7 @@ before_script:
 script: 
   - mvn -Duser.timezone=GMT -f acota-core/pom.xml install test
   - mvn -Duser.timezone=GMT -f acota-feedback/pom.xml install test
+  - mvn -Duser.timezone=GMT -f acota-examples/pom.xml install test
 notifications:
   email:
     - sisa989@gmail.com

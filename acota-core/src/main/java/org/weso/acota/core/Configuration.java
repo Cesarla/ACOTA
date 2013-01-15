@@ -20,6 +20,10 @@ public class Configuration {
 	protected String googleEncoding;
 	protected Double googleRelevance;
 
+	protected Integer tokenizerK;
+	protected Double tokenizerTermRelevance;
+	protected Double tokenizerLabelRelevance;
+	
 	protected Double luceneLabelRelevance;
 	protected Double luceneTermRelevance;
 
@@ -46,6 +50,7 @@ public class Configuration {
 		loadsConfiguration();
 		
 		loadLuceneEnhancerConfig();
+		loadTokenizerEnhancerConfig();
 		loadOpenNLPEnhancerConfig();
 		loadWordnetEnhancerConfig();
 		loadGoogleEnhancerConfig();
@@ -65,6 +70,15 @@ public class Configuration {
 		
 		config.addConfiguration(new PropertiesConfiguration(this.getClass()
 				.getResource(INTERNAL_ACOTA_PROPERTIES_PATH)));
+	}
+	
+	/**
+	 * Loads {@linked org.weso.acota.core.business.enhancer.TokenizerEnhancer}'s Configuration
+	 */
+	private void loadTokenizerEnhancerConfig(){
+		this.tokenizerK = config.getInteger("tokenizer.k", 1);
+		this.tokenizerLabelRelevance = config.getDouble("tokenizer.label.relevance");
+		this.tokenizerTermRelevance = config.getDouble("tokenizer.term.relevance");
 	}
 
 	/**
@@ -172,4 +186,29 @@ public class Configuration {
 		this.wordnetRelevance = wordnetRelevance;
 	}
 
+	public Integer getTokenizerK() {
+		return tokenizerK;
+	}
+
+	public void setTokenizerK(Integer tokenizerK) {
+		this.tokenizerK = tokenizerK;
+	}
+	
+	public Double getTokenizerTermRelevance() {
+		return tokenizerTermRelevance;
+	}
+
+	public void setTokenizerTermRelevance(Double tokenizerTermRelevance) {
+		this.tokenizerTermRelevance = tokenizerTermRelevance;
+	}
+	
+
+	public Double getTokenizerLabelRelevance() {
+		return tokenizerLabelRelevance;
+	}
+
+	public void setTokenizerLabelRelevance(Double tokenizerLabelRelevance) {
+		this.tokenizerLabelRelevance = tokenizerLabelRelevance;
+	}
+	
 }

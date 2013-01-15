@@ -88,7 +88,7 @@ Acota does not include Wordnet Dictionary or NLP Files, you can download it from
 ## License
 
 ```
-  Copyright 2012 WESO Research Group
+  Copyright 2012-2013 WESO Research Group
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
