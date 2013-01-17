@@ -34,8 +34,8 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	protected static final String DESCIPTION = "description";
 	protected static final String LABEL = "label";
 	
-	protected double luceneRelevanceLabel;
-	protected double luceneRelevanceTerm;
+	protected double luceneLabelRelevance;
+	protected double luceneTermRelevance;
 
 	protected Configuration configuration;
 	
@@ -55,8 +55,8 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 		if(configuration==null)
 			configuration = new Configuration();
 		this.configuration = configuration;
-		this.luceneRelevanceLabel = configuration.getLuceneLabelRelevance();
-		this.luceneRelevanceTerm = configuration.getLuceneTermRelevance();
+		this.luceneLabelRelevance = configuration.getLuceneLabelRelevance();
+		this.luceneTermRelevance = configuration.getLuceneTermRelevance();
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected void extractDescriptionTerms() throws IOException {
 		extractTerms(DESCIPTION, request.getResource().getDescription(),
-			luceneRelevanceTerm);
+			luceneTermRelevance);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected void extractLabelTerms() throws IOException {
 		extractTerms(LABEL, request.getResource().getLabel(),
-					luceneRelevanceLabel);
+					luceneLabelRelevance);
 	}
 
 	/**

@@ -105,10 +105,11 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	public TokenizerEnhancer() throws ConfigurationException, IOException {
 		super();
 		
+		this.tokens = new HashSet<String>(Arrays.asList(nplTokensEs));
+		
 		this.auxiliar = new HashMap<StringArrayWrapper, Double>();
 		this.tokenizer = new SimpleTokenizer();
 		this.pattern = Pattern.compile("[^A-Za-z\\d]");
-		this.tokens = new HashSet<String>(Arrays.asList(nplTokensEs));
 		
 		loadConfiguration(configuration);
 		
@@ -182,6 +183,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		String[] sentences = esSentenceDetector.sentDetect(text);
 		auxiliar.clear();
 		for (String sentence : sentences) {
+			System.out.println(sentence);
 			loadChunks(tokenizer.tokenize(sentence), relevance);
 		}
 		analysisOfTerms(relevance);
