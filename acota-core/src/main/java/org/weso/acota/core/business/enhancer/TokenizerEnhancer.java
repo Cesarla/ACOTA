@@ -11,11 +11,9 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import opennlp.maxent.MaxentModel;
 import opennlp.tools.lang.spanish.PosTagger;
 import opennlp.tools.lang.spanish.SentenceDetector;
 import opennlp.tools.postag.POSTagger;
-import opennlp.tools.tokenize.SimpleTokenizer;
 
 import opennlp.tools.lang.spanish.Tokenizer;
 
@@ -112,7 +110,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		
 		this.auxiliar = new HashMap<StringArrayWrapper, Double>();
 		this.tokenizer = new Tokenizer("/etc/acota/open_nlp/es/SpanishTok.bin");
-		this.pattern = Pattern.compile("[^A-Za-z\\d]");
+		this.pattern = Pattern.compile("[^A-Za-z\\dáéíóúñÁÉÍÓÚÑ\\-]");
 		
 		loadConfiguration(configuration);
 		
@@ -186,7 +184,6 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		String[] sentences = esSentenceDetector.sentDetect(text);
 		auxiliar.clear();
 		for (String sentence : sentences) {
-			System.out.println(sentence);
 			loadChunks(tokenizer.tokenize(sentence), relevance);
 		}
 		analysisOfTerms(relevance);
@@ -202,7 +199,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		for (int i = 1; i <= k; i++) {
 			for (int j = 0; j + i <= tokenizedText.length; j++) {
 				addString(
-						cleanChunks(Arrays.copyOfRange(tokenizedText, j, i + j - 1)),
+						cleanChunks(Arrays.copyOfRange(tokenizedText, j, i + j)),
 						relevance);
 			}
 		}

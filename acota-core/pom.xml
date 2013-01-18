@@ -36,6 +36,12 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+		<dependency>
+		<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0</version>
+		</dependency>
+            
 		<!-- Apache Configuration Utils -->
 		<dependency>
 			<groupId>commons-configuration</groupId>
