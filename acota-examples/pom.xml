@@ -4,7 +4,7 @@
   <groupId>org.weso</groupId>
   <artifactId>acota-examples</artifactId>
   <packaging>jar</packaging>
-  <version>0.3.4</version>
+  <version>0.3.5</version>
   <name>acota-examples, library 0.3.5</name>
   <url>http://maven.apache.org</url>
   <dependencies>
