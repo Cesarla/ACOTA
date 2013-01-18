@@ -101,7 +101,7 @@ public class WordnetEnhancerTest {
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		wordnetEnhancer.enhance(request);
-		assertTrue(3 == suggestion.getTags().get("clear").getValue());
+		assertEquals(3d, suggestion.getTags().get("clear").getValue(), 1e-15d);
 	}
 	
 	private SuggestionTO initializeSuggest() throws Exception {

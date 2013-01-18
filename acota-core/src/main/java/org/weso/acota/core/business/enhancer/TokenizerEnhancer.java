@@ -11,10 +11,13 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import opennlp.maxent.MaxentModel;
 import opennlp.tools.lang.spanish.PosTagger;
 import opennlp.tools.lang.spanish.SentenceDetector;
 import opennlp.tools.postag.POSTagger;
 import opennlp.tools.tokenize.SimpleTokenizer;
+
+import opennlp.tools.lang.spanish.Tokenizer;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringUtils;
@@ -50,7 +53,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	protected Pattern pattern;
 	
 	protected SentenceDetector esSentenceDetector;
-	protected SimpleTokenizer tokenizer;
+	protected Tokenizer tokenizer;
 	protected POSTagger esPOSTagger;
 
 	protected Configuration configuration;
@@ -108,7 +111,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		this.tokens = new HashSet<String>(Arrays.asList(nplTokensEs));
 		
 		this.auxiliar = new HashMap<StringArrayWrapper, Double>();
-		this.tokenizer = new SimpleTokenizer();
+		this.tokenizer = new Tokenizer("/etc/acota/open_nlp/es/SpanishTok.bin");
 		this.pattern = Pattern.compile("[^A-Za-z\\d]");
 		
 		loadConfiguration(configuration);

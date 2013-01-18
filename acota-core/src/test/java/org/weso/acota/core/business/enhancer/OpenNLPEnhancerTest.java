@@ -106,7 +106,7 @@ public class OpenNLPEnhancerTest {
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		TagTO tag = new TagTO("prueba", LuceneEnhancer.provider,
 				suggest.getResource());
-		tag.setValue(4.0);
+		tag.setValue(4.0d);
 		tags.put(tag.getLabel(), tag);
 		
 		openNLPEnhancer.tags = tags;
@@ -125,7 +125,7 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.enhance(request);
 		
-		assertEquals(6.0,suggest.getTags().get("prueba").getValue(),1e-15);
+		assertEquals(6.0d, suggest.getTags().get("prueba").getValue(),1e-15);
 	}
 	
 	@Test
@@ -154,10 +154,10 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.processSetence(new String[]{}, new String[]{});
 		
-		assertTrue(tags.get("eso").getValue() == 2.0);
-		assertTrue(tags.get("tu").getValue() == 2.0);
-		assertTrue(tags.get("comer").getValue() == 2.0);
-		assertTrue(tags.get("eso").getValue() == 2.0);
+		assertEquals(2.0d, tags.get("eso").getValue(), 1e-15d);
+		assertEquals(2.0d, tags.get("tu").getValue(), 1e-15d);
+		assertEquals(2.0d, tags.get("comer").getValue(), 1e-15d);
+		assertEquals(2.0d, tags.get("eso").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -175,7 +175,7 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.processSetence(new String[]{"T"}, new String[]{"perro"});
 		
-		assertTrue(openNLPEnhancer.tags.get("perro").getValue()==2);
+		assertEquals(2d, openNLPEnhancer.tags.get("perro").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -215,7 +215,7 @@ public class OpenNLPEnhancerTest {
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		
 		openNLPEnhancer.tags = tags;
-		assertTrue(0 == openNLPEnhancer.calculateMaxValue());
+		assertEquals(0d, openNLPEnhancer.calculateMaxValue(), 1e-15d);
 	}
 	
 	@Test 
@@ -269,7 +269,7 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.findAndChangeNoun();
 		
-		assertTrue(1 == openNLPEnhancer.tags.get("yo").getValue());
+		assertEquals(1d, openNLPEnhancer.tags.get("yo").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -289,7 +289,7 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.noun.add("yo");
 		
 		openNLPEnhancer.findAndChangeNoun();
-		assertTrue(1.5 == openNLPEnhancer.tags.get("yo").getValue());
+		assertEquals(1.5d, openNLPEnhancer.tags.get("yo").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -307,7 +307,7 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.findAndChangeVerbs();
 		
-		assertTrue(2 == openNLPEnhancer.tags.get("comer").getValue());
+		assertEquals(2d, openNLPEnhancer.tags.get("comer").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -328,7 +328,7 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.findAndChangeVerbs();
 		
-		assertTrue(1 == openNLPEnhancer.tags.get("comer").getValue());
+		assertEquals(1d, openNLPEnhancer.tags.get("comer").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -346,7 +346,7 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.findAndChangeNumbers();
 		
-		assertTrue(1 == openNLPEnhancer.tags.get("uno").getValue());
+		assertEquals(1d, openNLPEnhancer.tags.get("uno").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -367,7 +367,7 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.findAndChangeNumbers();
 		
-		assertTrue(0 == openNLPEnhancer.tags.get("uno").getValue());
+		assertEquals(0d, openNLPEnhancer.tags.get("uno").getValue(), 1e-15d);
 	}
 	
 	private SuggestionTO initializeSuggest() throws Exception {
