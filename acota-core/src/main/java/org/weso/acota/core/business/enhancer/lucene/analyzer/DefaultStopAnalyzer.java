@@ -18,10 +18,18 @@ import org.apache.lucene.util.Version;
  */
 public class DefaultStopAnalyzer extends Analyzer {
 	
+	private static DefaultStopAnalyzer DEFAULT_STOP_ANALYZER;
+	
 	/**
 	 * Zero-argument default constructor.
 	 */
 	public DefaultStopAnalyzer(){}
+	
+	public static DefaultStopAnalyzer getInstance(){
+		if(DEFAULT_STOP_ANALYZER==null)
+			DefaultStopAnalyzer.DEFAULT_STOP_ANALYZER = new DefaultStopAnalyzer();
+		return DEFAULT_STOP_ANALYZER;
+	}
 	
 	@Override
 	public final TokenStream tokenStream(String arg0, Reader reader) {

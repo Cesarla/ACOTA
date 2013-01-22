@@ -47,7 +47,7 @@ public class FeedbackConfiguration extends Configuration {
 	public FeedbackConfiguration() throws ConfigurationException {
 		super();
 
-		Configuration.logger = Logger.getLogger(FeedbackConfiguration.class);
+		Configuration.LOGGER = Logger.getLogger(FeedbackConfiguration.class);
 
 		config.addConfiguration(new PropertiesConfiguration(this.getClass()
 				.getResource(INTERNAL_ACOTA_PERSISTENCE_PROPERTIES_PATH)));

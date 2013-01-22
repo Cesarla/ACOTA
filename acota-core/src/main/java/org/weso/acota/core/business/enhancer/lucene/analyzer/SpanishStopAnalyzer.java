@@ -58,12 +58,22 @@ public class SpanishStopAnalyzer extends Analyzer {
 		"tenidas","tened"
 	};
 	
-	protected static final Set<Object> stopWrods = StopFilter.makeStopSet(Version.LUCENE_31,SPANISH_STOP_WORDS);
+	private static SpanishStopAnalyzer SPANISH_STOP_ANALYZER;
+	
+	protected Set<Object> stopWrods;
 	
 	/**
 	 * Zero-argument default constructor.
 	 */
-	public SpanishStopAnalyzer() {}
+	private SpanishStopAnalyzer() {
+		this.stopWrods = StopFilter.makeStopSet(Version.LUCENE_31,SPANISH_STOP_WORDS);
+	}
+	
+	public static SpanishStopAnalyzer getInstance(){
+		if(SPANISH_STOP_ANALYZER==null)
+			SpanishStopAnalyzer.SPANISH_STOP_ANALYZER = new SpanishStopAnalyzer();
+		return SPANISH_STOP_ANALYZER;
+	}
 
 	@Override
 	public final TokenStream tokenStream(String arg0, Reader reader) {

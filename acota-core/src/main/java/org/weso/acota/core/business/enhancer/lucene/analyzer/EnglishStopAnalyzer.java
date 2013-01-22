@@ -21,11 +21,19 @@ import org.apache.lucene.util.Version;
  */
 public class EnglishStopAnalyzer extends Analyzer {
 	
+	private static EnglishStopAnalyzer ENGLISH_STOP_ANALYZER;
+	
 	/**
 	 * Zero-argument default constructor.
 	 */
-	public EnglishStopAnalyzer() {}
+	private EnglishStopAnalyzer() {}
 
+	public static EnglishStopAnalyzer getInstance(){
+		if(ENGLISH_STOP_ANALYZER==null)
+			EnglishStopAnalyzer.ENGLISH_STOP_ANALYZER = new EnglishStopAnalyzer();
+		return ENGLISH_STOP_ANALYZER;
+	}
+	
 	@Override
 	public final TokenStream tokenStream(String arg0, Reader reader) {
 		TokenStream result = new StandardTokenizer(Version.LUCENE_31, reader);
