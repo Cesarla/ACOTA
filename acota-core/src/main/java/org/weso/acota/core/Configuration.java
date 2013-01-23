@@ -4,6 +4,7 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 /**
  * The main task of this class is to load the core configuration properties of
@@ -50,10 +51,10 @@ public class Configuration {
 	/**
 	 * Zero-argument default constructor.
 	 * 
-	 * @throws ConfigurationException Any exception that 
-	 * occurs while initializing a Configuration object
+	 * @throws AcotaConfigurationException Any exception that 
+	 * occurs while initializing a Acota's Configuration object
 	 */
-	public Configuration() throws ConfigurationException {
+	public Configuration() throws AcotaConfigurationException{
 		Configuration.LOGGER = Logger.getLogger(Configuration.class);
 
 		if(CONFIG==null){
@@ -148,94 +149,6 @@ public class Configuration {
 		return wordnetRelevance;
 	}
 
-	/**
-	 * Loads an Array from a String
-	 * 
-	 * @param planeArray  String to transform
-	 * @return Array generated
-	 */
-	private String[] loadArray(String planeArray) {
-		return planeArray.split("[\\s,;]+");
-	}
-
-	/**
-	 * Loads {@linked org.weso.acota.core.business.enhancer.GoogleEnhancer}'s
-	 * Configuration
-	 */
-	private void loadGoogleEnhancerConfig() {
-		this.setGoogleUrl(CONFIG.getString("google.url"));
-		this.setGoogleEncoding(CONFIG.getString("google.encoding"));
-		this.setGoogleRelevance(CONFIG.getDouble("google.relevance"));
-	}
-
-	/**
-	 * Loads {@linked org.weso.acota.core.business.enhancer.LuceneEnhancer}'s
-	 * Configuration
-	 */
-	private void loadLuceneEnhancerConfig() {
-		this.setLuceneTermRelevance(CONFIG
-				.getDouble("lucene.term.relevance"));
-		this.setLuceneLabelRelevance(CONFIG
-				.getDouble("lucene.label.relevance"));
-	}
-
-	/**
-	 * Loads {@linked org.weso.acota.core.business.enhancer.OpenNLPEnhancer}'s
-	 * Configuration
-	 */
-	private void loadOpenNLPEnhancerConfig() {
-		this.setOpenNLPesPosBin(CONFIG.getString("opennlp.es.pos"));
-		this.setOpenNLPesSentBin(CONFIG.getString("opennlp.es.sent"));
-		this.setOpenNLPesTokBin(CONFIG.getString("opennlp.es.tok"));
-		this.setOpenNLPenPosBin(CONFIG.getString("opennlp.en.pos"));
-		this.setOpenNLPenSentBin(CONFIG.getString("opennlp.en.sent"));
-		this.setOpenNLPenTokBin(CONFIG.getString("opennlp.en.tok"));
-	}
-
-	/**
-	 * Loads {@linked org.weso.acota.core.business.enhancer.TokenizerEnhancer}'s
-	 * Configuration
-	 */
-	private void loadTokenizerEnhancerConfig() {
-		this.setTokenizerK(CONFIG.getInteger("tokenizer.k", 1));
-		this.setTokenizerLabelRelevance (CONFIG
-				.getDouble("tokenizer.label.relevance"));
-		this.setTokenizerTermRelevance(CONFIG
-				.getDouble("tokenizer.term.relevance"));
-		this.setTokenizerEnPattern(CONFIG.getString("tokenizer.en.pattern"));
-		this.setTokenizerEnTokens(loadArray(CONFIG
-				.getString("tokenizer.en.tokens")));
-		this.setTokenizerEsPattern(CONFIG.getString("tokenizer.es.pattern"));
-		this.setTokenizerEsTokens(loadArray(CONFIG
-				.getString("tokenizer.es.tokens")));
-	}
-
-	/**
-	 * Loads {@linked org.weso.acota.core.business.enhancer.WordnetEnhancer}'s
-	 * Configuration
-	 */
-	private void loadWordnetEnhancerConfig() {
-		this.setWordnetEnDict(CONFIG.getString("wordnet.en.dict"));
-		this.setWordnetRelevance(CONFIG.getDouble("wordnet.relevance"));
-	}
-
-	/**
-	 * Loads Acota's configuration properties files
-	 * 
-	 * @throws ConfigurationException Any exception that occurs 
-	 * while initializing a Configuration object
-	 */
-	private void loadsConfiguration() throws ConfigurationException {
-		try {
-			CONFIG.addConfiguration(new PropertiesConfiguration(
-					"acota.properties"));
-		} catch (Exception e) {
-			LOGGER.warn("acota.properties not found, Using default values.");
-		}
-
-		CONFIG.addConfiguration(new PropertiesConfiguration(this.getClass()
-				.getResource(INTERNAL_ACOTA_PROPERTIES_PATH)));
-	}
 
 	public void setGoogleEncoding(String googleEncoding) {
 		this.googleEncoding = googleEncoding;
@@ -317,4 +230,98 @@ public class Configuration {
 		this.wordnetRelevance = wordnetRelevance;
 	}
 
+	/**
+	 * Loads {@linked org.weso.acota.core.business.enhancer.GoogleEnhancer}'s
+	 * Configuration
+	 */
+	private void loadGoogleEnhancerConfig() {
+		this.setGoogleUrl(CONFIG.getString("google.url"));
+		this.setGoogleEncoding(CONFIG.getString("google.encoding"));
+		this.setGoogleRelevance(CONFIG.getDouble("google.relevance"));
+	}
+
+	/**
+	 * Loads {@linked org.weso.acota.core.business.enhancer.LuceneEnhancer}'s
+	 * Configuration
+	 */
+	private void loadLuceneEnhancerConfig() {
+		this.setLuceneTermRelevance(CONFIG
+				.getDouble("lucene.term.relevance"));
+		this.setLuceneLabelRelevance(CONFIG
+				.getDouble("lucene.label.relevance"));
+	}
+
+	/**
+	 * Loads {@linked org.weso.acota.core.business.enhancer.OpenNLPEnhancer}'s
+	 * Configuration
+	 */
+	private void loadOpenNLPEnhancerConfig() {
+		this.setOpenNLPesPosBin(CONFIG.getString("opennlp.es.pos"));
+		this.setOpenNLPesSentBin(CONFIG.getString("opennlp.es.sent"));
+		this.setOpenNLPesTokBin(CONFIG.getString("opennlp.es.tok"));
+		this.setOpenNLPenPosBin(CONFIG.getString("opennlp.en.pos"));
+		this.setOpenNLPenSentBin(CONFIG.getString("opennlp.en.sent"));
+		this.setOpenNLPenTokBin(CONFIG.getString("opennlp.en.tok"));
+	}
+
+	/**
+	 * Loads {@linked org.weso.acota.core.business.enhancer.TokenizerEnhancer}'s
+	 * Configuration
+	 */
+	private void loadTokenizerEnhancerConfig() {
+		this.setTokenizerK(CONFIG.getInteger("tokenizer.k", 1));
+		this.setTokenizerLabelRelevance (CONFIG
+				.getDouble("tokenizer.label.relevance"));
+		this.setTokenizerTermRelevance(CONFIG
+				.getDouble("tokenizer.term.relevance"));
+		this.setTokenizerEnPattern(CONFIG.getString("tokenizer.en.pattern"));
+		this.setTokenizerEnTokens(loadArray(CONFIG
+				.getString("tokenizer.en.tokens")));
+		this.setTokenizerEsPattern(CONFIG.getString("tokenizer.es.pattern"));
+		this.setTokenizerEsTokens(loadArray(CONFIG
+				.getString("tokenizer.es.tokens")));
+	}
+
+	/**
+	 * Loads {@linked org.weso.acota.core.business.enhancer.WordnetEnhancer}'s
+	 * Configuration
+	 */
+	private void loadWordnetEnhancerConfig() {
+		this.setWordnetEnDict(CONFIG.getString("wordnet.en.dict"));
+		this.setWordnetRelevance(CONFIG.getDouble("wordnet.relevance"));
+	}
+
+	/**
+	 * Loads Acota's configuration properties files
+	 * 
+	 * @throws AcotaConfigurationException Any exception that occurs 
+	 * while initializing a Configuration object
+	 */
+	protected void loadsConfiguration() throws AcotaConfigurationException {
+		try {
+			CONFIG.addConfiguration(new PropertiesConfiguration(
+					"acota.properties"));
+		} catch (Exception e) {
+			LOGGER.warn("acota.properties not found, Using default values.");
+		}
+
+		try {
+			CONFIG.addConfiguration(new PropertiesConfiguration(this.getClass()
+					.getResource(INTERNAL_ACOTA_PROPERTIES_PATH)));
+		} catch (ConfigurationException e) {
+			throw new AcotaConfigurationException(e);
+		}
+		
+	}
+	
+	/**
+	 * Loads an Array from a String
+	 * 
+	 * @param planeArray  String to transform
+	 * @return Array generated
+	 */
+	private String[] loadArray(String planeArray) {
+		return planeArray.split("[\\s,;]+");
+	}
+	
 }

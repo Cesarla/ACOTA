@@ -9,25 +9,25 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttributeImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.weso.acota.core.business.enhancer.LuceneEnhancer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.EnglishStopAnalyzer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.SpanishStopAnalyzer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.DefaultStopAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.lucene.DefaultStopAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.lucene.EnglishStopAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.lucene.SpanishStopAnalyzer;
 import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
 import org.weso.acota.core.entity.SuggestionTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 public class LuceneEnhancerTest{
 
 	private LuceneEnhancer luceneEnhancer;
 
 	@Before
-	public void startTest() throws ConfigurationException {
+	public void startTest() throws AcotaConfigurationException {
 		this.luceneEnhancer = new LuceneEnhancer();
 	}
 
@@ -37,7 +37,7 @@ public class LuceneEnhancerTest{
 	}
 	
 	@Test
-	public void enhanceWithSuccessor()throws IOException, ConfigurationException{
+	public void enhanceWithSuccessor()throws AcotaConfigurationException{
 		luceneEnhancer.setSuccessor(new LuceneEnhancer());
 		ResourceTO resource = new ResourceTO();
 		resource.setDescription("Esto es Español");

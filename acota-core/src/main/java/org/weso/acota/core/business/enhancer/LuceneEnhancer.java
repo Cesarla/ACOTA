@@ -3,7 +3,6 @@ package org.weso.acota.core.business.enhancer;
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -11,11 +10,13 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.tika.language.LanguageIdentifier;
 import org.weso.acota.core.Configuration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.EnglishStopAnalyzer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.SpanishStopAnalyzer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.DefaultStopAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.lucene.DefaultStopAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.lucene.EnglishStopAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.lucene.SpanishStopAnalyzer;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
+
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_ENGLISH;
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 
@@ -41,17 +42,17 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	
 	/**
 	 * Zero-argument default constructor
-	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
 	 * a Configuration object
 	 */
-	public LuceneEnhancer() throws ConfigurationException{
+	public LuceneEnhancer() throws AcotaConfigurationException{
 		super();
 		LuceneEnhancer.provider = new ProviderTO("Lucene Analizer");
 		loadConfiguration(configuration);
 	}
 	
 	@Override
-	public void loadConfiguration(Configuration configuration) throws ConfigurationException{
+	public void loadConfiguration(Configuration configuration) throws AcotaConfigurationException{
 		if(configuration==null)
 			configuration = new Configuration();
 		this.configuration = configuration;

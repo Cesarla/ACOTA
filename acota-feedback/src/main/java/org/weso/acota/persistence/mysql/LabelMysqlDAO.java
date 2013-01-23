@@ -10,8 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.entity.persistence.tables.LabelTable;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 import org.weso.acota.persistence.LabelDAO;
 
 /**
@@ -28,10 +28,10 @@ public class LabelMysqlDAO extends GenericMysqlDAO implements LabelDAO {
 
 	/**
 	 * Zero-argument default constructor
-	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
 	 * a Configuration object
 	 */
-	public LabelMysqlDAO() throws ConfigurationException {
+	public LabelMysqlDAO() throws AcotaConfigurationException  {
 		super();
 		LabelTable label = configuration.getLabelTuple();
 		this.tableName = label.getName();

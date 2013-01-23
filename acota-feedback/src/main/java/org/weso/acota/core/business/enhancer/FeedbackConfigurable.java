@@ -1,7 +1,7 @@
 package org.weso.acota.core.business.enhancer;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.FeedbackConfiguration;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 /**
  * Configurable Interface, this interface allows configure the classes that
@@ -16,10 +16,10 @@ public interface FeedbackConfigurable {
 	 * 
 	 * @param configuration
 	 *            Acota-core's feedback class
-	 * @throws ConfigurationException
+	 * @throws AcotaConfigurationException 
 	 *             Any exception that occurs while initializing a Configuration
 	 *             object
 	 */
 	public void loadConfiguration(FeedbackConfiguration configuration)
-			throws ConfigurationException;
+			throws AcotaConfigurationException ;
 }

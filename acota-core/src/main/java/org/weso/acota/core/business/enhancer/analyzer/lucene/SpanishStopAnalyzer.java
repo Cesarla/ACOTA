@@ -1,4 +1,4 @@
-package org.weso.acota.core.business.enhancer.lucene.analyzer;
+package org.weso.acota.core.business.enhancer.analyzer.lucene;
 
 import java.io.IOException;
 import java.io.Reader;

@@ -14,7 +14,6 @@ import java.util.Set;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.weso.acota.core.business.enhancer.CustomRecommenderEnhancer;
@@ -23,6 +22,7 @@ import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
 import org.weso.acota.core.entity.SuggestionTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 import org.weso.acota.persistence.mysql.FeedbackMysqlDAO;
 
 public class CustomRecommenderEnhancerTest {
@@ -30,7 +30,7 @@ public class CustomRecommenderEnhancerTest {
 	protected CustomRecommenderEnhancer simpleRecommenderEnhancer;
 
 	@Before
-	public void startUp() throws ConfigurationException, SQLException,
+	public void startUp() throws AcotaConfigurationException, SQLException,
 			ClassNotFoundException, InstantiationException, IllegalAccessException {
 		this.simpleRecommenderEnhancer = new CustomRecommenderEnhancer();
 

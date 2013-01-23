@@ -12,6 +12,7 @@ import org.weso.acota.core.entity.persistence.Feedback;
 import org.weso.acota.core.entity.persistence.tables.DocumentTable;
 import org.weso.acota.core.entity.persistence.tables.FeedbackTable;
 import org.weso.acota.core.entity.persistence.tables.LabelTable;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 import org.weso.acota.persistence.FeedbackDAO;
 
 /**
@@ -43,7 +44,7 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 	 * @throws ConfigurationException Any exception that occurs while initializing 
 	 * a Configuration object
 	 */
-	public FeedbackMysqlDAO() throws ConfigurationException {
+	public FeedbackMysqlDAO() throws AcotaConfigurationException {
 		super();
 		DocumentTable document = configuration.getDocumentTuple();
 		this.documentTableName = document.getName();

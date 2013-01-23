@@ -1,10 +1,8 @@
 package org.weso.acota.core.exceptions;
-
-import java.io.FileNotFoundException;
-
 /**
  * 
- * This class models a generic runtime exception.
+ * @author César Luis Alvargonzález
+ *
  */
 public class AcotaModelException extends RuntimeException {
 
@@ -21,13 +19,5 @@ public class AcotaModelException extends RuntimeException {
 	public AcotaModelException(Exception e, String string) {
 		super(string, e);
 	}
-
-	public AcotaModelException(String string, Exception e) {
-		super(string, e);
-	}
-
-	public AcotaModelException(FileNotFoundException e, String string) {
-		super(string, e);
-	}
-
+	
 }

@@ -9,18 +9,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import opennlp.tools.lang.spanish.PosTagger;
-import opennlp.tools.lang.spanish.SentenceDetector;
-import opennlp.tools.postag.POSTagger;
-import opennlp.tools.tokenize.SimpleTokenizer;
-
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.tika.language.LanguageIdentifier;
 import org.weso.acota.core.Configuration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
+import org.weso.acota.core.business.enhancer.analyzer.opennlp.OpenNLPAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.opennlp.SpanishOpenNLPAnalyzer;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 
@@ -39,27 +36,21 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected static Logger logger;
 	protected static Set<String> tokensEs;
-	
-	protected String esSentBin;
-	protected String esPosBin;
 
 	protected Set<String> noun;
 	protected Set<String> verbs;
 	protected Set<String> numbers;
 	
-	protected SimpleTokenizer tokenizer;
-	protected SentenceDetector esSentenceDetector;
-	protected POSTagger esPOSTagger;
+	protected OpenNLPAnalyzer analyzer;
 	
 	protected Configuration configuration;
 	
 	/**
 	 * Zero-argument default constructor
-	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
 	 * a Configuration object
-	 * @throws IOException Any exception that occurs while reading OpenNLP's files
 	 */
-	public OpenNLPEnhancer() throws ConfigurationException, IOException {
+	public OpenNLPEnhancer() throws AcotaConfigurationException {
 		super();
 		OpenNLPEnhancer.logger = Logger.getLogger(OpenNLPEnhancer.class);
 		OpenNLPEnhancer.provider = new ProviderTO("OpenNPL tagger");
@@ -69,19 +60,14 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		this.numbers = new HashSet<String>();
 		
 		loadConfiguration(configuration);
-		
-		this.tokenizer = new SimpleTokenizer();
-		this.esSentenceDetector = new SentenceDetector(esSentBin);
-		this.esPOSTagger = new PosTagger(esPosBin);
 	}
 	
 	@Override
-	public void loadConfiguration(Configuration configuration) throws ConfigurationException{
+	public void loadConfiguration(Configuration configuration) throws AcotaConfigurationException{
 		if(configuration==null)
 			configuration = new Configuration();
 		this.configuration = configuration;
-		this.esPosBin = configuration.getOpenNLPesPosBin();
-		this.esSentBin = configuration.getOpenNLPesSentBin();
+		this.analyzer = new SpanishOpenNLPAnalyzer(configuration);
 	}
 	
 	@Override
@@ -134,11 +120,11 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		LanguageIdentifier ld = new LanguageIdentifier(text);
 
 		if (ld.getLanguage().equals(ISO_639_SPANISH)) {
-			String sentences[] = esSentenceDetector.sentDetect(suggest
+			String sentences[] = analyzer.sentDetect(suggest
 					.getResource().getDescription());
 			for (String sentence : sentences) {
-				String[] textTokenized = tokenizer.tokenize(sentence);
-				processSetence(esPOSTagger.tag(textTokenized), textTokenized);
+				String[] textTokenized = analyzer.tokenize(sentence);
+				processSetence(analyzer.tag(textTokenized), textTokenized);
 			}
 		}
 

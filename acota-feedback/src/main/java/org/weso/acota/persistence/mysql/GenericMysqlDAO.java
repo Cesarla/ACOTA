@@ -6,8 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.FeedbackConfiguration;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 import org.weso.acota.persistence.GenericDAO;
 
 /**
@@ -23,10 +23,10 @@ public abstract class GenericMysqlDAO implements GenericDAO {
 
 	/**
 	 * Zero-argument default constructor
-	 * @throws ConfigurationException Any exception that occurs while initializing 
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
 	 * a Configuration object
 	 */
-	public GenericMysqlDAO() throws ConfigurationException {
+	public GenericMysqlDAO() throws AcotaConfigurationException {
 		super();
 		this.configuration = new FeedbackConfiguration();
 		this.url = new StringBuilder("jdbc:mysql://")

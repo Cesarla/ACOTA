@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.weso.acota.core.business.enhancer.OpenNLPEnhancer;
@@ -22,13 +20,14 @@ import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
 import org.weso.acota.core.entity.SuggestionTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 public class OpenNLPEnhancerTest {
 	
 	protected OpenNLPEnhancer openNLPEnhancer;
 	
 	@Before
-	public void setUp() throws ConfigurationException, IOException{
+	public void setUp() throws AcotaConfigurationException{
 		this.openNLPEnhancer = new OpenNLPEnhancer();
 	}
 	

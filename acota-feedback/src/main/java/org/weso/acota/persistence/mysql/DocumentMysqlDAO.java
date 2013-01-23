@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.entity.persistence.tables.DocumentTable;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 import org.weso.acota.persistence.DocumentDAO;
 
 /**
@@ -30,7 +31,7 @@ public class DocumentMysqlDAO extends GenericMysqlDAO implements DocumentDAO {
 	 * @throws ConfigurationException Any exception that occurs while initializing 
 	 * a Configuration object
 	 */
-	public DocumentMysqlDAO() throws ConfigurationException {
+	public DocumentMysqlDAO() throws AcotaConfigurationException {
 		super();
 		DocumentTable label = configuration.getDocumentTuple();
 		this.tableName = label.getName();

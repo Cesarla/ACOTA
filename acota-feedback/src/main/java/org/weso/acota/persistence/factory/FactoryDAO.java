@@ -1,7 +1,7 @@
 package org.weso.acota.persistence.factory;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.FeedbackConfiguration;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 import org.weso.acota.persistence.DocumentDAO;
 import org.weso.acota.persistence.FeedbackDAO;
 import org.weso.acota.persistence.LabelDAO;
@@ -18,19 +18,19 @@ public class FactoryDAO {
 
 	/**
 	 * Zero-Argument Constructor
-	 * @throws ConfigurationException ConfigurationException Any exception that 
+	 * @throws AcotaConfigurationException ConfigurationException Any exception that 
 	 * occurs while initializing a Configuration object
 	 */
-	private FactoryDAO() throws ConfigurationException {
+	private FactoryDAO() throws AcotaConfigurationException {
 		FactoryDAO.configuration = new FeedbackConfiguration();
 	}
 
 	/**
 	 * Instantiate FactoryDAO (Singleton Design Pattern)
-	 * @throws ConfigurationException ConfigurationException Any exception that 
+	 * @throws AcotaConfigurationException ConfigurationException Any exception that 
 	 * occurs while initializing a Configuration object
 	 */
-	private static void instanciateClass() throws ConfigurationException {
+	private static void instanciateClass() throws AcotaConfigurationException {
 		if (FACTORY_DAO == null) {
 			FactoryDAO.FACTORY_DAO = new FactoryDAO();
 		}
@@ -40,7 +40,7 @@ public class FactoryDAO {
 	 * Creates a DocumentDAO with the implementation defined in the configuration
 	 * @see DocumentDAO
 	 * @return DocumentDAO with the implementation defined in the configuration
-	 * @throws ConfigurationException ConfigurationException Any exception that 
+	 * @throws AcotaConfigurationException ConfigurationException Any exception that 
 	 * occurs while initializing a Configuration object
 	 * @throws InstantiationException Thrown when an application tries to instantiate
 	 * an interface or an abstract class
@@ -50,7 +50,7 @@ public class FactoryDAO {
 	 * class through its string name
 	 */
 	public static DocumentDAO createDocumentDAO()
-			throws ClassNotFoundException, ConfigurationException,
+			throws ClassNotFoundException, AcotaConfigurationException,
 			InstantiationException, IllegalAccessException {
 		instanciateClass();
 		return (DocumentDAO) Class.forName(configuration.getDocumentDAOClass())
@@ -61,7 +61,7 @@ public class FactoryDAO {
 	 * Creates a FeedbackDAO with the implementation defined in the configuration
 	 * @see FeedbackDAO
 	 * @return DocumentDAO with the implementation defined in the configuration
-	 * @throws ConfigurationException ConfigurationException Any exception that 
+	 * @throws AcotaConfigurationException ConfigurationException Any exception that 
 	 * occurs while initializing a Configuration object
 	 * @throws InstantiationException Thrown when an application tries to instantiate
 	 * an interface or an abstract class
@@ -71,7 +71,7 @@ public class FactoryDAO {
 	 * class through its string name
 	 */
 	public static FeedbackDAO createFeedbackDAO()
-			throws ConfigurationException, InstantiationException,
+			throws AcotaConfigurationException, InstantiationException,
 			IllegalAccessException, ClassNotFoundException {
 		instanciateClass();
 		return (FeedbackDAO) Class.forName(configuration.getFeedbackDAOClass())
@@ -82,7 +82,7 @@ public class FactoryDAO {
 	 * Creates a LabelDAO with the implementation defined in the configuration
 	 * @see LabelDAO LabelDAO with the implementation defined in the configuration
 	 * @return LabelDAO with the implementation defined in the configuration
-	 * @throws ConfigurationException ConfigurationException Any exception that 
+	 * @throws AcotaConfigurationException ConfigurationException Any exception that 
 	 * occurs while initializing a Configuration object
 	 * @throws InstantiationException Thrown when an application tries to instantiate
 	 * an interface or an abstract class
@@ -91,7 +91,7 @@ public class FactoryDAO {
 	 * @throws ClassNotFoundException Thrown when an application tries to load in a
 	 * class through its string name
 	 */
-	public static LabelDAO createLabelDAO() throws ConfigurationException,
+	public static LabelDAO createLabelDAO() throws AcotaConfigurationException,
 			InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
 		instanciateClass();

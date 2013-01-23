@@ -6,23 +6,24 @@ import org.apache.log4j.Logger;
 import org.weso.acota.core.entity.persistence.tables.DocumentTable;
 import org.weso.acota.core.entity.persistence.tables.FeedbackTable;
 import org.weso.acota.core.entity.persistence.tables.LabelTable;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 /**
- * The main task of this class is to load the feedback configuration properties of ACOTA,
- * this properties could be set programmatically or by a configuration file called
- * acota.properties
+ * The main task of this class is to load the feedback CONFIGuration properties
+ * of ACOTA, this properties could be set programmatically or by a CONFIGuration
+ * file called acota.properties
  * 
  * @author César Luis Alvargonzález
- *
+ * 
  */
 public class FeedbackConfiguration extends Configuration {
 
 	protected static final String INTERNAL_ACOTA_PERSISTENCE_PROPERTIES_PATH = "/resources/inner.acota.persistence.properties";
-	
+
 	protected String documentDAOClass;
 	protected String feedbackDAOClass;
 	protected String labelDAOClass;
-	
+
 	protected String databaseUrl;
 	protected String databaseName;
 	protected String databaseUser;
@@ -41,100 +42,102 @@ public class FeedbackConfiguration extends Configuration {
 
 	/**
 	 * Zero-argument default constructor.
-	 * @throws ConfigurationException Any exception that occurs while initializing 
-	 * a Configuration object
+	 * 
+	 * @throws AcotaConfigurationException
+	 *             Any exception that occurs while initializing a Configuration
+	 *             object
 	 */
-	public FeedbackConfiguration() throws ConfigurationException {
+	public FeedbackConfiguration() throws AcotaConfigurationException {
 		super();
 
 		Configuration.LOGGER = Logger.getLogger(FeedbackConfiguration.class);
 
-		config.addConfiguration(new PropertiesConfiguration(this.getClass()
-				.getResource(INTERNAL_ACOTA_PERSISTENCE_PROPERTIES_PATH)));
-
 		loadDAOClasses();
-		loadDatabaseConfig();
-		loadDocumentConfig();
-		loadFeedbackConfig();
-		loadLabelConfig();
+		loadDatabaseCONFIG();
+		loadDocumentCONFIG();
+		loadFeedbackCONFIG();
+		loadLabelCONFIG();
 
-		loadLabelRecommenderConfig();
+		loadLabelRecommenderCONFIG();
 		loadSimpleRecommenderSimple();
 	}
 
 	/**
 	 * Loads the DAO Classes properties
 	 */
-	private void loadDAOClasses(){
-		this.documentDAOClass = config.getString("database.dao.impl.documentDAO");
-		this.feedbackDAOClass = config.getString("database.dao.impl.feedbackDAO");
-		this.labelDAOClass = config.getString("database.dao.impl.labelDAO");
+	private void loadDAOClasses() {
+		this.documentDAOClass = CONFIG
+				.getString("database.dao.impl.documentDAO");
+		this.feedbackDAOClass = CONFIG
+				.getString("database.dao.impl.feedbackDAO");
+		this.labelDAOClass = CONFIG.getString("database.dao.impl.labelDAO");
 	}
-	
+
 	/**
-	 * Loads the Database Configuration properties
+	 * Loads the Database CONFIGuration properties
 	 */
-	private void loadDatabaseConfig() {
-		this.databaseUrl = config.getString("database.url");
-		this.databaseName = config.getString("database.name");
-		this.databaseUser = config.getString("database.user");
-		this.databasePassword = config.getString("database.password");
+	private void loadDatabaseCONFIG() {
+		this.databaseUrl = CONFIG.getString("database.url");
+		this.databaseName = CONFIG.getString("database.name");
+		this.databaseUser = CONFIG.getString("database.user");
+		this.databasePassword = CONFIG.getString("database.password");
 	}
 
 	/**
 	 * Loads the Document Table properties
 	 */
-	private void loadDocumentConfig() {
+	private void loadDocumentCONFIG() {
 		this.documentTuple = new DocumentTable();
-		documentTuple.setName(config.getString("database.document"));
-		documentTuple.setIdAttribute(config.getString("database.document.id"));
-		documentTuple.setNameAttribute(config.getString("database.document.name"));
+		documentTuple.setName(CONFIG.getString("database.document"));
+		documentTuple.setIdAttribute(CONFIG.getString("database.document.id"));
+		documentTuple.setNameAttribute(CONFIG
+				.getString("database.document.name"));
 	}
 
 	/**
 	 * Loads the Feedback Table properties
 	 */
-	private void loadFeedbackConfig() {
+	private void loadFeedbackCONFIG() {
 		this.feedbackTuple = new FeedbackTable();
-		feedbackTuple.setName(config.getString("database.feedback"));
-		feedbackTuple.setIdAttribute(config.getString("database.feedback.id"));
-		feedbackTuple.setUserIdAttribute(config
+		feedbackTuple.setName(CONFIG.getString("database.feedback"));
+		feedbackTuple.setIdAttribute(CONFIG.getString("database.feedback.id"));
+		feedbackTuple.setUserIdAttribute(CONFIG
 				.getString("database.feedback.userId"));
-		feedbackTuple.setDocumentIdAttribute(config
+		feedbackTuple.setDocumentIdAttribute(CONFIG
 				.getString("database.feedback.document"));
-		feedbackTuple.setLabelIdAttribute(config
+		feedbackTuple.setLabelIdAttribute(CONFIG
 				.getString("database.feedback.label"));
-		feedbackTuple.setPreferenceAttribute(config
+		feedbackTuple.setPreferenceAttribute(CONFIG
 				.getString("database.feedback.preference"));
-		feedbackTuple.setTimestampAttribute(config
+		feedbackTuple.setTimestampAttribute(CONFIG
 				.getString("database.feedback.timestamp"));
 	}
 
 	/**
 	 * Loads the Label Table properties
 	 */
-	private void loadLabelConfig() {
+	private void loadLabelCONFIG() {
 		this.labelTuple = new LabelTable();
-		labelTuple.setName(config.getString("database.label"));
-		labelTuple.setIdAttribute(config.getString("database.label.id"));
-		labelTuple.setNameAttribute(config.getString("database.label.name"));
+		labelTuple.setName(CONFIG.getString("database.label"));
+		labelTuple.setIdAttribute(CONFIG.getString("database.label.id"));
+		labelTuple.setNameAttribute(CONFIG.getString("database.label.name"));
 	}
 
 	/**
 	 * Loads the LabelRecommenderEnhancer properties
 	 */
-	private void loadLabelRecommenderConfig() {
-		this.labelRecommenderRelevance = config
+	private void loadLabelRecommenderCONFIG() {
+		this.labelRecommenderRelevance = CONFIG
 				.getDouble("enhancer.recommender.label.relevance");
-		this.labelRecomenderNumRecommendations = config
+		this.labelRecomenderNumRecommendations = CONFIG
 				.getInt("enhancer.recommender.label.recommendations");
 	}
-	
+
 	/**
 	 * Loads the SimpleRecommenderEnhancer properties
 	 */
 	private void loadSimpleRecommenderSimple() {
-		this.simpleRecommenderRelevance = config
+		this.simpleRecommenderRelevance = CONFIG
 				.getDouble("enhancer.recommender.simple.relevance");
 	}
 
@@ -242,7 +245,18 @@ public class FeedbackConfiguration extends Configuration {
 			int labelRecomenderNumRecommendations) {
 		this.labelRecomenderNumRecommendations = labelRecomenderNumRecommendations;
 	}
-	
-	
+
+	/**
+	 * @see org.weso.acota.core.Configuration#loadsConfiguration()
+	 */
+	protected void loadsConfiguration() throws AcotaConfigurationException {
+		super.loadsConfiguration();
+		try {
+			CONFIG.addConfiguration(new PropertiesConfiguration(this.getClass()
+					.getResource(INTERNAL_ACOTA_PERSISTENCE_PROPERTIES_PATH)));
+		} catch (ConfigurationException e) {
+			throw new AcotaConfigurationException(e);
+		}
+	}
 
 }
