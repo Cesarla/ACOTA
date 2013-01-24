@@ -1,5 +1,6 @@
 package org.weso.acota.core;
 
+import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
@@ -16,10 +17,12 @@ import org.weso.acota.core.exceptions.AcotaConfigurationException;
  * @author César Luis Alvargonzález
  * 
  */
-public class FeedbackConfiguration extends Configuration {
+public class FeedbackConfiguration implements Configuration {
 
 	protected static final String INTERNAL_ACOTA_PERSISTENCE_PROPERTIES_PATH = "/resources/inner.acota.persistence.properties";
 
+	protected static Logger LOGGER;
+	protected static CompositeConfiguration CONFIG;
 	protected String documentDAOClass;
 	protected String feedbackDAOClass;
 	protected String labelDAOClass;
@@ -50,15 +53,19 @@ public class FeedbackConfiguration extends Configuration {
 	public FeedbackConfiguration() throws AcotaConfigurationException {
 		super();
 
-		Configuration.LOGGER = Logger.getLogger(FeedbackConfiguration.class);
+		FeedbackConfiguration.LOGGER = Logger.getLogger(FeedbackConfiguration.class);
 
+		if(CONFIG==null){
+			loadsConfiguration();
+		}
+		
 		loadDAOClasses();
-		loadDatabaseCONFIG();
-		loadDocumentCONFIG();
-		loadFeedbackCONFIG();
-		loadLabelCONFIG();
+		loadDatabaseConfig();
+		loadDocumentConfig();
+		loadFeedbackConfig();
+		loadLabelConfig();
 
-		loadLabelRecommenderCONFIG();
+		loadLabelRecommenderConfig();
 		loadSimpleRecommenderSimple();
 	}
 
@@ -76,7 +83,7 @@ public class FeedbackConfiguration extends Configuration {
 	/**
 	 * Loads the Database CONFIGuration properties
 	 */
-	private void loadDatabaseCONFIG() {
+	private void loadDatabaseConfig() {
 		this.databaseUrl = CONFIG.getString("database.url");
 		this.databaseName = CONFIG.getString("database.name");
 		this.databaseUser = CONFIG.getString("database.user");
@@ -86,7 +93,7 @@ public class FeedbackConfiguration extends Configuration {
 	/**
 	 * Loads the Document Table properties
 	 */
-	private void loadDocumentCONFIG() {
+	private void loadDocumentConfig() {
 		this.documentTuple = new DocumentTable();
 		documentTuple.setName(CONFIG.getString("database.document"));
 		documentTuple.setIdAttribute(CONFIG.getString("database.document.id"));
@@ -97,7 +104,7 @@ public class FeedbackConfiguration extends Configuration {
 	/**
 	 * Loads the Feedback Table properties
 	 */
-	private void loadFeedbackCONFIG() {
+	private void loadFeedbackConfig() {
 		this.feedbackTuple = new FeedbackTable();
 		feedbackTuple.setName(CONFIG.getString("database.feedback"));
 		feedbackTuple.setIdAttribute(CONFIG.getString("database.feedback.id"));
@@ -116,7 +123,7 @@ public class FeedbackConfiguration extends Configuration {
 	/**
 	 * Loads the Label Table properties
 	 */
-	private void loadLabelCONFIG() {
+	private void loadLabelConfig() {
 		this.labelTuple = new LabelTable();
 		labelTuple.setName(CONFIG.getString("database.label"));
 		labelTuple.setIdAttribute(CONFIG.getString("database.label.id"));
@@ -126,7 +133,7 @@ public class FeedbackConfiguration extends Configuration {
 	/**
 	 * Loads the LabelRecommenderEnhancer properties
 	 */
-	private void loadLabelRecommenderCONFIG() {
+	private void loadLabelRecommenderConfig() {
 		this.labelRecommenderRelevance = CONFIG
 				.getDouble("enhancer.recommender.label.relevance");
 		this.labelRecomenderNumRecommendations = CONFIG
@@ -249,8 +256,14 @@ public class FeedbackConfiguration extends Configuration {
 	/**
 	 * @see org.weso.acota.core.Configuration#loadsConfiguration()
 	 */
-	protected void loadsConfiguration() throws AcotaConfigurationException {
-		super.loadsConfiguration();
+	public void loadsConfiguration() throws AcotaConfigurationException {
+		FeedbackConfiguration.CONFIG = new CompositeConfiguration();
+		try {
+			CONFIG.addConfiguration(new PropertiesConfiguration(
+					"acota.properties"));
+		} catch (Exception e) {
+			LOGGER.warn("acota.properties not found, Using default values.");
+		}
 		try {
 			CONFIG.addConfiguration(new PropertiesConfiguration(this.getClass()
 					.getResource(INTERNAL_ACOTA_PERSISTENCE_PROPERTIES_PATH)));

@@ -4,7 +4,7 @@ import opennlp.tools.lang.spanish.SentenceDetector;
 import opennlp.tools.lang.spanish.Tokenizer;
 import opennlp.tools.postag.POSTagger;
 
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.business.enhancer.analyzer.tokenizer.TokenizerAnalyzer;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
@@ -20,10 +20,10 @@ public abstract class OpenNLPAnalyzerAdapter implements OpenNLPAnalyzer{
 	protected POSTagger posTagger;
 	
 	/**
-	 * @see org.weso.acota.core.business.enhancer.Configurable#loadConfiguration(Configuration)
+	 * @see org.weso.acota.core.business.enhancer.Configurable#loadConfiguration(CoreConfiguration)
 	 */
 	@Override
-	public abstract void loadConfiguration(Configuration configuration) throws AcotaConfigurationException;
+	public abstract void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException;
 
 	/**
 	 * @see TokenizerAnalyzer#tag(java.lang.String[])

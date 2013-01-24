@@ -1,6 +1,6 @@
 package org.weso.acota.core.business.enhancer;
 
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 /**
@@ -17,5 +17,5 @@ public interface Configurable {
 	 * @throws AcotaConfigurationException Any exception that occurs while 
 	 * initializing a Acota's Configuration object
 	 */
-	public void loadConfiguration(Configuration configuration) throws AcotaConfigurationException;
+	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException;
 }

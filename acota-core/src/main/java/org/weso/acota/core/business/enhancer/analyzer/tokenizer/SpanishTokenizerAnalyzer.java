@@ -1,13 +1,15 @@
 package org.weso.acota.core.business.enhancer.analyzer.tokenizer;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.regex.Pattern;
 
 import opennlp.tools.lang.spanish.PosTagger;
 import opennlp.tools.lang.spanish.SentenceDetector;
 import opennlp.tools.lang.spanish.Tokenizer;
 
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 
@@ -24,21 +26,22 @@ public class SpanishTokenizerAnalyzer extends TokenizerAnalyzerAdapter implement
 	 * @throws AcotaConfigurationException An exception that occurs 
 	 * while installing and configuration Acota
 	 */
-	public SpanishTokenizerAnalyzer(Configuration configuration)
+	public SpanishTokenizerAnalyzer(CoreConfiguration configuration)
 			throws AcotaConfigurationException {
 		loadConfiguration(configuration);
 	}
 	
 	/**
-	 * @see org.weso.acota.core.business.enhancer.Configurable#loadConfiguration(Configuration)
+	 * @see org.weso.acota.core.business.enhancer.Configurable#loadConfiguration(CoreConfiguration)
 	 */
 	@Override
-	public void loadConfiguration(Configuration configuration) throws AcotaConfigurationException {
+	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException {
 		try{
 			this.pattern = Pattern.compile(configuration.getTokenizerEsPattern());
-			this.sentenceDetector = new SentenceDetector(configuration.getOpenNLPesSentBin());
-			this.posTagger = new PosTagger(configuration.getOpenNLPesPosBin());
-			this.tokenizer = new Tokenizer(configuration.getOpenNLPesTokBin());
+			this.sentenceDetector = new SentenceDetector(configuration.getOpenNlpEsSentBin());
+			this.posTagger = new PosTagger(configuration.getOpenNlpEsPosBin());
+			this.tokenizer = new Tokenizer(configuration.getOpenNlpEsTokBin());
+			this.tokens = new HashSet<String>(Arrays.asList(configuration.getTokenizerEsTokens()));
 		} catch (IOException e) {
 			throw new AcotaConfigurationException(e);
 		}

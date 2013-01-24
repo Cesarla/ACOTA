@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.apache.tika.language.LanguageIdentifier;
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.business.enhancer.analyzer.opennlp.OpenNLPAnalyzer;
 import org.weso.acota.core.business.enhancer.analyzer.opennlp.SpanishOpenNLPAnalyzer;
@@ -43,7 +43,7 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected OpenNLPAnalyzer analyzer;
 	
-	protected Configuration configuration;
+	protected CoreConfiguration configuration;
 	
 	/**
 	 * Zero-argument default constructor
@@ -63,9 +63,9 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	}
 	
 	@Override
-	public void loadConfiguration(Configuration configuration) throws AcotaConfigurationException{
+	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException{
 		if(configuration==null)
-			configuration = new Configuration();
+			configuration = new CoreConfiguration();
 		this.configuration = configuration;
 		this.analyzer = new SpanishOpenNLPAnalyzer(configuration);
 	}

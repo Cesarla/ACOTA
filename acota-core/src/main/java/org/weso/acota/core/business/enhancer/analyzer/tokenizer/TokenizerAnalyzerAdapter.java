@@ -3,13 +3,14 @@
  */
 package org.weso.acota.core.business.enhancer.analyzer.tokenizer;
 
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import opennlp.tools.lang.spanish.SentenceDetector;
 import opennlp.tools.lang.spanish.Tokenizer;
 import opennlp.tools.postag.POSTagger;
 
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 /**
@@ -19,17 +20,19 @@ import org.weso.acota.core.exceptions.AcotaConfigurationException;
  *
  */
 public abstract class TokenizerAnalyzerAdapter implements TokenizerAnalyzer{
+	
 	protected Pattern pattern;
 	protected SentenceDetector sentenceDetector;
 	protected Tokenizer tokenizer;
 	protected POSTagger posTagger;
+	protected Set<String> tokens;
 	
 	/**
-	 * @see org.weso.acota.core.business.enhancer.Configurable#loadConfiguration(Configuration)
+	 * @see org.weso.acota.core.business.enhancer.Configurable#loadConfiguration(CoreConfiguration)
 	 */
 	@Override
-	public abstract void loadConfiguration(Configuration configuration) throws AcotaConfigurationException;
-
+	public abstract void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException;
+	
 	/**
 	 * @see TokenizerAnalyzer#match(java.lang.String)
 	 */
@@ -37,6 +40,14 @@ public abstract class TokenizerAnalyzerAdapter implements TokenizerAnalyzer{
 	public boolean match(String text) {
 		return pattern.matcher(text).find();
 	}
+	
+	/**
+	 * @see TokenizerAnalyzer#containsTag(String)
+	 */
+	@Override
+	public boolean containsTag(String tag) {
+		return tokens.contains(tag);
+	};
 	
 	/**
 	 * @see TokenizerAnalyzer#tag(java.lang.String[])

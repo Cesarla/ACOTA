@@ -8,7 +8,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.tika.language.LanguageIdentifier;
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.business.enhancer.analyzer.lucene.DefaultStopAnalyzer;
 import org.weso.acota.core.business.enhancer.analyzer.lucene.EnglishStopAnalyzer;
@@ -38,7 +38,7 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	protected double luceneLabelRelevance;
 	protected double luceneTermRelevance;
 
-	protected Configuration configuration;
+	protected CoreConfiguration configuration;
 	
 	/**
 	 * Zero-argument default constructor
@@ -52,9 +52,9 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	}
 	
 	@Override
-	public void loadConfiguration(Configuration configuration) throws AcotaConfigurationException{
+	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException{
 		if(configuration==null)
-			configuration = new Configuration();
+			configuration = new CoreConfiguration();
 		this.configuration = configuration;
 		this.luceneLabelRelevance = configuration.getLuceneLabelRelevance();
 		this.luceneTermRelevance = configuration.getLuceneTermRelevance();

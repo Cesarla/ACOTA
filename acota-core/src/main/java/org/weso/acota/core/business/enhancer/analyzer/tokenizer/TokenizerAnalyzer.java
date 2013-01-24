@@ -16,6 +16,15 @@ public interface TokenizerAnalyzer extends Configurable{
 	 * @return false if the text does not match
 	 */
 	public boolean match(String text);
+	
+	/**
+	 * Check whether the tag matches against the tag set
+	 * @param tag Tag to be matched
+	 * @return true if the tag matches
+	 * @return false if the tag does not match
+	 */
+	public boolean containsTag(String tag);
+	
 	/**
 	 * Tags a text with Morphosyntactic Tags
 	 * @param text The string to be tagged.
@@ -34,4 +43,6 @@ public interface TokenizerAnalyzer extends Configurable{
 	 * @return The String[] with the detected sentences
 	 */
 	String[] sentDetect(String text);
+	
+	
 }

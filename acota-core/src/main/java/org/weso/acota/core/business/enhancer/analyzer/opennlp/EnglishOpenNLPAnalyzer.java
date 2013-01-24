@@ -6,7 +6,7 @@ import opennlp.tools.lang.spanish.PosTagger;
 import opennlp.tools.lang.spanish.SentenceDetector;
 import opennlp.tools.lang.spanish.Tokenizer;
 
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 /**
@@ -22,19 +22,19 @@ public class EnglishOpenNLPAnalyzer extends OpenNLPAnalyzerAdapter implements Op
 	 * @throws AcotaConfigurationException An exception that occurs 
 	 * while installing and configuration Acota
 	 */
-	public EnglishOpenNLPAnalyzer(Configuration configuration) throws AcotaConfigurationException {
+	public EnglishOpenNLPAnalyzer(CoreConfiguration configuration) throws AcotaConfigurationException {
 		loadConfiguration(configuration);
 	}
 	
 	/**
-	 * @see org.weso.acota.core.business.enhancer.Configurable#loadConfiguration(Configuration)
+	 * @see org.weso.acota.core.business.enhancer.Configurable#loadConfiguration(CoreConfiguration)
 	 */
 	@Override
-	public void loadConfiguration(Configuration configuration) throws AcotaConfigurationException {
+	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException {
 		try{
-			this.sentenceDetector = new SentenceDetector(configuration.getOpenNLPenSentBin());
-			this.posTagger = new PosTagger(configuration.getOpenNLPenPosBin());
-			this.tokenizer = new Tokenizer(configuration.getOpenNLPenTokBin());
+			this.sentenceDetector = new SentenceDetector(configuration.getOpenNlpEnSentBin());
+			this.posTagger = new PosTagger(configuration.getOpenNlpEnPosBin());
+			this.tokenizer = new Tokenizer(configuration.getOpenNlpEnTokBin());
 		} catch (IOException e) {
 			throw new AcotaConfigurationException(e);
 		}
