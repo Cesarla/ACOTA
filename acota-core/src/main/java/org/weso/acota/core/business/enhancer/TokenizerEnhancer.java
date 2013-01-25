@@ -105,6 +105,8 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 
 	/**
 	 * @see Configurable#loadConfiguration(CoreConfiguration)
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
 	@Override
 	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException{
@@ -114,8 +116,10 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		this.k = configuration.getTokenizerK();
 		this.luceneRelevanceLabel = configuration.getTokenizerLabelRelevance();
 		this.luceneRelevanceTerm = configuration.getTokenizerTermRelevance();
-		this.spanishTokenizerAnalyzer = new SpanishTokenizerAnalyzer(configuration);
-		this.englishTokenizerAnalyzer = new EnglishTokenizerAnalyzer(configuration);
+		if(spanishTokenizerAnalyzer!=null)
+			this.spanishTokenizerAnalyzer.loadConfiguration(configuration);
+		if(englishTokenizerAnalyzer!=null)
+			this.englishTokenizerAnalyzer.loadConfiguration(configuration);
 	}
 
 	/**
@@ -151,8 +155,10 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	/**
 	 * Extracts Label terms
 	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
-	protected void extractLabelTerms() throws IOException {
+	protected void extractLabelTerms() throws IOException, AcotaConfigurationException {
 		extractTerms(LABEL, request.getResource().getLabel(),
 				luceneRelevanceLabel);
 	}
@@ -160,8 +166,10 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	/**
 	 * Extracts Description terms
 	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
-	protected void extractDescriptionTerms() throws IOException {
+	protected void extractDescriptionTerms() throws IOException, AcotaConfigurationException {
 		extractTerms(DESCIPTION, request.getResource().getDescription(),
 				luceneRelevanceTerm);
 	}
@@ -172,9 +180,11 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 * @param text Text to extract the terms
 	 * @param relevance Weight which is incremented each matched term
 	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
 	protected void extractTerms(String title, String text, double relevance)
-			throws IOException {
+			throws IOException, AcotaConfigurationException {
 		this.currentTokenizerAnalyzer = loadAnalyzer(text);
 		
 		String[] sentences = currentTokenizerAnalyzer.sentDetect(text);
@@ -303,13 +313,19 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 * Loads a language analyzer (English, Spanish or Default)
 	 * @param text Text to analyze
 	 * @return Lucene's {@link Analyzer}
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object 
 	 */
-	protected TokenizerAnalyzer loadAnalyzer(String text) {
+	protected TokenizerAnalyzer loadAnalyzer(String text) throws AcotaConfigurationException {
 		LanguageIdentifier ld = new LanguageIdentifier(text);
 		TokenizerAnalyzer analyzer = null;
 		if (ld.getLanguage().equals(ISO_639_SPANISH)) {
+			if(spanishTokenizerAnalyzer==null)
+				this.spanishTokenizerAnalyzer = new SpanishTokenizerAnalyzer(configuration);
 			analyzer = spanishTokenizerAnalyzer;
 		} else {
+			if(englishTokenizerAnalyzer==null)
+				this.englishTokenizerAnalyzer = new EnglishTokenizerAnalyzer(configuration);
 			analyzer = englishTokenizerAnalyzer;
 		}
 		return analyzer;
