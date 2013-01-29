@@ -2,7 +2,6 @@ package org.weso.acota.core.business.enhancer;
 
 import java.util.Map.Entry;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.FeedbackConfiguration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.business.enhancer.FeedbackConfigurable;

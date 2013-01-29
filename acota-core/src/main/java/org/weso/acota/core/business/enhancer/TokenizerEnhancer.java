@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.tika.language.LanguageIdentifier;
 import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.business.enhancer.analyzer.tokenizer.EnglishTokenizerAnalyzer;
 import org.weso.acota.core.business.enhancer.analyzer.tokenizer.SpanishTokenizerAnalyzer;
@@ -21,6 +20,7 @@ import org.weso.acota.core.business.enhancer.analyzer.tokenizer.TokenizerAnalyze
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
+import org.weso.acota.core.utils.LanguageUtil;
 
 /**
  * TokenizerEnhancer is an {@link Enhancer} specialized in tokenizing, removing stop-words and
@@ -317,9 +317,9 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 * a Configuration object 
 	 */
 	protected TokenizerAnalyzer loadAnalyzer(String text) throws AcotaConfigurationException {
-		LanguageIdentifier ld = new LanguageIdentifier(text);
+		String language = LanguageUtil.detect(text);
 		TokenizerAnalyzer analyzer = null;
-		if (ld.getLanguage().equals(ISO_639_SPANISH)) {
+		if (language.equals(ISO_639_SPANISH)) {
 			if(spanishTokenizerAnalyzer==null)
 				this.spanishTokenizerAnalyzer = new SpanishTokenizerAnalyzer(configuration);
 			analyzer = spanishTokenizerAnalyzer;

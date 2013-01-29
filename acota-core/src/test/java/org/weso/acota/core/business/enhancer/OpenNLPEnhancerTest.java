@@ -114,7 +114,7 @@ public class OpenNLPEnhancerTest {
 		suggest.setTags(tags);
 		
 		ResourceTO resource = new ResourceTO();
-		resource.setDescription("Esto es una prueba");
+		resource.setDescription("Hola esto es una prueba");
 		resource.setLabel("roberto");
 		
 		
@@ -124,7 +124,7 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.enhance(request);
 		
-		assertEquals(6.0d, suggest.getTags().get("prueba").getValue(),1e-15);
+		assertEquals(9.0d, suggest.getTags().get("prueba").getValue(),1e-15);
 	}
 	
 	@Test

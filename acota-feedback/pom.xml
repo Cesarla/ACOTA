@@ -4,9 +4,9 @@
 
   <groupId>org.weso</groupId>
   <artifactId>acota-feedback</artifactId>
-  <version>0.3.6</version>
+  <version>0.3.5</version>
   <packaging>jar</packaging>
-  <description>acota-feedback, library 0.3.6</description>
+  <description>acota-feedback, library 0.3.5</description>
   <name>acota-feedback</name>
   <url>http://maven.apache.org</url>
 
@@ -35,7 +35,7 @@
 	<dependency>
 		<groupId>org.weso</groupId>
 		<artifactId>acota-core</artifactId>
-		<version>0.3.6</version>
+		<version>0.3.5</version>
 	</dependency>
 	<dependency>
 		<groupId>log4j</groupId>

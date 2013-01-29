@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.tika.language.LanguageIdentifier;
 import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.business.enhancer.analyzer.lucene.DefaultStopAnalyzer;
@@ -16,6 +15,7 @@ import org.weso.acota.core.business.enhancer.analyzer.lucene.SpanishStopAnalyzer
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
+import org.weso.acota.core.utils.LanguageUtil;
 
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_ENGLISH;
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
@@ -84,8 +84,9 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	/**
 	 * Extracts Description Terms
 	 * @throws IOException Any exception that occurs while reading Lucene's TokenStream
+	 * @throws AcotaConfigurationException 
 	 */
-	protected void extractDescriptionTerms() throws IOException {
+	protected void extractDescriptionTerms() throws IOException, AcotaConfigurationException {
 		extractTerms(DESCIPTION, request.getResource().getDescription(),
 			luceneTermRelevance);
 	}
@@ -93,8 +94,9 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	/**
 	 * Extracts Label Terms
 	 * @throws IOException Any exception that occurs while reading Lucene's TokenStream
+	 * @throws AcotaConfigurationException 
 	 */
-	protected void extractLabelTerms() throws IOException {
+	protected void extractLabelTerms() throws IOException, AcotaConfigurationException {
 		extractTerms(LABEL, request.getResource().getLabel(),
 					luceneLabelRelevance);
 	}
@@ -105,9 +107,10 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	 * @param text Text to extract the terms
 	 * @param relevance Weight which is incremented each matched term
 	 * @throws IOException Any exception that occurs while reading Lucene's TokenStream
+	 * @throws AcotaConfigurationException 
 	 */
 	protected void extractTerms(String title, String text, double relevance)
-			throws IOException {
+			throws IOException, AcotaConfigurationException {
 
 		Analyzer analyzer = loadAnalyzer(text);
 
@@ -141,14 +144,14 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	 * Loads a language analyzer (English, Spanish or Default)
 	 * @param text Text to analyze
 	 * @return Lucene's {@link Analyzer}
+	 * @throws AcotaConfigurationException 
 	 */
-	protected Analyzer loadAnalyzer(String text) {
-		LanguageIdentifier ld = new LanguageIdentifier(text);
-
+	protected Analyzer loadAnalyzer(String text) throws AcotaConfigurationException {
+		String language = LanguageUtil.detect(text);
 		Analyzer analyzer = null;
-		if (ld.getLanguage().equals(ISO_639_SPANISH)) {
+		if (language.equals(ISO_639_SPANISH)) {
 			analyzer = SpanishStopAnalyzer.getInstance();
-		} else if (ld.getLanguage().equals(ISO_639_ENGLISH)) {
+		} else if (language.equals(ISO_639_ENGLISH)) {
 			analyzer = EnglishStopAnalyzer.getInstance();
 		} else {
 			analyzer = DefaultStopAnalyzer.getInstance();
