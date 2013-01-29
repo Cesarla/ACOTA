@@ -6,10 +6,10 @@ jdk:
 before_script:
   - 'wget -P acota-core http://156.35.82.101:7000/downloads/acota/utils/travis/core/acota.properties'
   - 'wget -P acota-feedback http://156.35.82.101:7000/downloads/acota/utils/travis/feedback/acota.properties'
-  - 'wget http://156.35.82.101:7000/downloads/acota/utils/SpanishPOS.bin'
-  - 'wget http://156.35.82.101:7000/downloads/acota/utils/SpanishSent.bin'
+  - 'wget http://156.35.82.101:7000/downloads/acota/utils/open_nlp.zip'
   - 'wget http://156.35.82.101:7000/downloads/acota/utils/travis/sql/acota.sql'
   - 'wget http://wordnetcode.princeton.edu/3.0/WNdb-3.0.tar.gz'
+  - 'unzip open_nlp.zip'
   - 'tar -xzf WNdb-3.0.tar.gz'
   - mysql --user="root" --password="" -e 'SET GLOBAL time_zone = "+00:00";'
   - mysql -e 'create database acota;'

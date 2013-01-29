@@ -144,6 +144,7 @@ public class LuceneEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected Analyzer loadAnalyzer(String text) {
 		LanguageIdentifier ld = new LanguageIdentifier(text);
+
 		Analyzer analyzer = null;
 		if (ld.getLanguage().equals(ISO_639_SPANISH)) {
 			analyzer = SpanishStopAnalyzer.getInstance();
