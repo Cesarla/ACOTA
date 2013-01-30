@@ -11,10 +11,13 @@
   <classpathentry kind="src" path="/acota-core"/>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.0/commons-lang3-3.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/1.3.2/commons-io-1.3.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-configuration/commons-configuration/1.9/commons-configuration-1.9.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-core/3.6.0/lucene-core-3.6.0.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/tika/tika-core/1.2/tika-core-1.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cybozu/labs/langdetect/1.1-20120112/langdetect-1.1-20120112.jar"/>
+  <classpathentry kind="var" path="M2_REPO/net/arnx/jsonic/1.2.7/jsonic-1.2.7.jar"/>
   <classpathentry kind="var" path="M2_REPO/opennlp/opennlp-tools/1.4.3/opennlp-tools-1.4.3.jar"/>
   <classpathentry kind="var" path="M2_REPO/opennlp/maxent/2.5.2/maxent-2.5.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/trove/trove/1.0.2/trove-1.0.2.jar"/>
@@ -53,7 +56,6 @@
   <classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-compress/1.2/commons-compress-1.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.9.1/xercesImpl-2.9.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.jar"/>
-  <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.0.1/commons-io-2.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/mongodb/mongo-java-driver/2.5/mongo-java-driver-2.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/mongodb/bson/2.5/bson-2.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/cassandra/cassandra-all/0.8.1/cassandra-all-0.8.1.jar"/>

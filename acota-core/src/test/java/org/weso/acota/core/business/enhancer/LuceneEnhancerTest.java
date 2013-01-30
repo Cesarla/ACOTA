@@ -49,7 +49,7 @@ public class LuceneEnhancerTest{
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		luceneEnhancer.enhance(request);
-		assertEquals(15.22d, suggestion.getTags().get("español").getValue(), 1e-15d);
+		assertEquals(3.44d, suggestion.getTags().get("español").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class LuceneEnhancerTest{
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		luceneEnhancer.enhance(request);
-		assertEquals(7.61d, suggestion.getTags().get("animal").getValue(), 1e-15d);
+		assertEquals(1.72d, suggestion.getTags().get("animal").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -100,19 +100,19 @@ public class LuceneEnhancerTest{
 	}
 
 	@Test
-	public void loadAnalyzerEs() {
+	public void loadAnalyzerEs() throws AcotaConfigurationException {
 		assertTrue(SpanishStopAnalyzer.class.isInstance(
 				luceneEnhancer.loadAnalyzer("Esto es Español")));
 	}
 
 	@Test
-	public void loadAnalyzerEn() {
+	public void loadAnalyzerEn() throws AcotaConfigurationException {
 		assertTrue(EnglishStopAnalyzer.class.isInstance(
 				luceneEnhancer.loadAnalyzer("This is English")));
 	}
 
 	@Test
-	public void loadAnalyzerOther() {
+	public void loadAnalyzerOther() throws AcotaConfigurationException {
 		assertTrue(DefaultStopAnalyzer.class.isInstance(
 				luceneEnhancer.loadAnalyzer("Das ist Deutsche")));
 	}
@@ -133,7 +133,7 @@ public class LuceneEnhancerTest{
 		luceneEnhancer.request = new RequestSuggestionTO(resource);
 		luceneEnhancer.extractDescriptionTerms();
 		
-		assertEquals(0.4d, suggest.getTags().get("español").getValue(), 1e-15d);
+		assertEquals(0.72d, suggest.getTags().get("español").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -181,7 +181,7 @@ public class LuceneEnhancerTest{
 		luceneEnhancer.request = new RequestSuggestionTO(resource);
 		luceneEnhancer.extractDescriptionTerms();
 		
-		assertEquals(1.4d, suggest.getTags().get("español").getValue(),1e-15d);
+		assertEquals(1.72d, suggest.getTags().get("español").getValue(),1e-15d);
 	}
 	
 	@Test
@@ -200,7 +200,7 @@ public class LuceneEnhancerTest{
 		
 		luceneEnhancer.extractLabelTerms();
 		
-		assertEquals(7.21d, suggest.getTags().get("español").getValue(), 1e-15d);
+		assertEquals(1.0d, suggest.getTags().get("español").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -251,7 +251,7 @@ public class LuceneEnhancerTest{
 		
 		luceneEnhancer.extractLabelTerms();
 		
-		assertEquals(8.21d, suggest.getTags().get("español").getValue(), 1e-15d);
+		assertEquals(2.0d, suggest.getTags().get("español").getValue(), 1e-15d);
 	}
 	
 	@Test

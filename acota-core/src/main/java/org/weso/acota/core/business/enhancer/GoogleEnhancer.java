@@ -50,7 +50,7 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 	
 	/**
 	 * Zero-argument default constructor
-	 * @throws AcotaConfigurationException  Any exception that occurs 
+	 * @throws AcotaConfigurationException Any exception that occurs 
 	 * while initializing Configuration object
 	 */
 	public GoogleEnhancer() throws AcotaConfigurationException{

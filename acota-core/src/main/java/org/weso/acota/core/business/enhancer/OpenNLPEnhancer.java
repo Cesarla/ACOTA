@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.apache.tika.language.LanguageIdentifier;
 import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.business.enhancer.analyzer.opennlp.OpenNLPAnalyzer;
@@ -18,6 +17,7 @@ import org.weso.acota.core.business.enhancer.analyzer.opennlp.SpanishOpenNLPAnal
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
+import org.weso.acota.core.utils.LanguageUtil;
 
 import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
 
@@ -98,16 +98,20 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	/**
 	 * Makes an Analysis of the label terms
 	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
-	protected void analyseLabelTerms() throws IOException {
+	protected void analyseLabelTerms() throws IOException, AcotaConfigurationException {
 		analysisOfTerms(request.getResource().getLabel());
 	}
 
 	/**
 	 * Makes an Analysis of the descriptions terms
 	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
-	protected void analyseDescriptionTerms() throws IOException {
+	protected void analyseDescriptionTerms() throws IOException, AcotaConfigurationException {
 		analysisOfTerms(request.getResource().getDescription());
 	}
 
@@ -115,11 +119,13 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	 * Makes an Analysis of a text's terms
 	 * @param text Text to make the analysis
 	 * @throws IOException Any exception that occurs while reading OpenNLP's files
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
-	public void analysisOfTerms(String text) throws IOException {
-		LanguageIdentifier ld = new LanguageIdentifier(text);
+	public void analysisOfTerms(String text) throws IOException, AcotaConfigurationException {
+		String language = LanguageUtil.detect(text);
 
-		if (ld.getLanguage().equals(ISO_639_SPANISH)) {
+		if (language.equals(ISO_639_SPANISH)) {
 			String sentences[] = analyzer.sentDetect(suggest
 					.getResource().getDescription());
 			for (String sentence : sentences) {
