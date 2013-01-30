@@ -1,13 +1,13 @@
 package org.weso.acota.core.business.enhancer.analyzer.tokenizer;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
-import opennlp.tools.lang.spanish.PosTagger;
-import opennlp.tools.lang.spanish.SentenceDetector;
-import opennlp.tools.lang.spanish.Tokenizer;
+import opennlp.tools.dictionary.Dictionary;
+import opennlp.tools.lang.english.PosTagger;
+import opennlp.tools.lang.english.SentenceDetector;
+import opennlp.tools.lang.english.Tokenizer;
 
 import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
@@ -39,9 +39,9 @@ public class EnglishTokenizerAnalyzer extends TokenizerAnalyzerAdapter implement
 		try{
 			this.pattern = Pattern.compile(configuration.getTokenizerEnPattern());
 			this.sentenceDetector = new SentenceDetector(configuration.getOpenNlpEnSentBin());
-			this.posTagger = new PosTagger(configuration.getOpenNlpEnPosBin());
+			this.posTagger = new PosTagger(configuration.getOpenNlpEnPosBin(),new Dictionary());
 			this.tokenizer = new Tokenizer(configuration.getOpenNlpEnTokBin());
-			this.tokens = new HashSet<String>(Arrays.asList(configuration.getTokenizerEnTokens()));
+			this.tokens = new HashSet<String>(configuration.getTokenizerEnTokens());
 		} catch (IOException e) {
 			throw new AcotaConfigurationException(e);
 		}

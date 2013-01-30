@@ -1,7 +1,6 @@
 package org.weso.acota.core.business.enhancer.analyzer.tokenizer;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
@@ -41,7 +40,7 @@ public class SpanishTokenizerAnalyzer extends TokenizerAnalyzerAdapter implement
 			this.sentenceDetector = new SentenceDetector(configuration.getOpenNlpEsSentBin());
 			this.posTagger = new PosTagger(configuration.getOpenNlpEsPosBin());
 			this.tokenizer = new Tokenizer(configuration.getOpenNlpEsTokBin());
-			this.tokens = new HashSet<String>(Arrays.asList(configuration.getTokenizerEsTokens()));
+			this.tokens = new HashSet<String>(configuration.getTokenizerEsTokens());
 		} catch (IOException e) {
 			throw new AcotaConfigurationException(e);
 		}

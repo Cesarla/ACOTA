@@ -114,8 +114,8 @@ public class OpenNLPEnhancerTest {
 		suggest.setTags(tags);
 		
 		ResourceTO resource = new ResourceTO();
-		resource.setDescription("Hola esto es una prueba");
-		resource.setLabel("roberto");
+		resource.setDescription("Hola esto es un contenido de prueba");
+		resource.setLabel("Mi nombre es roberto");
 		
 		
 		RequestSuggestionTO request = mock(RequestSuggestionTO.class);

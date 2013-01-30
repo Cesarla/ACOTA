@@ -1,14 +1,12 @@
-/**
- * 
- */
 package org.weso.acota.core.business.enhancer.analyzer.tokenizer;
 
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import opennlp.tools.lang.spanish.SentenceDetector;
-import opennlp.tools.lang.spanish.Tokenizer;
+
 import opennlp.tools.postag.POSTagger;
+import opennlp.tools.sentdetect.SentenceDetector;
+import opennlp.tools.tokenize.Tokenizer;
 
 import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;

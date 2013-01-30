@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,13 +33,12 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	protected static final String DESCIPTION = "description";
 	protected static final String LABEL = "label";
 
-	protected double luceneRelevanceLabel;
-	protected double luceneRelevanceTerm;
+	protected double tokenizerRelevanceLabel;
+	protected double tokenizerRelevanceTerm;
 
 	protected int k;
 	
 	protected Map<StringArrayWrapper, Double> auxiliar;
-	protected Set<String> tokens;
 
 	protected EnglishTokenizerAnalyzer englishTokenizerAnalyzer;
 	protected SpanishTokenizerAnalyzer spanishTokenizerAnalyzer;
@@ -114,8 +112,8 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 			configuration = new CoreConfiguration();
 		this.configuration = configuration;
 		this.k = configuration.getTokenizerK();
-		this.luceneRelevanceLabel = configuration.getTokenizerLabelRelevance();
-		this.luceneRelevanceTerm = configuration.getTokenizerTermRelevance();
+		this.tokenizerRelevanceLabel = configuration.getTokenizerLabelRelevance();
+		this.tokenizerRelevanceTerm = configuration.getTokenizerTermRelevance();
 		if(spanishTokenizerAnalyzer!=null)
 			this.spanishTokenizerAnalyzer.loadConfiguration(configuration);
 		if(englishTokenizerAnalyzer!=null)
@@ -160,7 +158,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected void extractLabelTerms() throws IOException, AcotaConfigurationException {
 		extractTerms(LABEL, request.getResource().getLabel(),
-				luceneRelevanceLabel);
+				tokenizerRelevanceLabel);
 	}
 	
 	/**
@@ -171,7 +169,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected void extractDescriptionTerms() throws IOException, AcotaConfigurationException {
 		extractTerms(DESCIPTION, request.getResource().getDescription(),
-				luceneRelevanceTerm);
+				tokenizerRelevanceTerm);
 	}
 
 	/**
@@ -206,7 +204,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		for (int i = 1; i <= k; i++) {
 			for (int j = 0; j + i <= tokenizedText.length; j++) {
 				addString(
-						cleanChunks(Arrays.copyOfRange(tokenizedText, j, i + j - 1)),
+						cleanChunks(Arrays.copyOfRange(tokenizedText, j, i + j )),
 						relevance);
 			}
 		}
@@ -273,7 +271,6 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		int min = calculateMin(tags);
 		int max = calculateMax(tags);
 		if (min <= max && min >= 0 && max >= 0) {
-
 			TagTO tag = new TagTO(StringUtils.join(
 					Arrays.copyOfRange(tokenizedText, min, max + 1), " "),
 					provider, request.getResource());

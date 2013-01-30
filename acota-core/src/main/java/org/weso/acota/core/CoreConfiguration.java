@@ -1,5 +1,7 @@
 package org.weso.acota.core;
 
+import java.util.List;
+
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -35,10 +37,11 @@ public class CoreConfiguration implements Configuration {
 	protected String openNlpEsTokBin;
 
 	protected String tokenizerEnPattern;
-	protected String tokenizerEnTokens[];
+	protected List<String> tokenizerEnTokens;
 
 	protected String tokenizerEsPattern;
-	protected String tokenizerEsTokens[];
+	protected List<String> tokenizerEsTokens;
+	
 	protected Integer tokenizerK;
 
 	protected Double tokenizerLabelRelevance;
@@ -117,7 +120,7 @@ public class CoreConfiguration implements Configuration {
 		return tokenizerEnPattern;
 	}
 
-	public String[] getTokenizerEnTokens() {
+	public List<String> getTokenizerEnTokens() {
 		return tokenizerEnTokens;
 	}
 
@@ -125,7 +128,7 @@ public class CoreConfiguration implements Configuration {
 		return tokenizerEsPattern;
 	}
 
-	public String[] getTokenizerEsTokens() {
+	public List<String> getTokenizerEsTokens() {
 		return tokenizerEsTokens;
 	}
 
@@ -197,7 +200,7 @@ public class CoreConfiguration implements Configuration {
 		this.tokenizerEnPattern = tokenizerEnPattern;
 	}
 
-	public void setTokenizerEnTokens(String[] tokenizerEnTokens) {
+	public void setTokenizerEnTokens(List<String> tokenizerEnTokens) {
 		this.tokenizerEnTokens = tokenizerEnTokens;
 	}
 
@@ -205,7 +208,7 @@ public class CoreConfiguration implements Configuration {
 		this.tokenizerEsPattern = tokenizerEsPattern;
 	}
 
-	public void setTokenizerEsTokens(String[] tokenizerEsTokens) {
+	public void setTokenizerEsTokens(List<String> tokenizerEsTokens) {
 		this.tokenizerEsTokens = tokenizerEsTokens;
 	}
 
@@ -287,17 +290,16 @@ public class CoreConfiguration implements Configuration {
 	 * Configuration
 	 */
 	private void loadTokenizerEnhancerConfig() {
+		
 		this.setTokenizerK(CONFIG.getInteger("tokenizer.k", 1));
 		this.setTokenizerLabelRelevance(CONFIG
 				.getDouble("tokenizer.label.relevance"));
 		this.setTokenizerTermRelevance(CONFIG
 				.getDouble("tokenizer.term.relevance"));
 		this.setTokenizerEnPattern(CONFIG.getString("tokenizer.en.pattern"));
-		this.setTokenizerEnTokens(loadArray(CONFIG
-				.getString("tokenizer.en.tokens")));
+		this.setTokenizerEnTokens((List)CONFIG.getList("tokenizer.en.tokens"));
 		this.setTokenizerEsPattern(CONFIG.getString("tokenizer.es.pattern"));
-		this.setTokenizerEsTokens(loadArray(CONFIG
-				.getString("tokenizer.es.tokens")));
+		this.setTokenizerEsTokens((List)CONFIG.getList("tokenizer.es.tokens"));
 	}
 
 	/**
@@ -307,17 +309,6 @@ public class CoreConfiguration implements Configuration {
 	private void loadWordnetEnhancerConfig() {
 		this.setWordnetEnDict(CONFIG.getString("wordnet.en.dict"));
 		this.setWordnetRelevance(CONFIG.getDouble("wordnet.relevance"));
-	}
-
-	/**
-	 * Loads an Array from a String
-	 * 
-	 * @param planeArray
-	 *            String to transform
-	 * @return Array generated
-	 */
-	private String[] loadArray(String planeArray) {
-		return planeArray.split("[\\s,;]+");
 	}
 
 }
