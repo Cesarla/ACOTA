@@ -46,17 +46,22 @@ Map<String, TagTO> labels = suggest.getTags();
 ```
 
 ## Download ##
-The current version of acota is 0.3.4, you can download it from:
+The current version of acota is **0.3.5**, you can download it from:
 ### For Maven Users
- * [acota-core-0.3.4.jar](http://156.35.82.101:7000/downloads/acota/0.3.4/core/acota-core-0.3.4.jar "Download acota-feedback-0.3.4.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.4/core/acota-core-0.3.4.pom "Download acota-feedback-0.3.4.pom")
- * [acota-feedback-0.3.4.jar](http://156.35.82.101:7000/downloads/acota/0.3.4/feedback/acota-feedback-0.3.4.jar "Download acota-feedback-0.3.4.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.4/feedback/acota-feedback-0.3.4.pom "Download acota-feedback-0.3.4.pom")
+ * [acota-core-0.3.5.jar](http://156.35.82.101:7000/downloads/acota/0.3.5/core/acota-core-0.3.5.jar "Download acota-feedback-0.3.5.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.5/core/acota-core-0.3.5.pom "Download acota-feedback-0.3.5.pom")
+ * [acota-feedback-0.3.5.jar](http://156.35.82.101:7000/downloads/acota/0.3.5/feedback/acota-feedback-0.3.5.jar "Download acota-feedback-0.3.5.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.5/feedback/acota-feedback-0.3.5.pom "Download acota-feedback-0.3.5.pom")
 
 ### For Non Maven Users
 Acota-bundle includes all required dependancies:
 
- * [acota-bundle-0.3.4.jar](http://156.35.82.101:7000/downloads/acota/0.3.4/bundle/acota-bundle-0.3.4.jar "Download acota-bundle-0.3.4.jar")
+ * [acota-bundle-0.3.5.jar](http://156.35.82.101:7000/downloads/acota/0.3.5/bundle/acota-bundle-0.3.5.jar "Download acota-bundle-0.3.5.jar")
 
 ### Old Versions
+Acota 0.3.4
+ * [acota-core-0.3.4.jar](http://156.35.82.101:7000/downloads/acota/0.3.4/core/acota-core-0.3.4.jar "Download acota-feedback-0.3.4.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.4/core/acota-core-0.3.4.pom "Download acota-feedback-0.3.4.pom")
+ * [acota-feedback-0.3.4.jar](http://156.35.82.101:7000/downloads/acota/0.3.4/feedback/acota-feedback-0.3.4.jar "Download acota-feedback-0.3.4.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.4/feedback/acota-feedback-0.3.4.pom "Download acota-feedback-0.3.4.pom")
+ * [acota-bundle-0.3.4.jar](http://156.35.82.101:7000/downloads/acota/0.3.4/bundle/acota-bundle-0.3.4.jar "Download acota-bundle-0.3.4.jar")
+
 Acota 0.3.3:
  * [acota-core-0.3.3.jar](http://156.35.82.101:7000/downloads/acota/0.3.3/core/acota-core-0.3.3.jar "Download acota-feedback-0.3.3.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.3/core/acota-core-0.3.3.pom "Download acota-feedback-0.3.3.pom")
  * [acota-feedback-0.3.3.jar](http://156.35.82.101:7000/downloads/acota/0.3.3/feedback/acota-feedback-0.3.3.jar "Download acota-feedback-0.3.3.jar") - [POM File](http://156.35.82.101:7000/downloads/acota/0.3.3/feedback/acota-feedback-0.3.3.pom "Download acota-feedback-0.3.3.pom")
@@ -82,8 +87,9 @@ Acota-feedback requires a MySQL Database, you can download the SQL Creation Scri
 
 Acota does not include Wordnet Dictionary or NLP Files, you can download it from:
  * [Wordnet 3.0](http://wordnetcode.princeton.edu/3.0/WNdb-3.0.tar.gz "Download Wordnet 3.0 Dict Files")
- * [SpanishPOS.bin](http://156.35.82.101:7000/downloads/acota/utils/SpanishPOS.bin "Download SpanishPOS.bin")
- * [SpanishSent.bin](http://156.35.82.101:7000/downloads/acota/utils/SpanishSent.bin "Download SpanishSent.bin")
+ * [OpenNLP Bundle Files](http://156.35.82.101:7000/downloads/acota/utils/open_nlp.zip "OpenNLP Bundle Files")
+ * [OpenNLP English Files](http://156.35.82.101:7000/downloads/acota/utils/open_nlp/es.zip "OpenNLP English Files")
+ * [OpenNLP Spanish Files](http://156.35.82.101:7000/downloads/acota/utils/open_nlp/en.zip "OpenNLP Spanish Files")
 
 ## License
 
