@@ -12,15 +12,15 @@ import java.util.Map.Entry;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.traversal.NodeIterator;
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 import org.weso.acota.core.exceptions.DocumentBuilderException;
 import org.weso.acota.core.utils.DocumentBuilderHelper;
 
@@ -46,23 +46,23 @@ public class GoogleEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected double googleRelevance;
 	
-	protected Configuration configuration;
+	protected CoreConfiguration configuration;
 	
 	/**
 	 * Zero-argument default constructor
-	 * @throws ConfigurationException Any exception that occurs while initializing 
-	 * a Configuration object
+	 * @throws AcotaConfigurationException Any exception that occurs 
+	 * while initializing Configuration object
 	 */
-	public GoogleEnhancer() throws ConfigurationException{
+	public GoogleEnhancer() throws AcotaConfigurationException{
 		super();
 		GoogleEnhancer.provider = new ProviderTO("Google Enhancer");
 		loadConfiguration(configuration);
 	}
 	
 	@Override
-	public void loadConfiguration(Configuration configuration) throws ConfigurationException{
+	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException{
 		if(configuration==null)
-			configuration = new Configuration();
+			configuration = new CoreConfiguration();
 		this.configuration = configuration;
 		this.googleUrl = configuration.getGoogleUrl();
 		this.googleEncoding = configuration.getGoogleEncoding();

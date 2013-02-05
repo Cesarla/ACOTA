@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.weso.acota.core.entity.ProviderTO;
@@ -18,13 +17,14 @@ import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
 import org.weso.acota.core.entity.SuggestionTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 public class WordnetEnhancerTest {
 	
 	private WordnetEnhancer wordnetEnhancer;
 	
 	@Before
-	public void startTest() throws ConfigurationException, IOException {
+	public void startTest() throws AcotaConfigurationException, IOException {
 		this.wordnetEnhancer = new WordnetEnhancer();
 	}
 	
@@ -101,7 +101,7 @@ public class WordnetEnhancerTest {
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		wordnetEnhancer.enhance(request);
-		assertTrue(3 == suggestion.getTags().get("clear").getValue());
+		assertEquals(3d, suggestion.getTags().get("clear").getValue(), 1e-15d);
 	}
 	
 	private SuggestionTO initializeSuggest() throws Exception {

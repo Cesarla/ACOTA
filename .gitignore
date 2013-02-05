@@ -1,4 +1,10 @@
-#java specific
+# maven target folders
+
+acota-core/target
+acota-feedback/target
+acota-examples/target
+
+# java specific
 *.class
 
 ## generic files to ignore

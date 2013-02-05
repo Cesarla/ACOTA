@@ -1,5 +1,7 @@
 package org.weso.acota.core.entity;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 /**
  * Contains data related to a Resource, as URI, label, description
  * or type
@@ -8,10 +10,14 @@ package org.weso.acota.core.entity;
  */
 public class ResourceTO {
 
+	public final static int DEFAULT = 0;
+	public final static int UNESCAPING_HTML = 1;
+	
 	private String uri;
 	private String label;
 	private String description;
 	private String type;
+	private int mode;
 
 	/**
 	 * Zero-argument default constructor.
@@ -22,6 +28,21 @@ public class ResourceTO {
 		this.label = "";
 		this.description = "";
 		this.type = "";
+		this.mode = DEFAULT;
+	}
+	
+
+	/**
+	 * One-argument secondary constructor.
+	 * @param mode Special Characters Escaping Mode
+	 */
+	public ResourceTO(int mode) {
+		super();
+		this.uri = "";
+		this.label = "";
+		this.description = "";
+		this.type = "";
+		this.mode = mode;
 	}
 	
 	/**
@@ -30,13 +51,15 @@ public class ResourceTO {
 	 * @param label Resource's label
 	 * @param description Resource's description
 	 * @param type Resource's type
+	 * @param mode Special Characters Escaping Mode
 	 */
-	public ResourceTO(String uri, String label, String description, String type) {
+	public ResourceTO(String uri, String label, String description, String type, int mode) {
 		super();
 		this.uri = uri;
 		this.label = label;
 		this.description = description;
 		this.type = type;
+		this.mode = mode;
 	}
 	
 	public String getUri() {
@@ -52,7 +75,7 @@ public class ResourceTO {
 	}
 
 	public void setLabel(String label) {
-		this.label = label;
+		this.label = unescapeText(label);
 	}
 
 	public String getDescription() {
@@ -60,7 +83,7 @@ public class ResourceTO {
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+		this.description = unescapeText(description);
 	}
 
 	public String getType() {
@@ -69,6 +92,18 @@ public class ResourceTO {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	private String unescapeText(String text) {
+		if(mode==ResourceTO.UNESCAPING_HTML){
+			return StringEscapeUtils.unescapeHtml4(text);
+		}else{
+			return text;
+		}
 	}
 
 	@Override

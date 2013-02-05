@@ -20,13 +20,13 @@ public abstract class EnhancerAdapter implements Enhancer {
 
 	protected static Logger logger;
 	
-	protected RequestSuggestionTO request;
-	protected SuggestionTO suggest;
-	protected Enhancer successor;
+	protected static ProviderTO provider;
 	
 	protected Map<String, TagTO> tags;
 	
-	protected static ProviderTO provider;
+	protected RequestSuggestionTO request;
+	protected SuggestionTO suggest;
+	protected Enhancer successor;
 	
 	/**
 	 * Zero-argument default constructor.
@@ -34,7 +34,7 @@ public abstract class EnhancerAdapter implements Enhancer {
 	 * @throws ConfigurationException Any exception that occurs while initializing a Configuration
 	 *             object
 	 */
-	public EnhancerAdapter() throws ConfigurationException{
+	public EnhancerAdapter(){
 		EnhancerAdapter.logger = Logger.getLogger(EnhancerAdapter.class);
 	}
 	
@@ -58,7 +58,7 @@ public abstract class EnhancerAdapter implements Enhancer {
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Exception enhancing request.", e);
-			throw new AcotaModelException("Exception enhancing request.", e);
+			throw new AcotaModelException(e,"Exception enhancing request.");
 		}
 		return suggest;
 	}

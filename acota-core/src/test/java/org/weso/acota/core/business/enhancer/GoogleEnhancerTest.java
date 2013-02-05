@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.weso.acota.core.business.enhancer.GoogleEnhancer;
@@ -14,12 +13,13 @@ import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
 import org.weso.acota.core.entity.SuggestionTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 public class GoogleEnhancerTest {
 protected GoogleEnhancer googleEnhancer;
 	
 	@Before
-	public void setUp() throws ConfigurationException{
+	public void setUp() throws AcotaConfigurationException {
 		this.googleEnhancer = new GoogleEnhancer();
 	}
 	
@@ -36,7 +36,7 @@ protected GoogleEnhancer googleEnhancer;
 	}
 	
 	@Test
-	public void setAdapterTest() throws ConfigurationException{
+	public void setAdapterTest() throws AcotaConfigurationException {
 		GoogleEnhancer successor = new GoogleEnhancer();
 		googleEnhancer.setSuccessor(successor);
 		assertEquals(successor,googleEnhancer.successor);

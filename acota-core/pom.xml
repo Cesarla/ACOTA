@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.weso</groupId>
 	<artifactId>acota-core</artifactId>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<name>acota-core</name>
 	<packaging>jar</packaging>
-	<description>acota-core, library 0.3.4</description>
+	<description>acota-core, library 0.3.5</description>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,6 +36,16 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+		<dependency>
+		<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+		</dependency>            
 		<!-- Apache Configuration Utils -->
 		<dependency>
 			<groupId>commons-configuration</groupId>
@@ -48,11 +58,11 @@
 			<artifactId>lucene-core</artifactId>
 			<version>3.6.0</version>
 		</dependency>
-		<!-- Apache Tika - Language identification -->
+		<!--LangDetect - Language Detection -->
 		<dependency>
-			<groupId>org.apache.tika</groupId>
-			<artifactId>tika-core</artifactId>
-			<version>1.2</version>
+			<groupId>com.cybozu.labs</groupId>
+			<artifactId>langdetect</artifactId>
+			<version>1.1-20120112</version>
 		</dependency>
 		<!-- Natural Language Processing  -->
 		<dependency>

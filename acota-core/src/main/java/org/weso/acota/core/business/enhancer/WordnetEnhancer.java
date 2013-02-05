@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
@@ -34,15 +34,15 @@ public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 	
 	protected IDictionary dicionary;
 	
-	protected Configuration configuration;
+	protected CoreConfiguration configuration;
 	
 	/**
 	 * Zero-argument default constructor
-	 * @throws ConfigurationException Any exception that occurs while initializing 
-	 * a Configuration object
 	 * @throws IOException Any exception that occurs while initializing Wordnet's dictionary
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
-	public WordnetEnhancer() throws ConfigurationException, IOException {
+	public WordnetEnhancer() throws IOException, AcotaConfigurationException  {
 		super();
 		WordnetEnhancer.provider = new ProviderTO("Wordnet Enhancer");
 		loadConfiguration(configuration);
@@ -53,9 +53,9 @@ public class WordnetEnhancer extends EnhancerAdapter implements Configurable {
 	}
 	
 	@Override
-	public void loadConfiguration(Configuration configuration) throws ConfigurationException{
+	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException{
 		if(configuration==null)
-			configuration = new Configuration();
+			configuration = new CoreConfiguration();
 		this.configuration = configuration;
 		this.wordnetEnDict = configuration.getWordnetEnDict();
 		this.wordnetRelevance = configuration.getWordnetRelevance();	

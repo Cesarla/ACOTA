@@ -1,59 +1,51 @@
 package org.weso.acota.core.business.enhancer;
 
+import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
-import opennlp.tools.lang.spanish.PosTagger;
-import opennlp.tools.lang.spanish.SentenceDetector;
-import opennlp.tools.postag.POSTagger;
-import opennlp.tools.tokenize.SimpleTokenizer;
-
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringUtils;
-import org.weso.acota.core.Configuration;
+import org.apache.lucene.analysis.Analyzer;
+import org.weso.acota.core.CoreConfiguration;
+import org.weso.acota.core.business.enhancer.analyzer.tokenizer.EnglishTokenizerAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.tokenizer.SpanishTokenizerAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.tokenizer.TokenizerAnalyzer;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
+import org.weso.acota.core.utils.LanguageUtil;
 
 /**
  * TokenizerEnhancer is an {@link Enhancer} specialized in tokenizing, removing stop-words and
  * cleaning the input data, producing a set of k-word {@link TagTO}s, k is configurable and
- * supplied by {@link Configuration}.
+ * supplied by {@link CoreConfiguration}.
  * 
  * @author César Luis Alvargonzález
  */
 public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
-
-	protected static final String[] nplTokensEs= new String[] { "NC", "NP", "VA", "VIP", "VM", "VS",
-		"W", "Z", "ZM", "ZP", "AO", "AQ" };
 	
 	protected static final String DESCIPTION = "description";
 	protected static final String LABEL = "label";
 
-	protected double luceneRelevanceLabel;
-	protected double luceneRelevanceTerm;
-	protected String esSentBin;
-	protected String esPosBin;
+	protected double tokenizerRelevanceLabel;
+	protected double tokenizerRelevanceTerm;
 
-	protected int k = 5;
+	protected int k;
 	
 	protected Map<StringArrayWrapper, Double> auxiliar;
-	protected Set<String> tokens;
 
-	protected Pattern pattern;
+	protected EnglishTokenizerAnalyzer englishTokenizerAnalyzer;
+	protected SpanishTokenizerAnalyzer spanishTokenizerAnalyzer;
 	
-	protected SentenceDetector esSentenceDetector;
-	protected SimpleTokenizer tokenizer;
-	protected POSTagger esPOSTagger;
-
-	protected Configuration configuration;
+	protected TokenizerAnalyzer currentTokenizerAnalyzer;
+	
+	protected CoreConfiguration configuration;
 
 	/**
 	 * Inner Class StringArrayWrapper is a wrap of a String[], so
@@ -98,44 +90,48 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 
 	/**
 	 * Zero-argument default constructor
-	 * @throws ConfigurationException Any exception that occurs while initializing 
-	 * a Configuration object
 	 * @throws IOException If there is some issue reading OpenNLP's files
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
-	public TokenizerEnhancer() throws ConfigurationException, IOException {
+	public TokenizerEnhancer() throws IOException, AcotaConfigurationException {
 		super();
-		
 		this.auxiliar = new HashMap<StringArrayWrapper, Double>();
-		this.tokenizer = new SimpleTokenizer();
-		this.pattern = Pattern.compile("[^A-Za-z\\d]");
-		this.tokens = new HashSet<String>(Arrays.asList(nplTokensEs));
-		
 		loadConfiguration(configuration);
-		
-		this.esSentenceDetector = new SentenceDetector(esSentBin);
-		this.esPOSTagger = new PosTagger(esPosBin);
-		
 		LuceneEnhancer.provider = new ProviderTO("Tokenizer Analizer");
 	}
 
+	/**
+	 * @see Configurable#loadConfiguration(CoreConfiguration)
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
+	 */
 	@Override
-	public void loadConfiguration(Configuration configuration)
-			throws ConfigurationException {
+	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException{
 		if (configuration == null)
-			configuration = new Configuration();
+			configuration = new CoreConfiguration();
 		this.configuration = configuration;
-		this.luceneRelevanceLabel = configuration.getLuceneLabelRelevance();
-		this.luceneRelevanceTerm = configuration.getLuceneTermRelevance();
-		this.esPosBin = configuration.getOpenNLPesPosBin();
-		this.esSentBin = configuration.getOpenNLPesSentBin();
+		this.k = configuration.getTokenizerK();
+		this.tokenizerRelevanceLabel = configuration.getTokenizerLabelRelevance();
+		this.tokenizerRelevanceTerm = configuration.getTokenizerTermRelevance();
+		if(spanishTokenizerAnalyzer!=null)
+			this.spanishTokenizerAnalyzer.loadConfiguration(configuration);
+		if(englishTokenizerAnalyzer!=null)
+			this.englishTokenizerAnalyzer.loadConfiguration(configuration);
 	}
 
+	/**
+	 * @see EnhancerAdapter#execute()
+	 */
 	@Override
 	protected void execute() throws Exception {
 		extractLabelTerms();
 		extractDescriptionTerms();
 	}
 
+	/**
+	 * @see EnhancerAdapter#preExecute()
+	 */
 	@Override
 	protected void preExecute() throws Exception {
 		this.suggest = request.getSuggestions();
@@ -143,6 +139,9 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		suggest.setResource(request.getResource());
 	}
 
+	/**
+	 * @see EnhancerAdapter#postExecute()
+	 */
 	@Override
 	protected void postExecute() throws Exception {
 		logger.debug("Add providers to request");
@@ -154,19 +153,23 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	/**
 	 * Extracts Label terms
 	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
-	protected void extractLabelTerms() throws IOException {
+	protected void extractLabelTerms() throws IOException, AcotaConfigurationException {
 		extractTerms(LABEL, request.getResource().getLabel(),
-				luceneRelevanceLabel);
+				tokenizerRelevanceLabel);
 	}
 	
 	/**
 	 * Extracts Description terms
 	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
-	protected void extractDescriptionTerms() throws IOException {
+	protected void extractDescriptionTerms() throws IOException, AcotaConfigurationException {
 		extractTerms(DESCIPTION, request.getResource().getDescription(),
-				luceneRelevanceTerm);
+				tokenizerRelevanceTerm);
 	}
 
 	/**
@@ -175,13 +178,17 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 * @param text Text to extract the terms
 	 * @param relevance Weight which is incremented each matched term
 	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object
 	 */
 	protected void extractTerms(String title, String text, double relevance)
-			throws IOException {
-		String[] sentences = esSentenceDetector.sentDetect(text);
+			throws IOException, AcotaConfigurationException {
+		this.currentTokenizerAnalyzer = loadAnalyzer(text);
+		
+		String[] sentences = currentTokenizerAnalyzer.sentDetect(text);
 		auxiliar.clear();
 		for (String sentence : sentences) {
-			loadChunks(tokenizer.tokenize(sentence), relevance);
+			loadChunks(currentTokenizerAnalyzer.tokenize(sentence), relevance);
 		}
 		analysisOfTerms(relevance);
 
@@ -191,12 +198,13 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 * Generates the k-words saving them into a auxiliary map
 	 * @param tokenizedText Tokenized Text
 	 * @param relevance Weight which is incremented each matched term
+	 * @param TokenizerAnalyzer
 	 */
 	protected void loadChunks(String[] tokenizedText, double relevance) {
 		for (int i = 1; i <= k; i++) {
 			for (int j = 0; j + i <= tokenizedText.length; j++) {
 				addString(
-						cleanChunks(Arrays.copyOfRange(tokenizedText, j, i + j - 1)),
+						cleanChunks(Arrays.copyOfRange(tokenizedText, j, i + j )),
 						relevance);
 			}
 		}
@@ -216,7 +224,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	protected String[] cleanChunks(String[] chunk) {
 		List<String> auxList = new LinkedList<String>();
 		for (int i = 0; i < chunk.length; i++) {
-			if (!pattern.matcher(chunk[i]).find()) {
+			if (!currentTokenizerAnalyzer.match(chunk[i])) {
 				if (!((i == 0 || i == chunk.length - 1) && chunk[i].length() <= 2))
 					auxList.add(chunk[i]);
 			}
@@ -247,7 +255,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected void analysisOfTerms(double relevance) throws IOException {
 		for (Entry<StringArrayWrapper, Double> value : auxiliar.entrySet()) {
-			processSetence(esPOSTagger.tag(value.getKey().data),
+			processSetence(currentTokenizerAnalyzer.tag(value.getKey().data),
 					value.getKey().data, relevance);
 		}
 	}
@@ -263,7 +271,6 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 		int min = calculateMin(tags);
 		int max = calculateMax(tags);
 		if (min <= max && min >= 0 && max >= 0) {
-
 			TagTO tag = new TagTO(StringUtils.join(
 					Arrays.copyOfRange(tokenizedText, min, max + 1), " "),
 					provider, request.getResource());
@@ -279,7 +286,7 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected int calculateMax(String[] tags) {
 		for (int i = tags.length - 1; i >= 0; i--) {
-			if (tokens.contains(tags[i]))
+			if (currentTokenizerAnalyzer.containsTag(tags[i]))
 				return i;
 		}
 		return -1;
@@ -293,10 +300,32 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	 */
 	protected int calculateMin(String[] tags) {
 		for (int i = 0; i < tags.length; i++) {
-			if (tokens.contains(tags[i]))
+			if (currentTokenizerAnalyzer.containsTag(tags[i]))
 				return i;
 		}
 		return -1;
 	}
 
+	/**
+	 * Loads a language analyzer (English, Spanish or Default)
+	 * @param text Text to analyze
+	 * @return Lucene's {@link Analyzer}
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object 
+	 */
+	protected TokenizerAnalyzer loadAnalyzer(String text) throws AcotaConfigurationException {
+		String language = LanguageUtil.detect(text);
+		TokenizerAnalyzer analyzer = null;
+		if (language.equals(ISO_639_SPANISH)) {
+			if(spanishTokenizerAnalyzer==null)
+				this.spanishTokenizerAnalyzer = new SpanishTokenizerAnalyzer(configuration);
+			analyzer = spanishTokenizerAnalyzer;
+		} else {
+			if(englishTokenizerAnalyzer==null)
+				this.englishTokenizerAnalyzer = new EnglishTokenizerAnalyzer(configuration);
+			analyzer = englishTokenizerAnalyzer;
+		}
+		return analyzer;
+	}
+	
 }

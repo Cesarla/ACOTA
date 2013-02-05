@@ -1,7 +1,7 @@
 package org.weso.acota.core.business.enhancer;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.weso.acota.core.Configuration;
+import org.weso.acota.core.CoreConfiguration;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 /**
  * Configurable Interface, this interface allows configure the classes that
@@ -13,12 +13,9 @@ import org.weso.acota.core.Configuration;
 public interface Configurable {
 	/**
 	 * Loads the configuration into the class that implements this interface
-	 * @param configuration
-	 *            acota-core's configuration class
-	 * @throws ConfigurationException
-	 *             Any exception that occurs while initializing a Configuration
-	 *             object
+	 * @param configuration acota-core's configuration class
+	 * @throws AcotaConfigurationException Any exception that occurs while 
+	 * initializing a Acota's Configuration object
 	 */
-	public void loadConfiguration(Configuration configuration)
-			throws ConfigurationException;
+	public void loadConfiguration(CoreConfiguration configuration) throws AcotaConfigurationException;
 }

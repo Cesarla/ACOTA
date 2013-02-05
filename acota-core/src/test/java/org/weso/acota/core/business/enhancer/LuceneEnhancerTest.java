@@ -9,25 +9,25 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttributeImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.weso.acota.core.business.enhancer.LuceneEnhancer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.EnglishStopAnalyzer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.SpanishStopAnalyzer;
-import org.weso.acota.core.business.enhancer.lucene.analyzer.DefaultStopAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.lucene.DefaultStopAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.lucene.EnglishStopAnalyzer;
+import org.weso.acota.core.business.enhancer.analyzer.lucene.SpanishStopAnalyzer;
 import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
 import org.weso.acota.core.entity.SuggestionTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 
 public class LuceneEnhancerTest{
 
 	private LuceneEnhancer luceneEnhancer;
 
 	@Before
-	public void startTest() throws ConfigurationException {
+	public void startTest() throws AcotaConfigurationException {
 		this.luceneEnhancer = new LuceneEnhancer();
 	}
 
@@ -37,7 +37,7 @@ public class LuceneEnhancerTest{
 	}
 	
 	@Test
-	public void enhanceWithSuccessor()throws IOException, ConfigurationException{
+	public void enhanceWithSuccessor()throws AcotaConfigurationException{
 		luceneEnhancer.setSuccessor(new LuceneEnhancer());
 		ResourceTO resource = new ResourceTO();
 		resource.setDescription("Esto es Español");
@@ -49,7 +49,7 @@ public class LuceneEnhancerTest{
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		luceneEnhancer.enhance(request);
-		assertTrue(30 == suggestion.getTags().get("español").getValue());
+		assertEquals(3.44d, suggestion.getTags().get("español").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class LuceneEnhancerTest{
 		when(request.getSuggestions()).thenReturn(suggestion);
 		
 		luceneEnhancer.enhance(request);
-		assertTrue(15 == suggestion.getTags().get("animal").getValue());
+		assertEquals(1.72d, suggestion.getTags().get("animal").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -100,19 +100,19 @@ public class LuceneEnhancerTest{
 	}
 
 	@Test
-	public void loadAnalyzerEs() {
+	public void loadAnalyzerEs() throws AcotaConfigurationException {
 		assertTrue(SpanishStopAnalyzer.class.isInstance(
 				luceneEnhancer.loadAnalyzer("Esto es Español")));
 	}
 
 	@Test
-	public void loadAnalyzerEn() {
+	public void loadAnalyzerEn() throws AcotaConfigurationException {
 		assertTrue(EnglishStopAnalyzer.class.isInstance(
 				luceneEnhancer.loadAnalyzer("This is English")));
 	}
 
 	@Test
-	public void loadAnalyzerOther() {
+	public void loadAnalyzerOther() throws AcotaConfigurationException {
 		assertTrue(DefaultStopAnalyzer.class.isInstance(
 				luceneEnhancer.loadAnalyzer("Das ist Deutsche")));
 	}
@@ -133,7 +133,7 @@ public class LuceneEnhancerTest{
 		luceneEnhancer.request = new RequestSuggestionTO(resource);
 		luceneEnhancer.extractDescriptionTerms();
 		
-		assertTrue(5 == suggest.getTags().get("español").getValue());
+		assertEquals(0.72d, suggest.getTags().get("español").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -144,7 +144,7 @@ public class LuceneEnhancerTest{
 		
 		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
 				suggest.getResource());
-		tag.setValue(1.0);
+		tag.setValue(1.0d);
 		tags.put(tag.getLabel(),tag);
 		
 		suggest.setTags(tags);
@@ -157,7 +157,7 @@ public class LuceneEnhancerTest{
 		luceneEnhancer.request = new RequestSuggestionTO(resource);
 		luceneEnhancer.extractDescriptionTerms();
 		
-		assertTrue(1 == suggest.getTags().get("español").getValue());
+		assertEquals(1d, suggest.getTags().get("español").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -168,7 +168,7 @@ public class LuceneEnhancerTest{
 		
 		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
 				suggest.getResource());
-		tag.setValue(1.0);
+		tag.setValue(1.0d);
 		tags.put(tag.getLabel(),tag);
 		
 		suggest.setTags(tags);
@@ -181,7 +181,7 @@ public class LuceneEnhancerTest{
 		luceneEnhancer.request = new RequestSuggestionTO(resource);
 		luceneEnhancer.extractDescriptionTerms();
 		
-		assertTrue(6 == suggest.getTags().get("español").getValue());
+		assertEquals(1.72d, suggest.getTags().get("español").getValue(),1e-15d);
 	}
 	
 	@Test
@@ -200,7 +200,7 @@ public class LuceneEnhancerTest{
 		
 		luceneEnhancer.extractLabelTerms();
 		
-		assertTrue(10 == suggest.getTags().get("español").getValue());
+		assertEquals(1.0d, suggest.getTags().get("español").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -211,7 +211,7 @@ public class LuceneEnhancerTest{
 		
 		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
 				suggest.getResource());
-		tag.setValue(1.0);
+		tag.setValue(1.0d);
 		tags.put(tag.getLabel(),tag);
 		
 		suggest.setTags(tags);
@@ -225,7 +225,7 @@ public class LuceneEnhancerTest{
 		
 		luceneEnhancer.extractLabelTerms();
 		
-		assertTrue(1 == suggest.getTags().get("español").getValue());
+		assertEquals(1d, suggest.getTags().get("español").getValue(), 1e-15);
 	}
 
 	@Test
@@ -236,7 +236,7 @@ public class LuceneEnhancerTest{
 		
 		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
 				suggest.getResource());
-		tag.setValue(1.0);
+		tag.setValue(1.0d);
 		tags.put(tag.getLabel(),tag);
 		
 
@@ -251,9 +251,8 @@ public class LuceneEnhancerTest{
 		
 		luceneEnhancer.extractLabelTerms();
 		
-		assertTrue(11 == suggest.getTags().get("español").getValue());
+		assertEquals(2.0d, suggest.getTags().get("español").getValue(), 1e-15d);
 	}
-	
 	
 	@Test
 	public void extractTermnsEmtpyLabels() throws Exception{
@@ -264,8 +263,8 @@ public class LuceneEnhancerTest{
 		luceneEnhancer.suggest = suggest;
 		luceneEnhancer.tags = tags;
 		
-		luceneEnhancer.extractTerms("label", "Esto es Español", 10);
-		assertTrue(10 == suggest.getTags().get("español").getValue());
+		luceneEnhancer.extractTerms("label", "Esto es Español", 10d);
+		assertEquals(10d, suggest.getTags().get("español").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -275,14 +274,14 @@ public class LuceneEnhancerTest{
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		TagTO tag = new TagTO("español", LuceneEnhancer.provider,
 				suggest.getResource());
-		tag.setValue(3.0);
+		tag.setValue(3.0d);
 		tags.put(tag.getLabel(), tag);
 		
 		luceneEnhancer.suggest.setTags(tags);
 		luceneEnhancer.tags = tags;
 		
-		luceneEnhancer.extractTerms("label", "Esto es Español", 10);
-		assertTrue(13 == suggest.getTags().get("español").getValue());
+		luceneEnhancer.extractTerms("label", "Esto es Español", 10d);
+		assertEquals(13d, suggest.getTags().get("español").getValue(), 1e-15);
 	}
 	
 	@Test
@@ -301,9 +300,9 @@ public class LuceneEnhancerTest{
 		tag = new TagTO("foo", LuceneEnhancer.provider,
 				suggest.getResource());
 		
-		luceneEnhancer.fillSuggestions(tag,1);
+		luceneEnhancer.fillSuggestions(tag,1d);
 		
-		assertTrue(2 == tags.get("foo").getValue());
+		assertEquals(2d, tags.get("foo").getValue(), 1e-15d);
 	}
 	
 	@Test
@@ -318,9 +317,9 @@ public class LuceneEnhancerTest{
 		TagTO tag = new TagTO("foo", LuceneEnhancer.provider,
 				suggest.getResource());
 		
-		luceneEnhancer.fillSuggestions(tag,1);
+		luceneEnhancer.fillSuggestions(tag,1d);
 		
-		assertTrue(1 == tags.get("foo").getValue());
+		assertEquals(1d, tags.get("foo").getValue(), 1e-15d);
 	}
 
 	@Test

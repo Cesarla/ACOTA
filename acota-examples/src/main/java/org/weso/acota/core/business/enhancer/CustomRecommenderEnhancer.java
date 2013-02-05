@@ -2,12 +2,12 @@ package org.weso.acota.core.business.enhancer;
 
 import java.util.Map.Entry;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.weso.acota.core.FeedbackConfiguration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
 import org.weso.acota.core.business.enhancer.FeedbackConfigurable;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 import org.weso.acota.persistence.FeedbackDAO;
 import org.weso.acota.persistence.factory.FactoryDAO;
 
@@ -25,12 +25,16 @@ public class CustomRecommenderEnhancer extends EnhancerAdapter implements Feedba
 
 	/**
 	 * Zero-argument default Exception
-	 * @throws ConfigurationException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws AcotaConfigurationException Any exception that occurs 
+	 * while initializing Configuration object
+	 * @throws InstantiationException Thrown when an application tries to instantiate
+	 * an interface or an abstract class
+	 * @throws IllegalAccessException An IllegalAccessException is thrown when an
+	 * application tries to reflectively create an instance
+	 * @throws ClassNotFoundException Thrown when an application tries to load in a
+	 * class through its string name
 	 */
-	public CustomRecommenderEnhancer() throws ConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public CustomRecommenderEnhancer() throws AcotaConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super();
 		CustomRecommenderEnhancer.provider = new ProviderTO("Simple Recommender Enhancer");
 		loadConfiguration(configuration);
@@ -38,7 +42,7 @@ public class CustomRecommenderEnhancer extends EnhancerAdapter implements Feedba
 	}
 	
 	@Override
-	public void loadConfiguration(FeedbackConfiguration configuration) throws ConfigurationException{
+	public void loadConfiguration(FeedbackConfiguration configuration) throws AcotaConfigurationException{
 		if(configuration==null)
 			configuration = new FeedbackConfiguration();
 		this.configuration = configuration;

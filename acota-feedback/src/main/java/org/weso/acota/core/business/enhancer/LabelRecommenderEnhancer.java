@@ -21,6 +21,7 @@ import org.weso.acota.core.FeedbackConfiguration;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.TagTO;
 import org.weso.acota.core.entity.persistence.tables.FeedbackTable;
+import org.weso.acota.core.exceptions.AcotaConfigurationException;
 import org.weso.acota.persistence.LabelDAO;
 import org.weso.acota.persistence.factory.FactoryDAO;
 
@@ -46,7 +47,7 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 
 	/**
 	 * Zero-argument default constructor
-	 * @throws ConfigurationException ConfigurationException Any exception that 
+	 * @throws AcotaConfigurationException ConfigurationException Any exception that 
 	 * occurs while initializing a Configuration object
 	 * @throws InstantiationException Thrown when an application tries to instantiate
 	 * an interface or an abstract class
@@ -55,7 +56,7 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 	 * @throws ClassNotFoundException Thrown when an application tries to load in a
 	 * class through its string name
 	 */
-	public LabelRecommenderEnhancer() throws ConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public LabelRecommenderEnhancer() throws AcotaConfigurationException, ConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException  {
 		super();
 		LabelRecommenderEnhancer.provider = new ProviderTO(
 				"Label Recommender Enhancer");
@@ -64,7 +65,7 @@ public class LabelRecommenderEnhancer extends EnhancerAdapter implements Feedbac
 	}
 	
 	@Override
-	public void loadConfiguration(FeedbackConfiguration configuration) throws ConfigurationException{
+	public void loadConfiguration(FeedbackConfiguration configuration) throws AcotaConfigurationException{
 		if(configuration==null)
 			configuration = new FeedbackConfiguration();
 		this.configuration = configuration;
