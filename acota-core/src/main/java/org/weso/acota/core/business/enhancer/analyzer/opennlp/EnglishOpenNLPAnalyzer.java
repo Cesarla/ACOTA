@@ -1,6 +1,7 @@
 package org.weso.acota.core.business.enhancer.analyzer.opennlp;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 import opennlp.tools.lang.spanish.PosTagger;
 import opennlp.tools.lang.spanish.SentenceDetector;
@@ -35,6 +36,10 @@ public class EnglishOpenNLPAnalyzer extends OpenNLPAnalyzerAdapter implements Op
 			this.sentenceDetector = new SentenceDetector(configuration.getOpenNlpEnSentBin());
 			this.posTagger = new PosTagger(configuration.getOpenNlpEnPosBin());
 			this.tokenizer = new Tokenizer(configuration.getOpenNlpEnTokBin());
+			this.tokens = new HashSet<String>(configuration.getOpenNlpEnTokens());
+			this.nouns = new HashSet<String>(configuration.getOpenNlpEnNouns());
+			this.verbs = new HashSet<String>(configuration.getOpenNlpEnVerbs());
+			this.numbers = new HashSet<String>(configuration.getOpenNlpEnNumbers());
 		} catch (IOException e) {
 			throw new AcotaConfigurationException(e);
 		}

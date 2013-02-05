@@ -307,9 +307,9 @@ public class TokenizerEnhancer extends EnhancerAdapter implements Configurable {
 	}
 
 	/**
-	 * Loads a language analyzer (English, Spanish or Default)
+	 * Loads a language analyzer (English or Spanish)
 	 * @param text Text to analyze
-	 * @return Lucene's {@link Analyzer}
+	 * @return Tokenizer's {@link Analyzer}
 	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
 	 * a Configuration object 
 	 */

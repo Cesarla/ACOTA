@@ -26,4 +26,36 @@ public interface OpenNLPAnalyzer extends Configurable{
 	 * @return The String[] with the detected sentences
 	 */
 	String[] sentDetect(String text);
+	
+	/**
+	 * Checks whether the supplied tag is a dispensable tag
+	 * @param tag OpenNLP Tag to check
+	 * @return true If the supplied tag is a dispensable tag
+	 * @return false If the supplied tag is not a dispensable tag
+	 */
+	boolean isDispenasble(String tag);
+	
+	/**
+	 * Checks whether the supplied tag is a noun tag
+	 * @param tag OpenNLP Tag to check
+	 * @return true If the supplied tag is a noun tag
+	 * @return false If the supplied tag is not a noun tag
+	 */
+	boolean isNoun(String tag);
+	
+	/**
+	 * Checks whether the supplied tag is a number tag
+	 * @param tag OpenNLP Tag to check
+	 * @return true If the supplied tag is a number tag
+	 * @return false If the supplied tag is not a number tag
+	 */
+	boolean isNumber(String tag);
+	
+	/**
+	 * Checks whether the supplied tag is a verb tag
+	 * @param tag OpenNLP Tag to check
+	 * @return true If the supplied tag is a verb tag
+	 * @return false If the supplied tag is not a verb tag
+	 */
+	boolean isVerb(String tag);
 }

@@ -15,6 +15,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.weso.acota.core.business.enhancer.OpenNLPEnhancer;
+import org.weso.acota.core.business.enhancer.analyzer.opennlp.SpanishOpenNLPAnalyzer;
 import org.weso.acota.core.entity.ProviderTO;
 import org.weso.acota.core.entity.RequestSuggestionTO;
 import org.weso.acota.core.entity.ResourceTO;
@@ -38,7 +39,7 @@ public class OpenNLPEnhancerTest {
 	
 	@Test
 	public void OpenNLPEConstructorPronouns(){
-		assertEquals(Collections.EMPTY_SET, openNLPEnhancer.noun);
+		assertEquals(Collections.EMPTY_SET, openNLPEnhancer.nouns);
 	}
 	
 	@Test
@@ -49,11 +50,6 @@ public class OpenNLPEnhancerTest {
 	@Test
 	public void OpenNLPEConstructorNumbers(){
 		assertEquals(Collections.EMPTY_SET, openNLPEnhancer.numbers);
-	}
-
-	@Test
-	public void OpenNLPEConstructorTokens(){
-		assertTrue(OpenNLPEnhancer.tokensEs!=null);
 	}
 	
 	@Test
@@ -160,7 +156,7 @@ public class OpenNLPEnhancerTest {
 	}
 	
 	@Test
-	public void processSentenceDoNothin() throws Exception{
+	public void processSentenceDoNothing() throws Exception{
 		SuggestionTO suggest = initializeSuggest();
 		
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
@@ -171,6 +167,8 @@ public class OpenNLPEnhancerTest {
 		
 		openNLPEnhancer.tags = tags;
 		openNLPEnhancer.suggest = suggest;
+		
+		openNLPEnhancer.openNlpAnalyzer = new SpanishOpenNLPAnalyzer(openNLPEnhancer.configuration);
 		
 		openNLPEnhancer.processSetence(new String[]{"T"}, new String[]{"perro"});
 		
@@ -184,7 +182,7 @@ public class OpenNLPEnhancerTest {
 		Map<String, TagTO> tags = new HashMap<String, TagTO>();
 		TagTO tag1 = new TagTO("eso", LuceneEnhancer.provider,suggest.getResource());
 		tag1.setValue(2.0);
-		TagTO tag2 = new TagTO("tu", LuceneEnhancer.provider,suggest.getResource());
+		TagTO tag2 = new TagTO("perro", LuceneEnhancer.provider,suggest.getResource());
 		tag2.setValue(2.0);
 		TagTO tag3 = new TagTO("comer", LuceneEnhancer.provider,suggest.getResource());
 		tag3.setValue(2.0);
@@ -201,10 +199,11 @@ public class OpenNLPEnhancerTest {
 		
 		suggest.setTags(tags);
 		
-		openNLPEnhancer.processSetence(new String[]{"PN","N","V","Z"}, new String[]{"eso","tu","comer","uno"});
+		openNLPEnhancer.openNlpAnalyzer = new SpanishOpenNLPAnalyzer(openNLPEnhancer.configuration);
+		openNLPEnhancer.processSetence(new String[]{"PN","NC","VS","Z"}, new String[]{"eso","perro","comer","uno"});
 		
-		assertTrue(openNLPEnhancer.tags.get("eso")==null);
-		assertTrue(openNLPEnhancer.noun.contains("tu"));
+		assertEquals(openNLPEnhancer.tags.get("eso"),null);
+		assertTrue(openNLPEnhancer.nouns.contains("perro"));
 		assertTrue(openNLPEnhancer.verbs.contains("comer"));
 		assertTrue(openNLPEnhancer.numbers.contains("uno"));
 	}
@@ -266,7 +265,7 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.tags = tags;
 		openNLPEnhancer.suggest = suggest;
 		
-		openNLPEnhancer.findAndChangeNoun();
+		openNLPEnhancer.findAndChangeNouns();
 		
 		assertEquals(1d, openNLPEnhancer.tags.get("yo").getValue(), 1e-15d);
 	}
@@ -284,10 +283,10 @@ public class OpenNLPEnhancerTest {
 		openNLPEnhancer.tags = tags;
 		openNLPEnhancer.suggest = suggest;
 		
-		openNLPEnhancer.noun = new HashSet<String>();
-		openNLPEnhancer.noun.add("yo");
+		openNLPEnhancer.nouns = new HashSet<String>();
+		openNLPEnhancer.nouns.add("yo");
 		
-		openNLPEnhancer.findAndChangeNoun();
+		openNLPEnhancer.findAndChangeNouns();
 		assertEquals(1.5d, openNLPEnhancer.tags.get("yo").getValue(), 1e-15d);
 	}
 	

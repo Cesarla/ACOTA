@@ -2,7 +2,6 @@ package org.weso.acota.core.business.enhancer;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -10,8 +9,10 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.Analyzer;
 import org.weso.acota.core.CoreConfiguration;
 import org.weso.acota.core.business.enhancer.EnhancerAdapter;
+import org.weso.acota.core.business.enhancer.analyzer.opennlp.EnglishOpenNLPAnalyzer;
 import org.weso.acota.core.business.enhancer.analyzer.opennlp.OpenNLPAnalyzer;
 import org.weso.acota.core.business.enhancer.analyzer.opennlp.SpanishOpenNLPAnalyzer;
 import org.weso.acota.core.entity.ProviderTO;
@@ -30,18 +31,16 @@ import static org.weso.acota.core.utils.LanguageUtil.ISO_639_SPANISH;
  */
 public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	
-	protected static final String[] nplTokensEs = new String[] { "SPC", "P", "DI",
-		"PR", "CC", "PP", "CS", "DD", "DP", "RG", "AO", "SPS", "AQ", "W",
-		"DN", "PD", "PI", "PN", "PT", "RN", "Y", "DT", "I", "DE" };
-	
 	protected static Logger logger;
-	protected static Set<String> tokensEs;
 
-	protected Set<String> noun;
+	protected Set<String> nouns;
 	protected Set<String> verbs;
 	protected Set<String> numbers;
 	
-	protected OpenNLPAnalyzer analyzer;
+	protected EnglishOpenNLPAnalyzer englishOpenNlpAnalyzer;
+	protected SpanishOpenNLPAnalyzer spanishOpenNlpAnalyzer;
+	
+	protected OpenNLPAnalyzer openNlpAnalyzer;
 	
 	protected CoreConfiguration configuration;
 	
@@ -54,8 +53,8 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		super();
 		OpenNLPEnhancer.logger = Logger.getLogger(OpenNLPEnhancer.class);
 		OpenNLPEnhancer.provider = new ProviderTO("OpenNPL tagger");
-		OpenNLPEnhancer.tokensEs = new HashSet<String>(Arrays.asList((nplTokensEs)));
-		this.noun = new HashSet<String>();
+		
+		this.nouns = new HashSet<String>();
 		this.verbs = new HashSet<String>();
 		this.numbers = new HashSet<String>();
 		
@@ -67,7 +66,12 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		if(configuration==null)
 			configuration = new CoreConfiguration();
 		this.configuration = configuration;
-		this.analyzer = new SpanishOpenNLPAnalyzer(configuration);
+		
+		if(spanishOpenNlpAnalyzer!=null)
+			this.spanishOpenNlpAnalyzer = new SpanishOpenNLPAnalyzer(configuration);
+		
+		if(englishOpenNlpAnalyzer!=null)
+			this.englishOpenNlpAnalyzer = new EnglishOpenNLPAnalyzer(configuration);
 	}
 	
 	@Override
@@ -76,7 +80,7 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 		this.tags = suggest.getTags();
 		suggest.setResource(request.getResource());
 		
-		noun.clear();
+		nouns.clear();
 		verbs.clear();
 		numbers.clear();
 	}
@@ -123,18 +127,16 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	 * a Configuration object
 	 */
 	public void analysisOfTerms(String text) throws IOException, AcotaConfigurationException {
-		String language = LanguageUtil.detect(text);
+		this.openNlpAnalyzer = loadAnalyzer(text);
 
-		if (language.equals(ISO_639_SPANISH)) {
-			String sentences[] = analyzer.sentDetect(suggest
-					.getResource().getDescription());
-			for (String sentence : sentences) {
-				String[] textTokenized = analyzer.tokenize(sentence);
-				processSetence(analyzer.tag(textTokenized), textTokenized);
-			}
+		String sentences[] = openNlpAnalyzer.sentDetect(suggest
+				.getResource().getDescription());
+		for (String sentence : sentences) {
+			String[] textTokenized = openNlpAnalyzer.tokenize(sentence);
+			processSetence(openNlpAnalyzer.tag(textTokenized), textTokenized);
 		}
 
-		findAndChangeNoun();
+		findAndChangeNouns();
 		findAndChangeVerbs();
 		findAndChangeNumbers();
 	}
@@ -145,15 +147,15 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	 * @param tokenizedText Tokenized Text
 	 */
 	protected void processSetence(String[] tags, String[] tokenizedText) {
-		for (int y = 0; y < tokenizedText.length; y++) {
-			if (tokensEs.contains(tags[y])) {
-				findAndRemove(tokenizedText[y]);
-			} else if (tags[y].startsWith("N")) {
-				noun.add(tokenizedText[y].toLowerCase());
-			} else if (tags[y].startsWith("V")) {
-				verbs.add(tokenizedText[y].toLowerCase());
-			} else if (tags[y].startsWith("Z")) {
-				numbers.add(tokenizedText[y].toLowerCase());
+		for (int i = 0; i < tokenizedText.length; i++) {
+			if (openNlpAnalyzer.isDispenasble(tags[i])) {
+				findAndRemove(tokenizedText[i]);
+			} else if (openNlpAnalyzer.isNoun(tags[i])) {
+				nouns.add(tokenizedText[i].toLowerCase());
+			} else if (openNlpAnalyzer.isVerb(tags[i])) {
+				verbs.add(tokenizedText[i].toLowerCase());
+			} else if (openNlpAnalyzer.isNumber(tags[i])) {
+				numbers.add(tokenizedText[i].toLowerCase());
 			}
 		}
 	}
@@ -185,11 +187,11 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 	/**
 	 * Modifies Nouns' weight. Adds the half of the maximum weight.
 	 */
-	protected void findAndChangeNoun() {
+	protected void findAndChangeNouns() {
 		double sum = calculateMaxValue() / 2;
 
 		for (Entry<String, TagTO> label : tags.entrySet()) {
-			if (noun.contains(label.getKey())) {
+			if (nouns.contains(label.getKey())) {
 				label.getValue().addValue(sum);
 			}
 		}
@@ -218,6 +220,28 @@ public class OpenNLPEnhancer extends EnhancerAdapter implements Configurable {
 				label.getValue().subValue(value);
 			}
 		}
+	}
+	
+	/**
+	 * Loads a language analyzer (English or Spanish)
+	 * @param text Text to analyze
+	 * @return OpenNLP's {@link Analyzer}
+	 * @throws AcotaConfigurationException Any exception that occurs while initializing 
+	 * a Configuration object 
+	 */
+	protected OpenNLPAnalyzer loadAnalyzer(String text) throws AcotaConfigurationException {
+		String language = LanguageUtil.detect(text);
+		OpenNLPAnalyzer analyzer = null;
+		if (language.equals(ISO_639_SPANISH)) {
+			if(spanishOpenNlpAnalyzer==null)
+				this.spanishOpenNlpAnalyzer = new SpanishOpenNLPAnalyzer(configuration);
+			analyzer = spanishOpenNlpAnalyzer;
+		} else {
+			if(englishOpenNlpAnalyzer==null)
+				this.englishOpenNlpAnalyzer = new EnglishOpenNLPAnalyzer(configuration);
+			analyzer = englishOpenNlpAnalyzer;
+		}
+		return analyzer;
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.weso.acota.core;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -7,7 +8,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.weso.acota.core.exceptions.AcotaConfigurationException;
-
+import org.weso.acota.core.utils.ExternalizableConfiguration;
 /**
  * The main task of this class is to load the core configuration properties of
  * ACOTA, this properties could be set programmatically or by a configuration
@@ -31,17 +32,25 @@ public class CoreConfiguration implements Configuration {
 	protected String openNlpEnPosBin;
 	protected String openNlpEnSentBin;
 	protected String openNlpEnTokBin;
+	protected List<String> openNlpEnTokens;
+	protected List<String> openNlpEnNouns;
+	protected List<String> openNlpEnVerbs;
+	protected List<String> openNlpEnNumbers;
 
 	protected String openNlpEsPosBin;
 	protected String openNlpEsSentBin;
 	protected String openNlpEsTokBin;
+	protected List<String> openNlpEsTokens;
+	protected List<String> openNlpEsNouns;
+	protected List<String> openNlpEsVerbs;
+	protected List<String> openNlpEsNumbers;
 
 	protected String tokenizerEnPattern;
 	protected List<String> tokenizerEnTokens;
 
 	protected String tokenizerEsPattern;
 	protected List<String> tokenizerEsTokens;
-	
+
 	protected Integer tokenizerK;
 
 	protected Double tokenizerLabelRelevance;
@@ -196,6 +205,70 @@ public class CoreConfiguration implements Configuration {
 		this.openNlpEsTokBin = openNlpEsTokBin;
 	}
 
+	public List<String> getOpenNlpEnTokens() {
+		return openNlpEnTokens;
+	}
+
+	public List<String> getOpenNlpEnNouns() {
+		return openNlpEnNouns;
+	}
+
+	public List<String> getOpenNlpEnVerbs() {
+		return openNlpEnVerbs;
+	}
+
+	public List<String> getOpenNlpEnNumbers() {
+		return openNlpEnNumbers;
+	}
+
+	public List<String> getOpenNlpEsTokens() {
+		return openNlpEsTokens;
+	}
+
+	public List<String> getOpenNlpEsNouns() {
+		return openNlpEsNouns;
+	}
+
+	public List<String> getOpenNlpEsVerbs() {
+		return openNlpEsVerbs;
+	}
+
+	public List<String> getOpenNlpEsNumbers() {
+		return openNlpEsNumbers;
+	}
+
+	public void setOpenNlpEnTokens(List<String> openNlpEnTokens) {
+		this.openNlpEnTokens = openNlpEnTokens;
+	}
+
+	public void setOpenNlpEnNouns(List<String> openNlpEnNouns) {
+		this.openNlpEnNouns = openNlpEnNouns;
+	}
+
+	public void setOpenNlpEnVerbs(List<String> openNlpEnVerbs) {
+		this.openNlpEnVerbs = openNlpEnVerbs;
+	}
+
+	public void setOpenNlpEnNumbers(List<String> openNlpEnNumbers) {
+		this.openNlpEnNumbers = openNlpEnNumbers;
+	}
+
+	public void setOpenNlpEsTokens(List<String> openNlpEsTokens) {
+		this.openNlpEsTokens = openNlpEsTokens;
+	}
+
+	public void setOpenNlpEsNouns(List<String> openNlpEsNouns) {
+		this.openNlpEsNouns = openNlpEsNouns;
+	}
+
+	public void setOpenNlpEsVerbs(List<String> openNlpEsVerbs) {
+		this.openNlpEsVerbs = openNlpEsVerbs;
+	}
+
+	public void setOpenNlpEsNumbers(List<String> openNlpEsNumbers) {
+		this.openNlpEsNumbers = openNlpEsNumbers;
+	}
+
 	public void setTokenizerEnPattern(String tokenizerEnPattern) {
 		this.tokenizerEnPattern = tokenizerEnPattern;
 	}
@@ -237,11 +310,22 @@ public class CoreConfiguration implements Configuration {
 	 */
 	public void loadsConfiguration() throws AcotaConfigurationException {
 		CoreConfiguration.CONFIG = new CompositeConfiguration();
+		
 		try {
 			CONFIG.addConfiguration(new PropertiesConfiguration(
 					"acota.properties"));
 		} catch (Exception e) {
 			LOGGER.warn("acota.properties not found, Using default values.");
+		}
+		
+		try {
+			Class<?> resourceLoader = Class
+					.forName("org.weso.acota.core.utils.ResourceLoader");
+			ExternalizableConfiguration rlInstance = (ExternalizableConfiguration) resourceLoader
+					.newInstance();
+			CONFIG.addConfiguration(rlInstance.getConfiguration());
+		} catch (Exception e) {
+			LOGGER.warn("acota-utils jar not found.");
 		}
 
 		try {
@@ -250,7 +334,6 @@ public class CoreConfiguration implements Configuration {
 		} catch (ConfigurationException e) {
 			throw new AcotaConfigurationException(e);
 		}
-
 	}
 
 	/**
@@ -276,30 +359,51 @@ public class CoreConfiguration implements Configuration {
 	 * Loads {@linked org.weso.acota.core.business.enhancer.OpenNlpEnhancer}'s
 	 * Configuration
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadOpenNlpEnhancerConfig() {
 		this.setOpenNlpEsPosBin(CONFIG.getString("opennlp.es.pos"));
 		this.setOpenNlpEsSentBin(CONFIG.getString("opennlp.es.sent"));
 		this.setOpenNlpEsTokBin(CONFIG.getString("opennlp.es.tok"));
+		this.setOpenNlpEsTokens((List) CONFIG.getList("opennlp.es.tokens",
+				Collections.EMPTY_LIST));
+		this.setOpenNlpEsNouns((List) CONFIG.getList("opennlp.es.nouns",
+				Collections.EMPTY_LIST));
+		this.setOpenNlpEsVerbs((List) CONFIG.getList("opennlp.es.verbs",
+				Collections.EMPTY_LIST));
+		this.setOpenNlpEsNumbers((List) CONFIG.getList("opennlp.es.numbers",
+				Collections.EMPTY_LIST));
+
 		this.setOpenNlpEnPosBin(CONFIG.getString("opennlp.en.pos"));
 		this.setOpenNlpEnSentBin(CONFIG.getString("opennlp.en.sent"));
 		this.setOpenNlpEnTokBin(CONFIG.getString("opennlp.en.tok"));
+		this.setOpenNlpEnTokens((List) CONFIG.getList("opennlp.en.tokens",
+				Collections.EMPTY_LIST));
+		this.setOpenNlpEnNouns((List) CONFIG.getList("opennlp.en.nouns",
+				Collections.EMPTY_LIST));
+		this.setOpenNlpEnVerbs((List) CONFIG.getList("opennlp.en.verbs",
+				Collections.EMPTY_LIST));
+		this.setOpenNlpEnNumbers((List) CONFIG.getList("opennlp.en.numbers",
+				Collections.EMPTY_LIST));
 	}
 
 	/**
 	 * Loads {@linked org.weso.acota.core.business.enhancer.TokenizerEnhancer}'s
 	 * Configuration
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadTokenizerEnhancerConfig() {
-		
+
 		this.setTokenizerK(CONFIG.getInteger("tokenizer.k", 1));
 		this.setTokenizerLabelRelevance(CONFIG
 				.getDouble("tokenizer.label.relevance"));
 		this.setTokenizerTermRelevance(CONFIG
 				.getDouble("tokenizer.term.relevance"));
 		this.setTokenizerEnPattern(CONFIG.getString("tokenizer.en.pattern"));
-		this.setTokenizerEnTokens((List)CONFIG.getList("tokenizer.en.tokens"));
+		this.setTokenizerEnTokens((List) CONFIG.getList("tokenizer.en.tokens",
+				Collections.EMPTY_LIST));
 		this.setTokenizerEsPattern(CONFIG.getString("tokenizer.es.pattern"));
-		this.setTokenizerEsTokens((List)CONFIG.getList("tokenizer.es.tokens"));
+		this.setTokenizerEsTokens((List) CONFIG.getList("tokenizer.es.tokens",
+				Collections.EMPTY_LIST));
 	}
 
 	/**

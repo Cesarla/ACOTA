@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.weso</groupId>
 	<artifactId>acota-core</artifactId>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<name>acota-core</name>
 	<packaging>jar</packaging>
-	<description>acota-core, library 0.3.5</description>
+	<description>acota-core, library 0.3.6</description>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,7 +38,7 @@
 			<version>1.1.1</version>
 		</dependency>
 		<dependency>
-		<groupId>org.apache.commons</groupId>
+			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.0</version>
 		</dependency>
@@ -45,14 +46,14 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>1.3.2</version>
-		</dependency>            
+		</dependency>
 		<!-- Apache Configuration Utils -->
 		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<version>1.9</version>
 		</dependency>
-		<!-- Lucene  -->
+		<!-- Lucene -->
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
@@ -64,7 +65,7 @@
 			<artifactId>langdetect</artifactId>
 			<version>1.1-20120112</version>
 		</dependency>
-		<!-- Natural Language Processing  -->
+		<!-- Natural Language Processing -->
 		<dependency>
 			<groupId>opennlp</groupId>
 			<artifactId>opennlp-tools</artifactId>
@@ -75,11 +76,11 @@
 			<artifactId>maxent</artifactId>
 			<version>2.5.2</version>
 		</dependency>
-		<!-- MIT Java Wordnet Interface  -->
+		<!-- MIT Java Wordnet Interface -->
 		<dependency>
-    		<groupId>edu.mit</groupId>
-    		<artifactId>jwi</artifactId>
-    		<version>2.2.3</version>
+			<groupId>edu.mit</groupId>
+			<artifactId>jwi</artifactId>
+			<version>2.2.3</version>
 		</dependency>
 	</dependencies>
 	<repositories>
@@ -107,7 +108,7 @@
 					<archive>
 						<manifest>
 							<mainClass>fully.qualified.MainClass</mainClass>
-				        </manifest>
+						</manifest>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
