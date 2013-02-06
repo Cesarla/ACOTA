@@ -4,10 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Timestamp;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
@@ -30,7 +31,9 @@ public class FeedbackMysqlDAOTest {
 	
 	@Before
 	public void init() throws Exception {
-		System.setProperty("user.timezone", "GMT");
+		
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+		
 		DatabaseOperation.CLEAN_INSERT.execute(getConnection(), getDataSet());
 		this.feedbackDao = new FeedbackMysqlDAO();
 	}
@@ -44,8 +47,7 @@ public class FeedbackMysqlDAOTest {
 		Class.forName("com.mysql.jdbc.Driver");
 		FeedbackConfiguration configuration = new FeedbackConfiguration();
 		Connection jdbcConnection = DriverManager.getConnection(
-				"jdbc:mysql://"+ configuration.getDatabaseUrl() +"/"+configuration.getDatabaseName(), configuration.getDatabaseUser(), configuration.getDatabasePassword());
-		
+				"jdbc:mysql://"+ configuration.getDatabaseUrl() +"/"+configuration.getDatabaseName()+"?useTimezone=false&useLegacyDatetimeCode=false&serverTimezone=UTC", configuration.getDatabaseUser(), configuration.getDatabasePassword());
 		IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
 		
 		DatabaseConfig dbConfig = connection.getConfig();
@@ -66,7 +68,7 @@ public class FeedbackMysqlDAOTest {
 	@Test
 	public void saveFeedbackTest() throws Exception {
 		Feedback feedback = new Feedback(4, 4, "demo", "http://www.example.es",
-				new Timestamp(1351099447000L));
+				new Date(1351106647000L));
 		feedbackDao.saveFeedback(feedback);
 		
         IDataSet databaseDataSet = getConnection().createDataSet();
@@ -84,11 +86,11 @@ public class FeedbackMysqlDAOTest {
 	public void getAllFeedbacksTest() throws Exception {
 		Set<Feedback> feedbacks = new HashSet<Feedback>();
 		feedbacks.add(new Feedback(3, 2, "group", "http://www.example.es",
-				new Timestamp(1351099447000L)));
+				new Date(1351106647000L)));
 		feedbacks.add(new Feedback(1, 1, "research", "http://www.weso.es",
-				new Timestamp(1351099447000L)));
+				new Date(1351106647000L)));
 		feedbacks.add(new Feedback(2, 2, "research", "http://www.weso.es",
-				new Timestamp(1351099447000L)));
+				new Date(1351106647000L)));
 		assertEquals(feedbacks, feedbackDao.getAllFeedbacks());
 	}
 
@@ -101,8 +103,7 @@ public class FeedbackMysqlDAOTest {
 	public void getAllFeedbacksByUserIdTest() throws Exception {
 		Set<Feedback> feedbacks = new HashSet<Feedback>();
 		feedbacks.add(new Feedback(1, 1, "research", "http://www.weso.es",
-				new Timestamp(1351099447000L)));
-
+				new Date(1351106647000L)));
 		assertEquals(feedbacks, feedbackDao.getFeedbacksByUserId(1));
 	}
 
@@ -116,9 +117,9 @@ public class FeedbackMysqlDAOTest {
 	public void getAllFeedbacksByLabelTest() throws Exception {
 		Set<Feedback> feedbacks = new HashSet<Feedback>();
 		feedbacks.add(new Feedback(1, 1, "research", "http://www.weso.es",
-				new Timestamp(1351099447000L)));
+				new Date(1351106647000L)));
 		feedbacks.add(new Feedback(2, 2, "research", "http://www.weso.es",
-				new Timestamp(1351099447000L)));
+				new Date(1351106647000L)));
 
 		assertEquals(feedbacks, feedbackDao.getFeedbacksByLabel("research"));
 	}
@@ -133,7 +134,7 @@ public class FeedbackMysqlDAOTest {
 	public void getAllFeedbacksByDocumentTest() throws Exception {
 		Set<Feedback> feedbacks = new HashSet<Feedback>();
 		feedbacks.add(new Feedback(3, 2, "group", "http://www.example.es",
-				new Timestamp(1351099447000L)));
+				new Date(1351106647000L)));
 
 		assertEquals(feedbacks,
 				feedbackDao.getFeedbacksByDocument("http://www.example.es"));

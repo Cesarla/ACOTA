@@ -132,7 +132,7 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 				feedback.setUserId(rs.getInt(feedbackUserIdAttribute));
 				feedback.setDocument(rs.getString("d." + documentNameAttribute));
 				feedback.setLabel(rs.getString("l." + labelNameAttribute));
-				feedback.setDate(rs.getTimestamp(feedbackTimestampAttribute));
+				feedback.setDate(new java.util.Date(rs.getTimestamp(feedbackTimestampAttribute).getTime()));
 				feedbacks.add(feedback);
 			}
 
@@ -184,7 +184,7 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 				feedback.setUserId(rs.getInt(feedbackUserIdAttribute));
 				feedback.setDocument(rs.getString("d." + documentNameAttribute));
 				feedback.setLabel(rs.getString("l." + labelNameAttribute));
-				feedback.setDate(rs.getTimestamp(feedbackTimestampAttribute));
+				feedback.setDate(new java.util.Date(rs.getTimestamp(feedbackTimestampAttribute).getTime()));
 				feedbacks.add(feedback);
 			}
 
@@ -236,7 +236,7 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 				feedback.setUserId(rs.getInt(feedbackUserIdAttribute));
 				feedback.setDocument(rs.getString("d." + documentNameAttribute));
 				feedback.setLabel(rs.getString("l." + labelNameAttribute));
-				feedback.setDate(rs.getTimestamp(feedbackTimestampAttribute));
+				feedback.setDate(new java.util.Date(rs.getTimestamp(feedbackTimestampAttribute).getTime()));
 				feedbacks.add(feedback);
 			}
 
@@ -288,7 +288,7 @@ public class FeedbackMysqlDAO extends GenericMysqlDAO implements FeedbackDAO {
 				feedback.setUserId(rs.getInt(feedbackUserIdAttribute));
 				feedback.setDocument(rs.getString("d." + documentNameAttribute));
 				feedback.setLabel(rs.getString("l." + labelNameAttribute));
-				feedback.setDate(rs.getTimestamp(feedbackTimestampAttribute));
+				feedback.setDate(new java.util.Date(rs.getTimestamp(feedbackTimestampAttribute).getTime()));
 				feedbacks.add(feedback);
 			}
 
