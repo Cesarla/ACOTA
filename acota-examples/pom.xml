@@ -1,37 +1,51 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.weso</groupId>
-  <artifactId>acota-examples</artifactId>
-  <packaging>jar</packaging>
-  <version>0.3.6</version>
-  <name>acota-examples, library 0.3.6</name>
-  <url>http://maven.apache.org</url>
-  <dependencies>
-    <dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>4.11</version>
-		<scope>test</scope>
-	</dependency>
-	<dependency>
-		<groupId>org.mockito</groupId>
-		<artifactId>mockito-all</artifactId>
-		<version>1.9.0</version>
-		<scope>test</scope>
-	</dependency>
-	<dependency>
-		<groupId>org.weso</groupId>
-		<artifactId>acota-core</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>org.weso</groupId>
-		<artifactId>acota-feedback</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-  </dependencies>
-   	<build>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.weso</groupId>
+	<artifactId>acota-examples</artifactId>
+	<packaging>jar</packaging>
+	<version>0.3.6</version>
+	<name>acota-examples, library 0.3.6</name>
+	<url>https://github.com/Cesarla/ACOTA/</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>manual</distribution>
+		</license>
+	</licenses>
+	<organization>
+		<name>WESO (Web Semantics Oviedo)</name>
+		<url>http://www.weso.es</url>
+	</organization>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.weso</groupId>
+			<artifactId>acota-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.weso</groupId>
+			<artifactId>acota-feedback</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -49,7 +63,7 @@
 					<archive>
 						<manifest>
 							<mainClass>fully.qualified.MainClass</mainClass>
-				        </manifest>
+						</manifest>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
