@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.weso</groupId>
+	<groupId>es.weso</groupId>
 	<artifactId>acota-utils</artifactId>
 	<packaging>jar</packaging>
-	<version>0.3.6</version>
+	<version>0.3.6-SNAPSHOT</version>
 	<name>acota-utils</name>
-	<description>acota-utils, library 0.3.6</description>
+	<description>acota-utils, library ${project.version}</description>
 	<url>https://github.com/Cesarla/ACOTA/</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,10 +18,28 @@
 			<distribution>manual</distribution>
 		</license>
 	</licenses>
+	<scm>
+		<connection>scm:git:git@github.com:Cesarla/ACOTA.git</connection>
+		<url>scm:git:git@github.com:Cesarla/ACOTA.git</url>
+		<developerConnection>scm:git:git@github.com:Cesarla/ACOTA.git</developerConnection>
+	</scm>
 	<organization>
-		<name>WESO (Web Semantics Oviedo)</name>
+		<name>WESO</name>
 		<url>http://www.weso.es</url>
 	</organization>
+	<developers>
+		<developer>
+			<name>César Luis Alvargonzález</name>
+			<organization>WESO</organization>
+			<url>http://www.cesarla.com</url>
+			<organizationUrl>http://www.weso.es</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+				<role>tester</role>
+			</roles>
+		</developer>
+	</developers>
 	<dependencies>
 		<!-- For testing purposes -->
 		<dependency>
@@ -31,7 +49,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.weso</groupId>
+			<groupId>es.weso</groupId>
 			<artifactId>acota-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
