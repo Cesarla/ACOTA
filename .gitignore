@@ -10,7 +10,7 @@ acota-utils/target
 
 # maven
 
-.versionsBackup
+*.versionsBackup
 
 ## generic files to ignore
 *~
