@@ -3,9 +3,14 @@
 acota-core/target
 acota-feedback/target
 acota-examples/target
+acota-utils/target
 
 # java specific
 *.class
+
+# maven
+
+*.versionsBackup
 
 ## generic files to ignore
 *~
