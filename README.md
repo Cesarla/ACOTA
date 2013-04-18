@@ -1,5 +1,24 @@
 <img src="http://weso.es/img/logo_acota_850.png">
-# ACOTA:  Automatic Collaborative Tagging 
+
+----
+
+# ACOTA HAS MOVED #
+ACOTA has moved and splitted in  different projects:
+* [acota-seed (NEW)](https://github.com/weso/acota-seed "Acota Seed Github Project")
+* [acota-core](https://github.com/weso/acota-core "Acota Core Github Project")
+* [acota-feedback](https://github.com/weso/acota-feedback "Acota Feedback Github Project")
+* [acota-semantics (NEW)](https://github.com/weso/acota-semantics "Acota Semantics Github Project")
+* [acota-utils](https://github.com/weso/acota-utils "Acota Utils Github Project")
+
+If you are still working with Acota 0.3.6 or lower, 
+we encourage you to update to the latest version of ACOTA (Check out the links above).
+
+If you got here via a link, please update that link to the proper one 
+(Check out the links above) if possible.
+
+----
+
+# ACOTA:  Automatic Collaborative Tagging
 Master: [![Build Status](https://travis-ci.org/Cesarla/ACOTA.png?branch=master)](https://travis-ci.org/Cesarla/ACOTA)
 Develop: [![Build Status](https://travis-ci.org/Cesarla/ACOTA.png?branch=develop)](https://travis-ci.org/Cesarla/ACOTA)
 
@@ -8,7 +27,6 @@ Develop: [![Build Status](https://travis-ci.org/Cesarla/ACOTA.png?branch=develop
 ACOTA (Automatic Collaborative Tagging). It is a Java-based library for suggesting 
 tags in a collaborative and automatic way. It is based on the use of ontologies to 
 manage the tags and provide advanced services of automatic learning, reasoning, etc. 
-
 
 ## Configuration example ##
 Acota configuration files only could by written in Java properties (key=value), XML 
